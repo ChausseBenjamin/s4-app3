@@ -11,6 +11,7 @@
 \usepackage{float}
 \usepackage{varwidth}
 \usepackage{graphicx}
+\usepackage{pifont}
 % \usepackage[toc,page]{appendix}
 \usepackage[dvipsnames]{xcolor}
 
@@ -34,79 +35,96 @@
 \newcommand{\fixme}[1]{\begin{color}{Fuchsia}\textbf{FIXME:} #1\end{color}}
 \newcommand{\question}[1]{\begin{color}{ForestGreen}\textbf{QUESTION:} #1\end{color}}
 
+% Checkboxes
+\setlength{\fboxsep}{1pt}
+\newcommand{\cbox}{\fbox{\phantom{\ding{51}}}}
+\newcommand{\cboxtick}{\fbox{\ding{51}}}%
+
 \begin{document}
 \maketitle
-\newpage
-\tableofcontents
 \newpage
 
 \section{Hihi Haha}
 
 \begin{center}
-	\begin{longtable}{lll}
-		\caption{A sample long table.} \label{tab:long}                                                                                             \\
+	\begin{longtable}{p{4cm}p{4cm}p{4cm}l}
+		\caption{Plan de vérification} \label{tab:verif} \\
 
-		\toprule \multicolumn{1}{c}{\textbf{First column}} & \multicolumn{1}{c}{\textbf{Second column}} & \multicolumn{1}{c}{\textbf{Third column}} \\ \midrule
+		\toprule
+		\multicolumn{2}{l}{Objectif Ciblé} &
+		\multicolumn{2}{l}{Test du beq}                  \\
+
+		\midrule
+		\bfseries Test                     &
+		\bfseries Action                   &
+		\bfseries Résultat Attendu         &
+		\cboxtick                                        \\
+		\midrule
 		\endfirsthead
 
-		\multicolumn{3}{c}%
-		{{\itshape \tablename\ \thetable{} -- continued from previous page}}                                                                        \\
-		\midrule \multicolumn{1}{c}{\textbf{First column}} & \multicolumn{1}{c}{\textbf{Second column}} & \multicolumn{1}{c}{\textbf{Third column}} \\ \midrule
+		\multicolumn{4}{c}%
+		{{\itshape \tablename\ \thetable{} -- Continué de la page précédente\ldots}} \\
+		\midrule
+		Test                     &
+		Action                   &
+		Résultat Attendu         &
+		\cboxtick                                        \\
+		\midrule
 		\endhead
 
-		\midrule \multicolumn{3}{r}{{Continued on next page}}                                                                                       \\ \midrule
+		\midrule \multicolumn{4}{r}{{Continué à la prochaine page}}                                                                                       \\ \midrule
 		\endfoot
 
 		\bottomrule
 		\endlastfoot
-
-		One                                                & abcdef ghjijklmn                           & 123.456778                                \\
-		One                                                & abcdef ghjijklmn                           & 123.456778                                \\
-		One                                                & abcdef ghjijklmn                           & 123.456778                                \\
-		One                                                & abcdef ghjijklmn                           & 123.456778                                \\
-		One                                                & abcdef ghjijklmn                           & 123.456778                                \\
-		One                                                & abcdef ghjijklmn                           & 123.456778                                \\
-		One                                                & abcdef ghjijklmn                           & 123.456778                                \\
-		One                                                & abcdef ghjijklmn                           & 123.456778                                \\
-		One                                                & abcdef ghjijklmn                           & 123.456778                                \\
-		One                                                & abcdef ghjijklmn                           & 123.456778                                \\
-		One                                                & abcdef ghjijklmn                           & 123.456778                                \\
-		One                                                & abcdef ghjijklmn                           & 123.456778                                \\
-		One                                                & abcdef ghjijklmn                           & 123.456778                                \\
-		One                                                & abcdef ghjijklmn                           & 123.456778                                \\
-		One                                                & abcdef ghjijklmn                           & 123.456778                                \\
-		One                                                & abcdef ghjijklmn                           & 123.456778                                \\
-		One                                                & abcdef ghjijklmn                           & 123.456778                                \\
-		One                                                & abcdef ghjijklmn                           & 123.456778                                \\
-		One                                                & abcdef ghjijklmn                           & 123.456778                                \\
-		One                                                & abcdef ghjijklmn                           & 123.456778                                \\
-		One                                                & abcdef ghjijklmn                           & 123.456778                                \\
-		One                                                & abcdef ghjijklmn                           & 123.456778                                \\
-		One                                                & abcdef ghjijklmn                           & 123.456778                                \\
-		One                                                & abcdef ghjijklmn                           & 123.456778                                \\
-		One                                                & abcdef ghjijklmn                           & 123.456778                                \\
-		One                                                & abcdef ghjijklmn                           & 123.456778                                \\
-		One                                                & abcdef ghjijklmn                           & 123.456778                                \\
-		One                                                & abcdef ghjijklmn                           & 123.456778                                \\
-		One                                                & abcdef ghjijklmn                           & 123.456778                                \\
-		One                                                & abcdef ghjijklmn                           & 123.456778                                \\
-		One                                                & abcdef ghjijklmn                           & 123.456778                                \\
-		One                                                & abcdef ghjijklmn                           & 123.456778                                \\
-		One                                                & abcdef ghjijklmn                           & 123.456778                                \\
-		One                                                & abcdef ghjijklmn                           & 123.456778                                \\
-		One                                                & abcdef ghjijklmn                           & 123.456778                                \\
-		One                                                & abcdef ghjijklmn                           & 123.456778                                \\
-		One                                                & abcdef ghjijklmn                           & 123.456778                                \\
-		One                                                & abcdef ghjijklmn                           & 123.456778                                \\
-		One                                                & abcdef ghjijklmn                           & 123.456778                                \\
-		One                                                & abcdef ghjijklmn                           & 123.456778                                \\
-		One                                                & abcdef ghjijklmn                           & 123.456778                                \\
-		One                                                & abcdef ghjijklmn                           & 123.456778                                \\
-		One                                                & abcdef ghjijklmn                           & 123.456778                                \\
-		One                                                & abcdef ghjijklmn                           & 123.456778                                \\
-		One                                                & abcdef ghjijklmn                           & 123.456778                                \\
-		One                                                & abcdef ghjijklmn                           & 123.456778                                \\
-		One                                                & abcdef ghjijklmn                           & 123.456778
+    a \\
+    a \\
+    a \\
+    a \\
+    a \\
+    a \\
+    a \\
+    a \\
+    a \\
+    a \\
+    a \\
+    a \\
+    a \\
+    a \\
+    a \\
+    a \\
+    a \\
+    a \\
+    a \\
+    a \\
+    a \\
+    a \\
+    a \\
+    a \\
+    a \\
+    a \\
+    a \\
+    a \\
+    a \\
+    a \\
+    a \\
+    a \\
+    a \\
+    a \\
+    a \\
+    a \\
+    a \\
+    a \\
+    a \\
+    a \\
+    a \\
+    a \\
+    a \\
+    a \\
+    a \\
+    a \\
+    a \\
+    a \\
 	\end{longtable}
 \end{center}
 
