@@ -40,6 +40,10 @@
 \newcommand{\cbox}{\fbox{\phantom{\ding{51}}}}
 \newcommand{\cboxtick}{\fbox{\ding{51}}}%
 
+% self-incrementing Test-ID
+\newcounter{tid}
+\newcommand{\tid}{\stepcounter{tid}\thetid}
+
 \begin{document}
 \maketitle
 \newpage
@@ -53,84 +57,148 @@ Suite à l'analyse du code, 3 des opérations de l'annexe du guide étudiant ont
 
 
 \begin{center}
-	\begin{longtable}{p{4cm}p{4cm}p{4cm}l}
-		\caption{Plan de vérification} \label{tab:verif} \\
+	\begin{longtable}{lp{5cm}p{4cm}p{4cm}l}
+		% Headers & Footers {{{
+		\caption{Plan de vérification} \label{tab:verif}
+		\\
 
 		\toprule
-		\multicolumn{2}{l}{Objectif Ciblé} &
-		\multicolumn{2}{l}{Test du beq}                  \\
+		\multicolumn{3}{l}{Objectif Ciblé} &
+		\multicolumn{2}{l}{Test du beq}
+		\\
 
 		\midrule
+		\#                                 &
 		\bfseries Test                     &
 		\bfseries Action                   &
 		\bfseries Résultat Attendu         &
-		\cboxtick                                        \\
+		\cboxtick
+		\\
+
 		\midrule
 		\endfirsthead
 
-		\multicolumn{4}{c}%
-		{{\itshape \tablename\ \thetable{} -- Continué de la page précédente\ldots}} \\
+		\multicolumn{5}{c}%
+		{{\itshape \tablename\ \thetable{} -- Continué de la page précédente\ldots}}
+		\\
+
 		\midrule
-		Test                     &
-		Action                   &
-		Résultat Attendu         &
-		\cboxtick                                        \\
+		\#                                 &
+		Test                               &
+		Action                             &
+		Résultat Attendu                   &
+		\cboxtick
+		\\
+
 		\midrule
 		\endhead
 
-		\midrule \multicolumn{4}{r}{{Continué à la prochaine page}}                                                                                       \\ \midrule
+		\midrule \multicolumn{5}{r}{{Continué à la prochaine page}}
+		\\
+		\midrule
 		\endfoot
 
 		\bottomrule
 		\endlastfoot
-    a \\
-    a \\
-    a \\
-    a \\
-    a \\
-    a \\
-    a \\
-    a \\
-    a \\
-    a \\
-    a \\
-    a \\
-    a \\
-    a \\
-    a \\
-    a \\
-    a \\
-    a \\
-    a \\
-    a \\
-    a \\
-    a \\
-    a \\
-    a \\
-    a \\
-    a \\
-    a \\
-    a \\
-    a \\
-    a \\
-    a \\
-    a \\
-    a \\
-    a \\
-    a \\
-    a \\
-    a \\
-    a \\
-    a \\
-    a \\
-    a \\
-    a \\
-    a \\
-    a \\
-    a \\
-    a \\
-    a \\
-    a \\
+		% }}}
+		% lwv Tests {{{
+		\tid                               & \verb|lwv|:
+		Valeurs positives                  &
+		                                   &
+		                                   &
+		\cbox
+		\\
+
+		\tid                               & \verb|lwv|:
+		Valeurs négatives                  &
+		                                   &
+		                                   &
+		\cbox
+		\\
+
+		\tid                               & \verb|lwv|:
+		Registres supérieurs à 4           &
+		                                   &
+		                                   &
+		\cbox
+		\\ % }}}
+		% swv Tests {{{
+		\tid                               & \verb|swv|:
+		Valeurs positives                  &
+		                                   &
+		                                   &
+		\cbox
+		\\
+
+		\tid                               & \verb|swv|:
+		Valeurs négatives                  &
+		                                   &
+		                                   &
+		\cbox
+		\\
+
+		\tid                               & \verb|swv|:
+		Registres de plus de 4             &
+		                                   &
+		                                   &
+		\cbox
+		\\ % }}}
+		% addv Tests {{{
+		\tid                               & \verb|addv|:
+		Valeurs positives                  &
+		                                   &
+		                                   &
+		\cbox
+		\\
+
+		\tid                               & \verb|addv|:
+		Valeurs négatives                  &
+		                                   &
+		                                   &
+		\cbox
+		\\
+
+		\tid                               & \verb|addv|:
+		Débordement                        &
+		                                   &
+		                                   &
+		\cbox
+		\\
+
+		\tid                               & \verb|addv|:
+		Registres de plus de 4             &
+		                                   &
+		                                   &
+		\cbox
+		\\ % }}}
+		% addv Tests {{{
+		\tid                               & \verb|addv|:
+		Valeurs positives                  &
+		                                   &
+		                                   &
+		\cbox
+		\\
+
+		\tid                               & \verb|addv|:
+		Valeurs négatives                  &
+		                                   &
+		                                   &
+		\cbox
+		\\
+
+		\tid                               & \verb|addv|:
+		Débordement                        &
+		                                   &
+		                                   &
+		\cbox
+		\\
+
+		\tid                               & \verb|addv|:
+		Registres de plus de 4             &
+		                                   &
+		                                   &
+		\cbox
+		\\ % }}}
 	\end{longtable}
 \end{center}
 
