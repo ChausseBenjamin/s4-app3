@@ -44,7 +44,13 @@
 \maketitle
 \newpage
 
-\section{Hihi Haha}
+\section{Introduction}
+Les instructions choisis sont en fonction du fait que l'on veut implémenter des instructions SIMD (ou vectorielles) dans notre architecture MIPS afin d'améliorer
+la vitesse du programme. Ceci fait du sense puisqu'une analyze vite fait du programme initiale fournie démontre la redondance multiple de vecteurs de 4 éléments.
+En utilisant de tel instructions, il ne sera plus nécessaire de faire 2 boucles pour les calculs et qu'une seule vas suffir. À cause de la gestion des opérations en blocs de 4 valeurs de 32 bits, les instructions choisis n'ont pas de sous-ensembles permettent d'autres tailles de vecteurs que 4.
+
+Suite à l'analyse du code, 3 des opérations de l'annexe du guide étudiant ont été identifié comme utile. Soit `lw` (load word vector) qui permet de charger 4 valeurs consécutives de la mémoire vers un vecteur de taille 4, `swv` (store word vector) qui permet de stocker un vecteur de 4 mots consécutifs en mémoire et `addv` (add vectors) qui permet de faire l'addition de chacun des mots des 2 vecteurs ensemble (soit position 0 A avec position 0 B, etc). Ces derniers sont tous des opérations arithmétiques vu dans le code c fournis. Cependant, une quatrième opérations, laquel n'est pas dans l'annexe est nécessaire. C'est `multv`, qui permet la même chose que `addv` mais une multiplication au lieu d'addition. Notez que tous ces instructions ne spécifie pas de signe et donc ils sont signés.
+
 
 \begin{center}
 	\begin{longtable}{p{4cm}p{4cm}p{4cm}l}
