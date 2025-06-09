@@ -9,6 +9,6 @@ du diable...
 
 Votre plan sera évalué sommativement à la validation.
 Remettez votre plan de validation en format PDF avant le mardi 10 Juin 2025, 17h00. Le nom du fichier
-doit suivre le format cip1-cip2.pdf o`u cip1 et cip2 sont les CIP de chaque étudiant de l'équipe. Il ne faut
+doit suivre le format cip1-cip2.pdf où cip1 et cip2 sont les CIP de chaque étudiant de l'équipe. Il ne faut
 pas oublier d'insérer le tiret entre les deux CIP. Le système n'acceptera pas le dépôt si le CIP de l'usager
-effectuant le dépˆot n'est pas indiqué dans le nom du fichier.
+effectuant le dépôt n'est pas indiqué dans le nom du fichier.
