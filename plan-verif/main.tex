@@ -15,12 +15,12 @@
 % \usepackage[toc,page]{appendix}
 \usepackage[dvipsnames]{xcolor}
 
-\title{Rapport d'APP}
+\title{Plan de vérification}
 
-\class{Logique Combinatoire}
-\classnb{GEN420 \& GEN430}
+\class{Architecture des ordinateurs}
+\classnb{GIF310}
 
-\teacher{Marwan Besrour \& Gabriel Bélanger}
+\teacher{Marc-André Tétrault}
 
 \author{
   \addtolength{\tabcolsep}{-0.4em}
@@ -44,16 +44,48 @@
 \newcounter{tid}
 \newcommand{\tid}{\stepcounter{tid}\thetid}
 
+\renewcommand{\frenchtablename}{Tableau}
+
 \begin{document}
 \maketitle
 \newpage
 
 \section{Introduction}
-Les instructions choisis sont en fonction du fait que l'on veut implémenter des instructions SIMD (ou vectorielles) dans notre architecture MIPS afin d'améliorer
+Les instructions choisies sont en fonction du fait que l'on veut implémenter des instructions SIMD (ou vectorielles) dans notre architecture MIPS afin d'améliorer
 la vitesse du programme. Ceci fait du sense puisqu'une analyze vite fait du programme initiale fournie démontre la redondance multiple de vecteurs de 4 éléments.
 En utilisant de tel instructions, il ne sera plus nécessaire de faire 2 boucles pour les calculs et qu'une seule vas suffir. À cause de la gestion des opérations en blocs de 4 valeurs de 32 bits, les instructions choisis n'ont pas de sous-ensembles permettent d'autres tailles de vecteurs que 4.
 
-Suite à l'analyse du code, 3 des opérations de l'annexe du guide étudiant ont été identifié comme utile. Soit `lw` (load word vector) qui permet de charger 4 valeurs consécutives de la mémoire vers un vecteur de taille 4, `swv` (store word vector) qui permet de stocker un vecteur de 4 mots consécutifs en mémoire et `addv` (add vectors) qui permet de faire l'addition de chacun des mots des 2 vecteurs ensemble (soit position 0 A avec position 0 B, etc). Ces derniers sont tous des opérations arithmétiques vu dans le code c fournis. Cependant, une quatrième opérations, laquel n'est pas dans l'annexe est nécessaire. C'est `multv`, qui permet la même chose que `addv` mais une multiplication au lieu d'addition. Notez que tous ces instructions ne spécifie pas de signe et donc ils sont signés.
+Suite à l'analyse du code, 3 des opérations de l'annexe du guide étudiant ont été identifié comme utile. Soit \verb|lw| (load word vector) qui permet de charger 4 valeurs consécutives de la mémoire vers un vecteur de taille 4, \verb|swv| (store word vector) qui permet de stocker un vecteur de 4 mots consécutifs en mémoire et \verb|addv| (add vectors) qui permet de faire l'addition de chacun des mots des 2 vecteurs ensemble (soit position 0 A avec position 0 B, etc). Ces derniers sont tous des opérations arithmétiques vu dans le code \verb|C| fournis. Cependant, une quatrième opérations, laquelle n'est pas dans l'annexe est nécessaire. C'est \verb|multv|, qui permet la même chose que \verb|addv| mais une multiplication au lieu d'addition. Notez que tous ces instructions ne spécifie pas de signe et donc ils sont signés. \\
+
+
+Afin de simplifier la lecture du tableau \ref{tab:verif}, les variables
+suivantes seront utilisés pour représentés des cas de figures fréquents lors
+des tests (tant comme intrant que comme résultat attendu). Celles-ci ne sont
+pas des addresses de registre au sens où \verb|$r1| suit \verb|$r2| mais biens
+des endroits symbolique en mémoire ou l'addresse des vecteurs serait stockés:
+
+\begin{table}[H]
+	\centering
+	\footnotesize
+	\caption{Variable fréquentes lors des tests}
+	\label{tab:vars}
+	\begin{tabular}{@{}cp{5.5cm}l@{}}
+		\toprule
+		\textbf{Variable} & \textbf{Description}                             & \textbf{Valeurs hexadécimales}                  \\
+		\midrule
+		\verb|$r0|        & Vecteur de 0 (4 mots de 32bits)                  & \verb|{0x0000, 0x0000, 0x0000, 0x0000}|         \\
+		\verb|$r1|        & Vecteur de 1                                     & \verb|{0x0001, 0x0001, 0x0001, 0x0001}|         \\
+		\verb|$r2|        & Vecteur de 2                                     & \verb|{0x0002, 0x0002, 0x0002, 0x0002}|         \\
+		\verb|$r4|        & Vecteur de 4                                     & \verb|{0x0004, 0x0004, 0x0004, 0x0004}|         \\
+		\verb|$rM|        & Vecteur de valeurs maximales positives           & \verb|{0x7fff, 0x7fff, 0x7fff, 0x7fff}|         \\
+		\verb|$rN|        & Vecteur de -1 ($2^e$ complément)                 & \verb|{0x1111, 0x1111, 0x1111, 0x1111}|         \\
+		\verb|$rQ|        & Vecteur quelquonque (débordement)                & \verb|{0xfffe, 0xfffe, 0xfffe, 0xfffe}|         \\
+		\verb|$r5|        & Vecteur 5D de 1                                  & \verb|{0x0001, 0x0001, 0x0001, 0x0001, 0x0001}| \\
+		\verb|$rR|        & Endroit hypotétique où un résultat serait stocké &                                                 \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
 
 
 \begin{center}
@@ -64,14 +96,14 @@ Suite à l'analyse du code, 3 des opérations de l'annexe du guide étudiant ont
 
 		\toprule
 		\multicolumn{3}{l}{Objectif Ciblé} &
-		\multicolumn{2}{l}{Test du beq}
+		\multicolumn{2}{l}{Test des nouvelles opérations}
 		\\
 
 		\midrule
 		\#                                 &
 		\bfseries Test                     &
 		\bfseries Action                   &
-		\bfseries Résultat Attendu         &
+		\bfseries Résultat Attendu\footnotemark[1]         &
 		\cboxtick
 		\\
 
@@ -86,7 +118,7 @@ Suite à l'analyse du code, 3 des opérations de l'annexe du guide étudiant ont
 		\#                                 &
 		Test                               &
 		Action                             &
-		Résultat Attendu                   &
+		Résultat Attendu\footnotemark[1]   &
 		\cboxtick
 		\\
 
@@ -104,102 +136,91 @@ Suite à l'analyse du code, 3 des opérations de l'annexe du guide étudiant ont
 		% lwv Tests {{{
 		\tid                               & \verb|lwv|:
 		Valeurs positives                  &
-		                                   &
-		                                   &
-		\cbox
-		\\
-
-		\tid                               & \verb|lwv|:
-		Valeurs négatives                  &
-		                                   &
-		                                   &
+		\verb|lwv $rR, $r1|                &
+		\verb|$rR| $\thicksim$ \verb|$r1|  &
 		\cbox
 		\\
 
 		\tid                               & \verb|lwv|:
 		Registres supérieurs à 4           &
-		                                   &
-		                                   &
+		\verb|lwv $rR, $r5|                &
+		\verb|$rR| $\thicksim$ \verb|$r1|  &
 		\cbox
 		\\ % }}}
 		% swv Tests {{{
 		\tid                               & \verb|swv|:
 		Valeurs positives                  &
-		                                   &
-		                                   &
-		\cbox
-		\\
-
-		\tid                               & \verb|swv|:
-		Valeurs négatives                  &
-		                                   &
-		                                   &
+		\verb|swv $rR, $r1|                &
+		\verb|$rR| $\thicksim$ \verb|$r1|  &
 		\cbox
 		\\
 
 		\tid                               & \verb|swv|:
 		Registres de plus de 4             &
-		                                   &
-		                                   &
+		\verb|swv $rR, $r5|                &
+		\verb|$rR| $\thicksim$ \verb|$r1|  &
 		\cbox
 		\\ % }}}
 		% addv Tests {{{
 		\tid                               & \verb|addv|:
 		Valeurs positives                  &
-		                                   &
-		                                   &
+		\verb|addv $rR, $r1, $r1|          &
+		\verb|$rR| $\thicksim$ \verb|$r2|  &
 		\cbox
 		\\
 
 		\tid                               & \verb|addv|:
 		Valeurs négatives                  &
-		                                   &
-		                                   &
+		\verb|addv $rR, $r1, $rN|          &
+		\verb|$rR| $\thicksim$ \verb|$r0|  &
 		\cbox
 		\\
 
 		\tid                               & \verb|addv|:
 		Débordement                        &
-		                                   &
-		                                   &
+		\verb|addv $rR, $r1, $rM|          &
+		\verb|$rR| $\thicksim$ \verb|$r0|  &
 		\cbox
 		\\
 
 		\tid                               & \verb|addv|:
-		Registres de plus de 4             &
-		                                   &
-		                                   &
+		Registres de plus de 4  &
+		\verb|addv $rR, $r1, $r5|          &
+		\verb|$rR| $\thicksim$ \verb|$r2|\footnotemark[2] &
 		\cbox
 		\\ % }}}
-		% addv Tests {{{
-		\tid                               & \verb|addv|:
+		% multv Tests {{{
+		\tid                               & \verb|multv|:
 		Valeurs positives                  &
-		                                   &
-		                                   &
+		\verb|multv $rR, $r2, $r2 |        &
+		\verb|$rR| $\thicksim$ \verb|$r4|  &
 		\cbox
 		\\
 
-		\tid                               & \verb|addv|:
+		\tid                               & \verb|multv|:
 		Valeurs négatives                  &
-		                                   &
-		                                   &
+		\verb|multv $rR, $r1, $rN|         &
+		\verb|$rR| $\thicksim$ \verb|$rN|  &
 		\cbox
 		\\
 
-		\tid                               & \verb|addv|:
+		\tid                               & \verb|multv|:
 		Débordement                        &
-		                                   &
-		                                   &
+		\verb|multv $rR, $r2, $rM|         &
+		\verb|$rR| $\thicksim$ \verb|$rQ|  &
 		\cbox
 		\\
 
-		\tid                               & \verb|addv|:
+		\tid                               & \verb|multv|:
 		Registres de plus de 4             &
-		                                   &
-		                                   &
+		\verb|multv $rR, $r1, $r5|         &
+		\verb|$rR| $\thicksim$ \verb|$r1|\footnotemark[2]  &
 		\cbox
 		\\ % }}}
 	\end{longtable}
 \end{center}
+
+\footnotetext[1]{Le symbole $\thicksim$ est utilisé ici pour désigner que le vecteur de gauche serait équivalent à celui de droite}
+\footnotetext[2]{Même si l'on pointe vers un vecteurs de 5 mots, seul les 4 premiers mots sont lus}
 
 \end{document}
