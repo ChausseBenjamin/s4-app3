@@ -50,11 +50,11 @@ comma: 	   .asciiz ", "
 .eqv NOMBRE_ETAT_FOR_LOOP_MAX 16 	# Quand on pointe dans un vecteur, on se deplace de 4. Cet constante est essentiellement (NOMBRE_ETAT * 4)
 .eqv LONGUEUR_MESSAGE 12       		# Meme but que `#define L 12`. (C'est important de bien nommer nos variables au lieu d'utiliser une lettre de l'alphabet.)
 
-.eqv CalculSurvivants_METRIQUE_PARAM_REGISTER $a3
+.eqv CalculSurvivants_METRIQUE_PARAM_REGISTER $a0
 .eqv CalculSurvivants_SINPUT_PARAM_REGISTER $a1
 .eqv CalculSurvivants_SOUTPUT_PARAM_REGISTER $a2
 
-.eqv acs_METRIQUE_PARAM_REGISTER $a3
+.eqv acs_METRIQUE_PARAM_REGISTER $a0
 .eqv acs_SINPUT_PARAM_REGISTER $a1
 .eqv acs_SOUTPUT_PARAM_REGISTER $a2
 
@@ -131,6 +131,10 @@ main:
     	la $a0, newline
     	syscall
 	#----------------------------------------------------------------------
+	
+	la CalculSurvivants_METRIQUE_PARAM_REGISTER, metrique_1
+	la CalculSurvivants_SINPUT_PARAM_REGISTER, si_1
+	la CalculSurvivants_SOUTPUT_PARAM_REGISTER, so
 	
 	jal CalculSurvivants
 	
@@ -231,6 +235,10 @@ main:
     	syscall
 	#----------------------------------------------------------------------
 	
+	la CalculSurvivants_METRIQUE_PARAM_REGISTER, metrique_2
+	la CalculSurvivants_SINPUT_PARAM_REGISTER, si_2
+	la CalculSurvivants_SOUTPUT_PARAM_REGISTER, so
+	
 	jal CalculSurvivants
 	
 	la CalculSurvivants_METRIQUE_PARAM_REGISTER, metrique_2
@@ -329,6 +337,10 @@ main:
     	la $a0, newline
     	syscall
 	#----------------------------------------------------------------------
+	
+	la CalculSurvivants_METRIQUE_PARAM_REGISTER, metrique_3
+	la CalculSurvivants_SINPUT_PARAM_REGISTER, si_3
+	la CalculSurvivants_SOUTPUT_PARAM_REGISTER, so
 	
 	jal CalculSurvivants
 	
@@ -429,6 +441,10 @@ main:
     	syscall
 	#----------------------------------------------------------------------
 	
+	la CalculSurvivants_METRIQUE_PARAM_REGISTER, metrique_4
+	la CalculSurvivants_SINPUT_PARAM_REGISTER, si_4
+	la CalculSurvivants_SOUTPUT_PARAM_REGISTER, so
+	
 	jal CalculSurvivants
 	
 	la CalculSurvivants_METRIQUE_PARAM_REGISTER, metrique_4
@@ -527,6 +543,10 @@ main:
     	la $a0, newline
     	syscall
 	#----------------------------------------------------------------------
+
+	la CalculSurvivants_METRIQUE_PARAM_REGISTER, metrique_5
+	la CalculSurvivants_SINPUT_PARAM_REGISTER, si_5
+	la CalculSurvivants_SOUTPUT_PARAM_REGISTER, so
 	
 	jal CalculSurvivants
 	
@@ -627,6 +647,10 @@ main:
     	syscall
 	#----------------------------------------------------------------------
 	
+	la CalculSurvivants_METRIQUE_PARAM_REGISTER, metrique_6
+	la CalculSurvivants_SINPUT_PARAM_REGISTER, si_6
+	la CalculSurvivants_SOUTPUT_PARAM_REGISTER, so
+	
 	jal CalculSurvivants
 	
 	la CalculSurvivants_METRIQUE_PARAM_REGISTER, metrique_6
@@ -681,7 +705,7 @@ main:
 	syscall
 		
 # Parametres:
-#	- $a3 = met
+#	- $a0 = met
 #	- $a1 = sinput
 #	- $a2 = soutput
 # Les memes registres sont garder car ils sont transferer dans des registres temporaires t0 a t3 lesquels ne sont pas utiliser par acs.
@@ -760,7 +784,7 @@ CalculSurvivants:
 	
 
 # Parametres:
-#	- $a3 = met 	(vecteur)
+#	- $a0 = met 	(vecteur)
 #	- $a1 = sinput	(vecteur
 #	- $a2 = soutput
 # En accordance avec le code d'origine, cet fonction fait "N" iterations (nombre d'etats)
