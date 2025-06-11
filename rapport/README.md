@@ -13,8 +13,8 @@ remis par binôme (équipe de 2) et contient deux parties:
 ### Document manuscrit
 
 Le rapport manuscrit doit répondre aux questions posées par l'énoncé de la
-problématique: relire la pro- blématique. Plusieurs indications et indices y
-sont écrits et beaucoup moins mystérieux à ce stade qu'au premier tutorat. En
+problématique: relire la problématique. Plusieurs indications et indices y sont
+écrits et beaucoup moins mystérieux à ce stade qu'au premier tutorat. En
 complément au texte de la problématique, les quelques précisions ci-bas.
 
 Chacun des éléments doit être accompagné d'une description adéquate pour en
