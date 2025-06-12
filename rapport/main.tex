@@ -40,29 +40,99 @@
 \newpage
 
 \section{Performances d'organisations}
+Une analyze des différentes organisations proposées est effectuée dans cette section. Cette analyze donne une vision des gains de performances qu'un changement de la méthode
+d'exécution des instructions amènerait.
+
+\subsection{Analyze du code de référence}
+Le code de référence contient des pseudo-instructions assembleurs que MARS transforme en instructions standard. Premièrement, les instructions "li" sont des pseudo-instructions.
+Cependant, ces dernières sont traduite en une seule instruction et donc n'ont pas d'impacte sur le nombre d'instructions totaux et le temps d'exécution.
+Malheureusement, les 4 instructions "sw" et "lw" dans \verb|boucle_interne| sont des pseudo-instructions puisqu'ils index sur des tableaux directement. Ceci n'est pas possible en
+MIPS. MARS remplace ces pseudo-instructions par 3 différentes instructions. En premier il charge l'addresse du tableau dans un registre, ensuite il décale l'addresse pour qu'elle
+pointe sur la bonne index du tableau et finalement un vrai "lw" ou "sw" est effectué à l'index 0 de l'addresse décalé. Ceci veut dire que la \verb|boucle_interne| a 6 instructions
+supplémentaire.
 
 \subsection{Organisation unicycle}
+%\todo{documenter sous forme algébrique l'organisation unicycle}
+%\todo{Calculer en cycles d'horloge l'organisation unicycle}
+Le calcul du temps d'exécution en cycle d'horloge pour une organisation unicycle est aussi simple que de compter le nombre d'instructions exécuté. Aucune bulles ou vidanges est 
+nécessaire. 
 
-\todo{documenter sous forme algébrique l'organisation unicycle}
+La boucle interne a un total de $15$ instructions qui une fois traduite donne un total de $23$. Ces 23 instructions sont exécuté $4$ fois. Au 5e appel, une seule instruction est
+exécuté, soit la comparaison \verb|beq|, qui branche dans \verb|finBoucleInterne| qui est $2$ instructions. La formule pour la boucle interne est donc:
+$$
+T = 4\times(23)+(2+1)
+$$
 
-\todo{Calculer en cycles d'horloge l'organisation unicycle}
+la boucle externe est aussi exécuté $4$ fois. Elle contient $2$ instructions puis une exécution complète de la boucle interne. À la 5e exécution, une seule instruction est exécuté
+pour sortie de la boucle et appeller \verb|finBoucleExterne|. Cette dernière est $2$ instructions. La formule pour la boucle externe est donc la suivante:
+$$
+T = 4\times(2+4\times(23)+(2+1)) + (2+1)
+$$
+Reste juste le \verb|main| à inclure, qui est $2$ instructions. Le temps d'exécution en coup d'horloge est donc:
+$$
+T = 2+ 4\times(2+4\times(23)+(2+1)) + (2+1)
+$$
+$$
+T = 4\times(4\times(23)+5) + 5
+$$
+$$
+T = 4\times(97) + 5
+$$
+$$
+T = 393
+$$
 
-\subsection{Organisation en pipeline}
+\subsection{Organisation en pipeline avec branchement au 4e étage}
+%\todo{identifier et calcuer toutes les pénalités causées par deux organisation avec branchement au 4e étage en pipeline}
+%\todo{identifier et calcuer toutes les pénalités causées par deux organisation avec branchement au 2e étage}
+L'analyze de l'organisation en pipeline avec branchement au 4e étage est fait sans unité d'avancement ni de détection des aléas de données. Ceci dit, l'ajout de bulles est
+nécessaire pour évité que des instructions utilisant les même registres rentre en concurance. Si ce n'est pas fait, une instructions pourrait additionner dans un certain registre, 
+l'instruction suivante l'utiliserait mais n'aurait pas la bonne valeur car l'instruction précédente n'a pas terminé d'exécuté. Après une analyze de l'organisation, une bulle de $2$
+instructions minimum est nécessaire entre instructions concurente. Vu que les branchements sont au 4e étage, une bulle de $3$ \verb|nop| est nécessaire après chaque appel
+d'instructions de format J pour évité que les instructions suivant les branchements soit charger dans le pipeline lorsqu'il ne devrait pas.
 
-\todo{identifier et calcuer toutes les pénalités causées par deux organisation
- avec branchement au 4e étage
-en pipeline}
+Finalement, il faut prendre en compte la traduction des pseudo-instructions. En effet, ils sont traduits en instructions qui utilise des registres concurents! l'ajout de 2 bulles
+de $2$ instructions par pseudo-instructions est donc nécessaire. La première entre le chargement de l'addresse du tableau et son déplacement, la deuxième entre le déplacement de
+l'addresse et l'écriture ou la lecture à cet endroit.
 
-\todo{identifier et calcuer toutes les pénalités causées par deux organisation
-avec branchement au 2e étage}
+Après analyze du program de référence, le \verb|main| devient 4 instructions, la boucle interne à un nouveau total de $63$ instructions, la boucle externe en a $8$ au lieu de $2$,
+le main en a $4$ au lieu de $2$, la fin de boucle externe en a $8$ au lieu de $2$ et la fin de boucle interne en a $5$ au lieu de $2$.
+La nouvelle formule est donc:
+$$
+T = 4+ 4\times(7+4\times(63)+(5+1)) + (8+1)
+$$
+$$
+T = 1073
+$$
+
+\subsection{Organisation en pipeline avec branchement au 2e étage}
+Cette organisation change l'emplacement des branchements et les montent de $2$ étages. Ils sont donc effectué plus tôt dans la chaine d'évènement des pipelines. Ça à pour effet que
+$2$ des $3$ \verb|nop| nécessaire pour les instructions de format J peuvent être enlevé. Par la suite, cette organisation, pour notre cas d'étude, implémente une unité d'avancement.
+Ceci permet aux résultats des instructions d'être disponible plus tôt et de ne pas devoir attendre leurs mise en mémoire, réduisant la taille minimum des bulles de prévention d'aléas
+de données. De plus, une unité de détection des aléas est présente. Cette dernière est plutôt complexe mais enlève complètement le nécessaire de rajouter des \verb|nop| manuellement
+pour créé des bulles. On peut donc enlever tout les \verb|nop|. On revient donc au même nombre d'instruction que l'organisation unicycle.
+
+\todo{les enlève t'ont tous vraiment? Ne doit t'ont pas prendre en compte un temps supplémentaire induit par le module de détection d'aléas?}
+
+La formule algébrique est donc identique à l'organisation unicycle. Le program à donc besoin de $393$ coup d'horloge.
 
 \subsection{Temps d'exécution}
+%\todo{calculez le temps d'exécution en vous basant sur une vitesses d'opération de 25 ns pour l'organisation unicycle}
+%\todo{calculez le temps d'exécution en vous basant sur une vitesses d'opération de 10 ns pour l'organisation pipeline}
+Pour notre cas d'étude, l'organisation unicycle à un temps de $25ns$ par instructions tandis que les organisations en pipeline prennent $10ns$ par coup d'horloge.
+La formule trivial suivante indique que le temps d'exécution est le total des instructions multiplié par le temps d'un coup d'horloge.
+$$
+\text{T}_{\text{sys}} = \text{instructions}\times\text{T}_{\text{CPU}}
+$$
+Cette formule a été appliqué aux trois organisations. L'unicycle prend $9825$ nanosecondes, le pipeline avec branchement au 4e étage prend $$10730$$ nanosecondes et l'organisation en pipeline
+avec branchement au 2e étage prent $3930$ nanosecondes.
 
-\todo{calculez le temps d'exécution en vous basant sur une vitesses
-d'opération de 25 ns pour l'organisation unicycle}
+\subsection{Analyze des résultats}
+L'organisation en pipeline avec branchement au 2e étage est $2.5\times$ plus performant que l'organisation unicycle avec l'avantage de n'avoir aucune différence dans les codes assembleurs.
+Cependant, la modification de l'organisation pour une méthode pipeline peut être couteuse en developpement et nécessite un changement matérielle. Les gains ne sont pas à négligé cependant puisqu'une
+amélioration de $2.5\times$ atteint presque la demande d'amélioration de $3\times$. Cependant, cette analyse à été fait pour le code de référence de calcul matricielle et non l'algorithme de Viterbis
+utilisé par l'organisation dans l'énoncé de la problématique.
 
-\todo{calculez le temps d'exécution en vous basant sur une vitesses
-d'opération de 10 ns pour l'organisation pipeline}
 
 \section{Performances SIMD}
 
