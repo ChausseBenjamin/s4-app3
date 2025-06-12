@@ -26,17 +26,19 @@ main:
     # pas de fonctions, donc pas de protection des registres
     li $s0, 0               # j = 0
     li $s2, N
-    #nop
+    nop
+    nop
 
 boucle_externe:
     beq  $s0, $s2, finBoucleExterne
-    #nop
+    nop
     li   $s1, 0             # i = 0
-    #nop
+    nop
+    nop
 
     boucle_interne:
         beq $s1, $s2, finBoucleInterne # for i < 4
-        #nop
+        nop
         
         # obtenir x[j]
         sll $t4, $s0, 2          # décalage pour adresse en mots
@@ -73,17 +75,22 @@ boucle_externe:
         addi $s1, $s1, 1    # i++
         #nop                 # un seul nop car le jump = 2e operation entre le beq qui lui est concurrant
         j boucle_interne    #
-        #nop
+        nop
     
 finBoucleInterne:
     addi $s0, $s0, 1        # j++
     j boucle_externe
-    #nop
+    nop
     
 finBoucleExterne:
     addi $v0, $zero, 10     # fin du programme
-    #nop
+    nop
+    nop
     syscall
+    nop
+    nop
+    nop
+    nop
     
 
 

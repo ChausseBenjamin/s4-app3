@@ -108,13 +108,21 @@ $$
 \subsection{Organisation en pipeline avec branchement au 2e étage}
 Cette organisation change l'emplacement des branchements et les montent de $2$ étages. Ils sont donc effectué plus tôt dans la chaine d'évènement des pipelines. Ça à pour effet que
 $2$ des $3$ \verb|nop| nécessaire pour les instructions de format J peuvent être enlevé. Par la suite, cette organisation, pour notre cas d'étude, implémente une unité d'avancement.
-Ceci permet aux résultats des instructions d'être disponible plus tôt et de ne pas devoir attendre leurs mise en mémoire, réduisant la taille minimum des bulles de prévention d'aléas
-de données. De plus, une unité de détection des aléas est présente. Cette dernière est plutôt complexe mais enlève complètement le nécessaire de rajouter des \verb|nop| manuellement
-pour créé des bulles. On peut donc enlever tout les \verb|nop|. On revient donc au même nombre d'instruction que l'organisation unicycle.
+Ceci permet aux résultats des instructions d'être disponible plus tôt et de ne pas devoir attendre leurs mise en mémoire (pour les instructions qui ne sont pas des branchements), 
+éliminant les bulles entre les accès des instructions concurentes. Cependant, les banchements sont exécuté plus haut que l'emplacement de retour de l'unité d'avancement. Ça veut dire
+que la bulle reste nécessaire lorsque les instructions concurentes sont avec des instructions de branchements!
+De plus, une unité de détection des aléas est présente. Cette dernière est plutôt complexe mais enlève 
+complètement le nécessaire de rajouter des \verb|nop| manuellement pour créé des bulles. Malheureusement, on doit tout de même calculer les délais ajoutés tel que mentionné plus haut.
+Le \verb|syscall| a encore besoion de ces $4$ instructions le précédent et d'une bulle de $2$ pour le registre \verb|$v0| avant son appel.
 
-\todo{les enlève t'ont tous vraiment? Ne doit t'ont pas prendre en compte un temps supplémentaire induit par le module de détection d'aléas?}
-
-La formule algébrique est donc identique à l'organisation unicycle. Le program à donc besoin de $393$ coup d'horloge.
+Ceci veut dire que, le \verb|main| à encore $4$ instructions, la boucle interne en a maintenant $25$, la boucle externe en a maintenant $5$, la fin de boucle externe en a encore $8$
+et la fin de boucle interne en a maintenant $3$. La formule algébrique est donc la suivante:
+$$
+T = 4+ 4\times(5+4\times(25)+(3+1)) + (8+1)
+$$
+$$
+T = 449
+$$
 
 \subsection{Temps d'exécution}
 %\todo{calculez le temps d'exécution en vous basant sur une vitesses d'opération de 25 ns pour l'organisation unicycle}
@@ -125,12 +133,12 @@ $$
 \text{T}_{\text{sys}} = \text{instructions}\times\text{T}_{\text{CPU}}
 $$
 Cette formule a été appliqué aux trois organisations. L'unicycle prend $9825$ nanosecondes, le pipeline avec branchement au 4e étage prend $$10730$$ nanosecondes et l'organisation en pipeline
-avec branchement au 2e étage prent $3930$ nanosecondes.
+avec branchement au 2e étage prent $4490$ nanosecondes.
 
 \subsection{Analyze des résultats}
-L'organisation en pipeline avec branchement au 2e étage est $2.5\times$ plus performant que l'organisation unicycle avec l'avantage de n'avoir aucune différence dans les codes assembleurs.
+L'organisation en pipeline avec branchement au 2e étage est $2.2\times$ plus performant que l'organisation unicycle avec l'avantage de n'avoir aucune différence dans les codes assembleurs.
 Cependant, la modification de l'organisation pour une méthode pipeline peut être couteuse en developpement et nécessite un changement matérielle. Les gains ne sont pas à négligé cependant puisqu'une
-amélioration de $2.5\times$ atteint presque la demande d'amélioration de $3\times$. Cependant, cette analyse à été fait pour le code de référence de calcul matricielle et non l'algorithme de Viterbis
+amélioration de $2.2\times$ atteint presque la demande d'amélioration de $3\times$. Cependant, cette analyse à été fait pour le code de référence de calcul matricielle et non l'algorithme de Viterbis
 utilisé par l'organisation dans l'énoncé de la problématique.
 
 
