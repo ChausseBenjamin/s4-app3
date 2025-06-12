@@ -116,13 +116,22 @@ pour créé des bulles. On peut donc enlever tout les \verb|nop|. On revient don
 
 La formule algébrique est donc identique à l'organisation unicycle. Le program à donc besoin de $393$ coup d'horloge.
 
-
 \subsection{Temps d'exécution}
 %\todo{calculez le temps d'exécution en vous basant sur une vitesses d'opération de 25 ns pour l'organisation unicycle}
 %\todo{calculez le temps d'exécution en vous basant sur une vitesses d'opération de 10 ns pour l'organisation pipeline}
+Pour notre cas d'étude, l'organisation unicycle à un temps de $25ns$ par instructions tandis que les organisations en pipeline prennent $10ns$ par coup d'horloge.
+La formule trivial suivante indique que le temps d'exécution est le total des instructions multiplié par le temps d'un coup d'horloge.
+$$
+\text{T}_{\text{sys}} = \text{instructions}\times\text{T}_{\text{CPU}}
+$$
+Cette formule a été appliqué aux trois organisations. L'unicycle prend $9825$ nanosecondes, le pipeline avec branchement au 4e étage prend $$10730$$ nanosecondes et l'organisation en pipeline
+avec branchement au 2e étage prent $3930$ nanosecondes.
 
-
-
+\subsection{Analyze des résultats}
+L'organisation en pipeline avec branchement au 2e étage est $2.5\times$ plus performant que l'organisation unicycle avec l'avantage de n'avoir aucune différence dans les codes assembleurs.
+Cependant, la modification de l'organisation pour une méthode pipeline peut être couteuse en developpement et nécessite un changement matérielle. Les gains ne sont pas à négligé cependant puisqu'une
+amélioration de $2.5\times$ atteint presque la demande d'amélioration de $3\times$. Cependant, cette analyse à été fait pour le code de référence de calcul matricielle et non l'algorithme de Viterbis
+utilisé par l'organisation dans l'énoncé de la problématique.
 
 
 \section{Performances SIMD}
