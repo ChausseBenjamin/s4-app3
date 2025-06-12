@@ -158,6 +158,25 @@ de la problématique}
 \section{Performances des mémoires sur processeur unicycle}
 \subsection{Performances de la mémoire de données}
 \subsubsection{Cas de la DRAM de la problématique}
+La DRAM de base à une pénalité de 10 coups d'horloge par accès. Chaque accès fournis 2 mots séquentielles. De base, aucune cache de donnée est inclus. Donc chaque accès aux données
+nécessite 10 coups d'horloge. Le mode de lecture "2-word burst" donne aucun avantage puisque les données ne sont pas sauvegarder dans une cache. Ça veut donc dire que un des deux
+mots chargé n'est pas utilisé et un autre accès à la DRAM est nécessaire plutard pour allé chercher le deuxième mot! Cependant, si des instructions SIMD sont utilisés alors ce mode
+de lecture vient sauver du temps lors de chargement de vecteurs. Charger Un vecteur de $4$ prendrait uniquement $20$ coup de clock plutôt que $40$ sans ajout d'instructions SIMD.
+
+Le calcul du temps d'accès pour cette implémentation de mémoire est très simple. Chaque appel de \verb|sw| et \verb|lw| causent les délais d'accès. Les instructions immédiate en
+cause aucun puisque les données sont dans l'instruction directe. Une fois que les données sont dans les registres, le coup d'accès est nulle.
+
+Le programme matricielle de référence fait $4$ appel à ce genre d'instructions à l'intérieur de la boucle interne. La formule mathématique des pénalité est donc simplement:
+$$
+\text{T} = 10\times4\times(4\times4)
+$$
+$$
+\text{T} = 10\times4\times(4\times4)
+$$
+$$
+T=640
+$$
+Si on rajoute les instructions de l'organisation unicycle, on obtient un total de $1033$ coup d'horloge, sans compté les pénalité de mémoire d'instructions!
 
 \subsubsection{Cas avec une cache attaché}
 
