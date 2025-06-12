@@ -52,6 +52,8 @@ pointe sur la bonne index du tableau et finalement un vrai "lw" ou "sw" est effe
 supplémentaire.
 
 \subsection{Organisation unicycle}
+%\todo{documenter sous forme algébrique l'organisation unicycle}
+%\todo{Calculer en cycles d'horloge l'organisation unicycle}
 Le calcul du temps d'exécution en cycle d'horloge pour une organisation unicycle est aussi simple que de compter le nombre d'instructions exécuté. Aucune bulles ou vidanges est 
 nécessaire. 
 
@@ -80,13 +82,29 @@ $$
 T = 393
 $$
 
-
-%\todo{documenter sous forme algébrique l'organisation unicycle}
-%\todo{Calculer en cycles d'horloge l'organisation unicycle}
-
-\subsection{Organisation en pipeline}
+\subsection{Organisation en pipeline avec branchement au 4e étage}
 %\todo{identifier et calcuer toutes les pénalités causées par deux organisation avec branchement au 4e étage en pipeline}
 %\todo{identifier et calcuer toutes les pénalités causées par deux organisation avec branchement au 2e étage}
+L'analyze de l'organisation en pipeline avec branchement au 4e étage est fait sans unité d'avancement ni de détection des aléas de données. Ceci dit, l'ajout de bulles est
+nécessaire pour évité que des instructions utilisant les même registres rentre en concurance. Si ce n'est pas fait, une instructions pourrait additionner dans un certain registre, 
+l'instruction suivante l'utiliserait mais n'aurait pas la bonne valeur car l'instruction précédente n'a pas terminé d'exécuté. Après une analyze de l'organisation, une bulle de $2$
+instructions minimum est nécessaire entre instructions concurente. Vu que les branchements sont au 4e étage, une bulle de $3$ \verb|nop| est nécessaire après chaque appel
+d'instructions de format J pour évité que les instructions suivant les branchements soit charger dans le pipeline lorsqu'il ne devrait pas.
+
+Finalement, il faut prendre en compte la traduction des pseudo-instructions. En effet, ils sont traduits en instructions qui utilise des registres concurents! l'ajout de 2 bulles
+de $2$ instructions par pseudo-instructions est donc nécessaire. La première entre le chargement de l'addresse du tableau et son déplacement, la deuxième entre le déplacement de
+l'addresse et l'écriture ou la lecture à cet endroit.
+
+Après analyze du program de référence, le \verb|main| devient 4 instructions, la boucle interne à un nouveau total de $63$ instructions, la boucle externe en a $8$ au lieu de $2$,
+le main en a $4$ au lieu de $2$, la fin de boucle externe en a $8$ au lieu de $2$ et la fin de boucle interne en a $5$ au lieu de $2$.
+La nouvelle formule est donc:
+$$
+T = 4+ 4\times(7+4\times(63)+(5+1)) + (8+1)
+$$
+$$
+T = 1073
+$$
+
 
 \subsection{Temps d'exécution}
 %\todo{calculez le temps d'exécution en vous basant sur une vitesses d'opération de 25 ns pour l'organisation unicycle}
