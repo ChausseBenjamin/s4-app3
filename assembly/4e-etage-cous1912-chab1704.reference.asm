@@ -46,14 +46,14 @@ boucle_externe:
         
         # obtenir x[j]
         sll $t4, $s0, 2          # décalage pour adresse en mots
-        nop
-        nop
+        #nop
+        #nop
         lw  $t1, vec_entree($t4) # lecture de x[j]
         
         # obtenir y[i]
         sll $t5, $s1, 2          # décalage pour adresse en mots
-        nop
-        nop
+        #nop
+        #nop
         lw  $t0, vec_sortie($t5) # lecture de y[i]
         
         # Lecture de A[i][j]
@@ -65,8 +65,8 @@ boucle_externe:
         nop
         nop
         sll $t4, $t4, 2     # décalage [i*4+j] (adresse en mots)
-        nop
-        nop
+        #nop
+        #nop
         lw  $t2, mat_A($t4) # lecture de A[i][j]
         nop
         nop
@@ -79,8 +79,8 @@ boucle_externe:
         nop
 
         add $t0, $t0, $t1   # y[i] = y[i] + A[i][j] * x[j]
-        nop
-        nop
+        #nop
+        #nop
         
         sw $t0, vec_sortie($t5) # écriture de y[i]
         
