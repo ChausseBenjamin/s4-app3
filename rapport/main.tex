@@ -93,16 +93,17 @@ d'instructions de format J pour évité que les instructions suivant les branche
 
 Finalement, il faut prendre en compte la traduction des pseudo-instructions. En effet, ils sont traduits en instructions qui utilise des registres concurents! l'ajout de 2 bulles
 de $2$ instructions par pseudo-instructions est donc nécessaire. La première entre le chargement de l'addresse du tableau et son déplacement, la deuxième entre le déplacement de
-l'addresse et l'écriture ou la lecture à cet endroit.
+l'addresse et l'écriture ou la lecture à cet endroit. Cependant, les bulles ajouter avant l'appel des pseudo-instructions ne sont donc pas nécessaire puisque le registre n'est
+qu'utilisé que 2 instructions plus loin. Ceci réduit de 8 \verb|nop| le total de la boucle interne.
 
-Après analyze du program de référence, le \verb|main| devient 4 instructions, la boucle interne à un nouveau total de $63$ instructions, la boucle externe en a $8$ au lieu de $2$,
+Après analyze du program de référence, le \verb|main| devient 4 instructions, la boucle interne à un nouveau total de $55$ instructions, la boucle externe en a $8$ au lieu de $2$,
 le main en a $4$ au lieu de $2$, la fin de boucle externe en a $8$ au lieu de $2$ et la fin de boucle interne en a $5$ au lieu de $2$.
 La nouvelle formule est donc:
 $$
-T = 4+ 4\times(7+4\times(63)+(5+1)) + (8+1)
+T = 4+ 4\times(7+4\times(55)+(5+1)) + (8+1)
 $$
 $$
-T = 1073
+T = 945
 $$
 
 \subsection{Organisation en pipeline avec branchement au 2e étage}
@@ -133,7 +134,7 @@ La formule trivial suivante indique que le temps d'exécution est le total des i
 $$
 \text{T}_{\text{sys}} = \text{instructions}\times\text{T}_{\text{CPU}}
 $$
-Cette formule a été appliqué aux trois organisations. L'unicycle prend $9825$ nanosecondes, le pipeline avec branchement au 4e étage prend $$10730$$ nanosecondes et l'organisation en pipeline
+Cette formule a été appliqué aux trois organisations. L'unicycle prend $9825$ nanosecondes, le pipeline avec branchement au 4e étage prend $$9450$$ nanosecondes et l'organisation en pipeline
 avec branchement au 2e étage prent $4490$ nanosecondes.
 
 \subsection{Analyze des résultats}
