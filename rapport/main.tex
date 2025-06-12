@@ -179,6 +179,20 @@ $$
 Si on rajoute les instructions de l'organisation unicycle, on obtient un total de $1033$ coup d'horloge, sans compté les pénalité de mémoire d'instructions!
 
 \subsubsection{Cas avec une cache attaché}
+Afin de réduire le nombre de pénalité engendré par l'accès à la DRAM, l'ajour d'une cache de données est pertinente. Pour ce cas d'étude, il s'agit d'une cache de $256$ blocs avec
+$2$ mots de $32$ bits par block, avec un mode de DRAM "write-through". Dans les caches, les premières accès causent une pénalité de lecture. Les accès suivantes, au mêmes données,
+ne causent pas de pénalité puisque le programme n'a plus besoin d'accèder a la DRAM. Hors, les vecteurs d'entrées et de sorties sont $4$ mots. Sachant que la cache enregistres des 
+données contingu à l'écriture, la lecture initiale des vecteurs causent $2$ pénalités d'accès à la DRAM par vecteur. Pour la matrice, $8$ pénalité auront lieu pour toute la mettre
+dans la cache par groupe de $2$ mots. La cache ayant $256$ blocs, aucun remplacement de blocs auront lieu.
+
+Le calcul reste simple, uniquement les pénalité d'accès mentionné plus haut ont besoin d'être calculer puisque n'importe quel autre lecture ou écriture n'a plus besoin d'accèder à
+la DRAM. Voici donc la formule:
+$$
+\text{T} = 10\times(2+2+8)
+$$
+$$
+\text{T} = 120
+$$
 
 \subsection{Performances incluant les instructions}
 \subsubsection{Cas de la DRAM de la problématique}
