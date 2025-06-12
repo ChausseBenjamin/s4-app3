@@ -113,7 +113,8 @@ Ceci permet aux résultats des instructions d'être disponible plus tôt et de n
 que la bulle reste nécessaire lorsque les instructions concurentes sont avec des instructions de branchements!
 De plus, une unité de détection des aléas est présente. Cette dernière est plutôt complexe mais enlève 
 complètement le nécessaire de rajouter des \verb|nop| manuellement pour créé des bulles. Malheureusement, on doit tout de même calculer les délais ajoutés tel que mentionné plus haut.
-Le \verb|syscall| a encore besoion de ces $4$ instructions le précédent et d'une bulle de $2$ pour le registre \verb|$v0| avant son appel.
+Le \verb|syscall| a encore besoion de ces $4$ instructions le précédent et d'une bulle de $2$ pour le registre \verb|$v0| avant son appel. De même, les pseudo-instructions n'ont plus
+de bulles et on donc le même impacte d'ajout d'instruction que l'organisation unicycle.
 
 Ceci veut dire que, le \verb|main| à encore $4$ instructions, la boucle interne en a maintenant $25$, la boucle externe en a maintenant $5$, la fin de boucle externe en a encore $8$
 et la fin de boucle interne en a maintenant $3$. La formule algébrique est donc la suivante:
