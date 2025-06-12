@@ -40,110 +40,157 @@
 \newpage
 
 \section{Performances d'organisations}
-Une analyze des différentes organisations proposées est effectuée dans cette section. Cette analyze donne une vision des gains de performances qu'un changement de la méthode
-d'exécution des instructions amènerait.
+Une analyze des différentes organisations proposées est effectuée dans cette
+section. Cette analyze donne une vision des gains de performances qu'un
+changement de la méthode d'exécution des instructions amènerait.
 
 \subsection{Analyze du code de référence}
-Le code de référence contient des pseudo-instructions assembleurs que MARS transforme en instructions standard. Premièrement, les instructions "li" sont des pseudo-instructions.
-Cependant, ces dernières sont traduite en une seule instruction et donc n'ont pas d'impacte sur le nombre d'instructions totaux et le temps d'exécution.
-Malheureusement, les 4 instructions "sw" et "lw" dans \verb|boucle_interne| sont des pseudo-instructions puisqu'ils index sur des tableaux directement. Ceci n'est pas possible en
-MIPS. MARS remplace ces pseudo-instructions par 3 différentes instructions. En premier il charge l'addresse du tableau dans un registre, ensuite il décale l'addresse pour qu'elle
-pointe sur la bonne index du tableau et finalement un vrai "lw" ou "sw" est effectué à l'index 0 de l'addresse décalé. Ceci veut dire que la \verb|boucle_interne| a 6 instructions
-supplémentaire.
+
+Le code de référence contient des pseudo-instructions assembleurs que MARS
+transforme en instructions standard. Premièrement, les instructions "li" sont
+des pseudo-instructions. Cependant, ces dernières sont traduite en une seule
+instruction et donc n'ont pas d'impacte sur le nombre d'instructions totaux
+et le temps d'exécution. Malheureusement, les 4 instructions "sw" et "lw"
+dans \verb|boucle_interne| sont des pseudo-instructions puisqu'ils index sur
+des tableaux directement. Ceci n'est pas possible en MIPS. MARS remplace ces
+pseudo-instructions par 3 différentes instructions. En premier il charge
+l'addresse du tableau dans un registre, ensuite il décale l'addresse pour
+qu'elle pointe sur la bonne index du tableau et finalement un vrai "lw" ou
+"sw" est effectué à l'index 0 de l'addresse décalé. Ceci veut dire que la
+\verb|boucle_interne| a 6 instructions supplémentaire.
 
 \subsection{Organisation unicycle}
+
 %\todo{documenter sous forme algébrique l'organisation unicycle}
 %\todo{Calculer en cycles d'horloge l'organisation unicycle}
-Le calcul du temps d'exécution en cycle d'horloge pour une organisation unicycle est aussi simple que de compter le nombre d'instructions exécuté. Aucune bulles ou vidanges est 
-nécessaire. 
 
-La boucle interne a un total de $15$ instructions qui une fois traduite donne un total de $23$. Ces 23 instructions sont exécuté $4$ fois. Au 5e appel, une seule instruction est
-exécuté, soit la comparaison \verb|beq|, qui branche dans \verb|finBoucleInterne| qui est $2$ instructions. La formule pour la boucle interne est donc:
-$$
-T = 4\times(23)+(2+1)
-$$
+Le calcul du temps d'exécution en cycle d'horloge pour une organisation
+unicycle est aussi simple que de compter le nombre d'instructions exécuté.
+Aucune bulles ou vidanges est nécessaire.
+
+La boucle interne a un total de $15$ instructions qui une fois traduite donne
+un total de $23$. Ces 23 instructions sont exécuté $4$ fois. Au 5e appel, une
+seule instruction est exécuté, soit la comparaison \verb|beq|, qui branche
+dans \verb|finBoucleInterne| qui est $2$ instructions. La formule pour la
+boucle interne est donc: $$ T = 4\times(23)+(2+1) $$
 
 la boucle externe est aussi exécuté $4$ fois. Elle contient $2$ instructions puis une exécution complète de la boucle interne. À la 5e exécution, une seule instruction est exécuté
 pour sortie de la boucle et appeller \verb|finBoucleExterne|. Cette dernière est $2$ instructions. La formule pour la boucle externe est donc la suivante:
-$$
+
+\begin{equation}
 T = 4\times(2+4\times(23)+(2+1)) + (2+1)
-$$
+\end{equation}
+
 Reste juste le \verb|main| à inclure, qui est $2$ instructions. Le temps d'exécution en coup d'horloge est donc:
-$$
-T = 2+ 4\times(2+4\times(23)+(2+1)) + (2+1)
-$$
-$$
-T = 4\times(4\times(23)+5) + 5
-$$
-$$
-T = 4\times(97) + 5
-$$
-$$
-T = 393
-$$
+\begin{align}
+  T &= 2+ 4\times(2+4\times(23)+(2+1)) + (2+1) \\
+  T &= 4\times(4\times(23)+5) + 5 \\
+  T &= 4\times(97) + 5 \\
+  T &= 393
+\end{align}
 
 \subsection{Organisation en pipeline avec branchement au 4e étage}
+
 %\todo{identifier et calcuer toutes les pénalités causées par deux organisation avec branchement au 4e étage en pipeline}
 %\todo{identifier et calcuer toutes les pénalités causées par deux organisation avec branchement au 2e étage}
-L'analyze de l'organisation en pipeline avec branchement au 4e étage est fait sans unité d'avancement ni de détection des aléas de données. Ceci dit, l'ajout de bulles est
-nécessaire pour évité que des instructions utilisant les même registres rentre en concurance. Si ce n'est pas fait, une instructions pourrait additionner dans un certain registre, 
-l'instruction suivante l'utiliserait mais n'aurait pas la bonne valeur car l'instruction précédente n'a pas terminé d'exécuté. Après une analyze de l'organisation, une bulle de $2$
-instructions minimum est nécessaire entre instructions concurente. Vu que les branchements sont au 4e étage, une bulle de $3$ \verb|nop| est nécessaire après chaque appel
-d'instructions de format J pour évité que les instructions suivant les branchements soit charger dans le pipeline lorsqu'il ne devrait pas.
 
-Finalement, il faut prendre en compte la traduction des pseudo-instructions. En effet, ils sont traduits en instructions qui utilise des registres concurents! l'ajout de 2 bulles
-de $2$ instructions par pseudo-instructions est donc nécessaire. La première entre le chargement de l'addresse du tableau et son déplacement, la deuxième entre le déplacement de
-l'addresse et l'écriture ou la lecture à cet endroit. Cependant, les bulles ajouter avant l'appel des pseudo-instructions ne sont donc pas nécessaire puisque le registre n'est
-qu'utilisé que 2 instructions plus loin. Ceci réduit de 8 \verb|nop| le total de la boucle interne.
+L'analyze de l'organisation en pipeline avec branchement au 4e étage est fait
+sans unité d'avancement ni de détection des aléas de données. Ceci dit,
+l'ajout de bulles est nécessaire pour évité que des instructions utilisant
+les même registres rentre en concurance. Si ce n'est pas fait, une
+instructions pourrait additionner dans un certain registre, l'instruction
+suivante l'utiliserait mais n'aurait pas la bonne valeur car l'instruction
+précédente n'a pas terminé d'exécuté. Après une analyze de l'organisation,
+une bulle de $2$ instructions minimum est nécessaire entre instructions
+concurente. Vu que les branchements sont au 4e étage, une bulle de $3$
+\verb|nop| est nécessaire après chaque appel d'instructions de format J pour
+évité que les instructions suivant les branchements soit charger dans le
+pipeline lorsqu'il ne devrait pas.
 
-Après analyze du program de référence, le \verb|main| devient 4 instructions, la boucle interne à un nouveau total de $55$ instructions, la boucle externe en a $8$ au lieu de $2$,
-le main en a $4$ au lieu de $2$, la fin de boucle externe en a $8$ au lieu de $2$ et la fin de boucle interne en a $5$ au lieu de $2$.
-La nouvelle formule est donc:
-$$
-T = 4+ 4\times(7+4\times(55)+(5+1)) + (8+1)
-$$
-$$
-T = 945
-$$
+Finalement, il faut prendre en compte la traduction des pseudo-instructions.
+En effet, ils sont traduits en instructions qui utilise des registres
+concurents! l'ajout de 2 bulles de $2$ instructions par pseudo-instructions
+est donc nécessaire. La première entre le chargement de l'addresse du tableau
+et son déplacement, la deuxième entre le déplacement de l'addresse et
+l'écriture ou la lecture à cet endroit. Cependant, les bulles ajouter avant
+l'appel des pseudo-instructions ne sont donc pas nécessaire puisque le
+registre n'est qu'utilisé que 2 instructions plus loin. Ceci réduit de 8
+\verb|nop| le total de la boucle interne.
+
+Après analyze du program de référence, le \verb|main| devient 4 instructions,
+la boucle interne à un nouveau total de $55$ instructions, la boucle externe
+en a $8$ au lieu de $2$, le main en a $4$ au lieu de $2$, la fin de boucle
+externe en a $8$ au lieu de $2$ et la fin de boucle interne en a $5$ au lieu
+de $2$. La nouvelle formule est donc:
+
+\begin{align}
+  T &= 4+ 4\times(7+4\times(55)+(5+1)) + (8+1) \\
+  T &= 945
+\end{align}
 
 \subsection{Organisation en pipeline avec branchement au 2e étage}
-Cette organisation change l'emplacement des branchements et les montent de $2$ étages. Ils sont donc effectué plus tôt dans la chaine d'évènement des pipelines. Ça à pour effet que
-$2$ des $3$ \verb|nop| nécessaire pour les instructions de format J peuvent être enlevé. Par la suite, cette organisation, pour notre cas d'étude, implémente une unité d'avancement.
-Ceci permet aux résultats des instructions d'être disponible plus tôt et de ne pas devoir attendre leurs mise en mémoire (pour les instructions qui ne sont pas des branchements), 
-éliminant les bulles entre les accès des instructions concurentes. Cependant, les banchements sont exécuté plus haut que l'emplacement de retour de l'unité d'avancement. Ça veut dire
-que la bulle reste nécessaire lorsque les instructions concurentes sont avec des instructions de branchements!
-De plus, une unité de détection des aléas est présente. Cette dernière est plutôt complexe mais enlève 
-complètement le nécessaire de rajouter des \verb|nop| manuellement pour créé des bulles. Malheureusement, on doit tout de même calculer les délais ajoutés tel que mentionné plus haut.
-Le \verb|syscall| a encore besoion de ces $4$ instructions le précédent et d'une bulle de $2$ pour le registre \verb|$v0| avant son appel. De même, les pseudo-instructions n'ont plus
-de bulles et on donc le même impacte d'ajout d'instruction que l'organisation unicycle.
 
-Ceci veut dire que, le \verb|main| à encore $4$ instructions, la boucle interne en a maintenant $25$, la boucle externe en a maintenant $5$, la fin de boucle externe en a encore $8$
-et la fin de boucle interne en a maintenant $3$. La formule algébrique est donc la suivante:
-$$
-T = 4+ 4\times(5+4\times(25)+(3+1)) + (8+1)
-$$
-$$
-T = 449
-$$
+Cette organisation change l'emplacement des branchements et les montent de
+$2$ étages. Ils sont donc effectué plus tôt dans la chaine d'évènement des
+pipelines. Ça à pour effet que $2$ des $3$ \verb|nop| nécessaire pour les
+instructions de format J peuvent être enlevé. Par la suite, cette
+organisation, pour notre cas d'étude, implémente une unité d'avancement. Ceci
+permet aux résultats des instructions d'être disponible plus tôt et de ne pas
+devoir attendre leurs mise en mémoire (pour les instructions qui ne sont pas
+des branchements), éliminant les bulles entre les accès des instructions
+concurentes. Cependant, les banchements sont exécuté plus haut que
+l'emplacement de retour de l'unité d'avancement. Ça veut dire que la bulle
+reste nécessaire lorsque les instructions concurentes sont avec des
+instructions de branchements! De plus, une unité de détection des aléas est
+présente. Cette dernière est plutôt complexe mais enlève complètement le
+nécessaire de rajouter des \verb|nop| manuellement pour créé des bulles.
+Malheureusement, on doit tout de même calculer les délais ajoutés tel que
+mentionné plus haut. Le \verb|syscall| a encore besoion de ces $4$
+instructions le précédent et d'une bulle de $2$ pour le registre \verb|$v0|
+avant son appel. De même, les pseudo-instructions n'ont plus de bulles et on
+donc le même impacte d'ajout d'instruction que l'organisation unicycle.
+
+Ceci veut dire que, le \verb|main| à encore $4$ instructions, la boucle
+interne en a maintenant $25$, la boucle externe en a maintenant $5$, la fin
+de boucle externe en a encore $8$ et la fin de boucle interne en a maintenant
+$3$. La formule algébrique est donc la suivante:
+
+\begin{align}
+  T &= 4+ 4\times(5+4\times(25)+(3+1)) + (8+1) \\
+  T &= 449
+\end{align}
 
 \subsection{Temps d'exécution}
+
 %\todo{calculez le temps d'exécution en vous basant sur une vitesses d'opération de 25 ns pour l'organisation unicycle}
 %\todo{calculez le temps d'exécution en vous basant sur une vitesses d'opération de 10 ns pour l'organisation pipeline}
-Pour notre cas d'étude, l'organisation unicycle à un temps de $25ns$ par instructions tandis que les organisations en pipeline en prennent $10ns$.
-La formule trivial suivante indique que le temps d'exécution est le total des instructions multiplié par le temps d'un coup d'horloge.
-$$
+
+Pour notre cas d'étude, l'organisation unicycle à un temps de $25ns$ par
+instructions tandis que les organisations en pipeline en prennent $10ns$. La
+formule trivial suivante indique que le temps d'exécution est le total des
+instructions multiplié par le temps d'un coup d'horloge.
+
+\begin{equation}
 \text{T}_{\text{sys}} = \text{instructions}\times\text{T}_{\text{CPU}}
-$$
-L'unicycle prend donc $9825$ nanosecondes, le pipeline avec branchement au 4e étage prend $9450$ nanosecondes et l'organisation en pipeline
-avec branchement au 2e étage prent $4490$ nanosecondes.
+\end{equation}
+
+L'unicycle prend donc $9825$ nanosecondes, le pipeline avec branchement au 4e
+étage prend $9450$ nanosecondes et l'organisation en pipeline avec
+branchement au 2e étage prent $4490$ nanosecondes.
 
 \subsection{Analyze des résultats}
-L'organisation en pipeline avec branchement au 2e étage est $2.2\times$ plus performant que l'organisation unicycle avec l'avantage de d'avoir aucune différence dans
-les codes assembleurs. Cependant, la modification de l'organisation pour une méthode pipeline peut être couteuse en developpement et nécessite un changement 
-matérielle. Pour ce qui est de l'organisation avec branchement au 4e étage, le gain de performance n'est que de $0.03$, complètement négligable et nécessite l'ajout
-manuelle de bulles dans le langage assembleur.
-Les gains ne sont pas à négligé cependant puisqu'une amélioration de $2.2\times$ atteint presque la demande d'amélioration de $3\times$ sans nécessairement faire 
-$3\times$ moins d'instructions tel que demandé.
+
+L'organisation en pipeline avec branchement au 2e étage est $2.2\times$ plus
+performant que l'organisation unicycle avec l'avantage de d'avoir aucune
+différence dans les codes assembleurs. Cependant, la modification de
+l'organisation pour une méthode pipeline peut être couteuse en developpement
+et nécessite un changement matérielle. Pour ce qui est de l'organisation avec
+branchement au 4e étage, le gain de performance n'est que de $0.03$,
+complètement négligable et nécessite l'ajout manuelle de bulles dans le
+langage assembleur. Les gains ne sont pas à négligé cependant puisqu'une
+amélioration de $2.2\times$ atteint presque la demande d'amélioration de
+$3\times$ sans nécessairement faire $3\times$ moins d'instructions tel que
+demandé.
 
 
 \section{Performances SIMD}
@@ -161,41 +208,62 @@ de la problématique}
 \section{Performances des mémoires sur processeur unicycle}
 \subsection{Pour la mémoire de données}
 \subsubsection{Cas de la DRAM de la problématique}
-La DRAM de base à une pénalité de 10 coups d'horloge par accès. Chaque accès fournis 2 mots séquentielles. De base, aucune cache de donnée est inclus. Donc chaque accès aux données
-nécessite 10 coups d'horloge. Le mode de lecture "2-word burst" donne aucun avantage puisque les données ne sont pas sauvegarder dans une cache. Ça veut donc dire que un des deux
-mots chargé n'est pas utilisé et un autre accès à la DRAM est nécessaire plutard pour allé chercher le deuxième mot! Cependant, si des instructions SIMD sont utilisés alors ce mode
-de lecture vient sauver du temps lors de chargement de vecteurs. Charger Un vecteur de $4$ prendrait uniquement $20$ coup de clock plutôt que $40$ sans ajout d'instructions SIMD.
 
-Le calcul du temps d'accès pour cette implémentation de mémoire est très simple. Chaque appel de \verb|sw| et \verb|lw| causent les délais d'accès. Les instructions immédiate en
-cause aucun puisque les données sont dans l'instruction directe. Une fois que les données sont dans les registres, le coup d'accès est nulle.
+La DRAM de base à une pénalité de 10 coups d'horloge par accès. Chaque accès
+fournis 2 mots séquentielles. De base, aucune cache de donnée est inclus.
+Donc chaque accès aux données nécessite 10 coups d'horloge. Le mode de
+lecture "2-word burst" donne aucun avantage puisque les données ne sont pas
+sauvegarder dans une cache. Ça veut donc dire que un des deux mots chargé
+n'est pas utilisé et un autre accès à la DRAM est nécessaire plutard pour
+allé chercher le deuxième mot! Cependant, si des instructions SIMD sont
+utilisés alors ce mode de lecture vient sauver du temps lors de chargement de
+vecteurs. Charger Un vecteur de $4$ prendrait uniquement $20$ coup de clock
+plutôt que $40$ sans ajout d'instructions SIMD.
 
-Le programme matricielle de référence fait $4$ appel à ce genre d'instructions à l'intérieur de la boucle interne. La formule mathématique des pénalité est donc simplement:
-$$
-\text{T} = 10\times4\times(4\times4)
-$$
-$$
-\text{T} = 10\times4\times(4\times4)
-$$
-$$
-T=640
-$$
-Si on rajoute les instructions de l'organisation unicycle, on obtient un total de $1033$ coup d'horloge, sans compté les pénalité de mémoire d'instructions!
+Le calcul du temps d'accès pour cette implémentation de mémoire est très
+simple. Chaque appel de \verb|sw| et \verb|lw| causent les délais d'accès.
+Les instructions immédiate en cause aucun puisque les données sont dans
+l'instruction directe. Une fois que les données sont dans les registres, le
+coup d'accès est nulle.
+
+Le programme matricielle de référence fait $4$ appel à ce genre
+d'instructions à l'intérieur de la boucle interne. La formule mathématique
+des pénalité est donc simplement:
+
+\begin{align}
+  \text{T} &= 10\times4\times(4\times4) \\
+  \text{T} &= 10\times4\times(4\times4) \\
+  T        &= 640
+\end{align}
+
+Si on rajoute les instructions de l'organisation unicycle, on obtient un
+total de $1033$ coup d'horloge, sans compté les pénalité de mémoire
+d'instructions!
 
 \subsubsection{Cas avec une cache attaché}
-Afin de réduire le nombre de pénalité engendré par l'accès à la DRAM, l'ajour d'une cache de données est pertinente. Pour ce cas d'étude, il s'agit d'une cache de $256$ blocs avec
-$2$ mots de $32$ bits par block, avec un mode de DRAM "write-through". Dans les caches, les premières accès causent une pénalité de lecture. Les accès suivantes, au mêmes données,
-ne causent pas de pénalité puisque le programme n'a plus besoin d'accèder a la DRAM. Hors, les vecteurs d'entrées et de sorties sont $4$ mots. Sachant que la cache enregistres des 
-données contingu à l'écriture, la lecture initiale des vecteurs causent $2$ pénalités d'accès à la DRAM par vecteur. Pour la matrice, $8$ pénalité auront lieu pour toute la mettre
-dans la cache par groupe de $2$ mots. La cache ayant $256$ blocs, aucun remplacement de blocs auront lieu.
 
-Le calcul reste simple, uniquement les pénalité d'accès mentionné plus haut ont besoin d'être calculer puisque n'importe quel autre lecture ou écriture n'a plus besoin d'accèder à
-la DRAM. Voici donc la formule:
-$$
-\text{T} = 10\times(2+2+8)
-$$
-$$
-\text{T} = 120
-$$
+Afin de réduire le nombre de pénalité engendré par l'accès à la DRAM, l'ajour
+d'une cache de données est pertinente. Pour ce cas d'étude, il s'agit d'une
+cache de $256$ blocs avec $2$ mots de $32$ bits par block, avec un mode de
+DRAM "write-through". Dans les caches, les premières accès causent une
+pénalité de lecture. Les accès suivantes, au mêmes données, ne causent pas de
+pénalité puisque le programme n'a plus besoin d'accèder a la DRAM. Hors, les
+vecteurs d'entrées et de sorties sont $4$ mots. Sachant que la cache
+enregistres des données contingu à l'écriture, la lecture initiale des
+vecteurs causent $2$ pénalités d'accès à la DRAM par vecteur. Pour la
+matrice, $8$ pénalité auront lieu pour toute la mettre dans la cache par
+groupe de $2$ mots. La cache ayant $256$ blocs, aucun remplacement de blocs
+auront lieu.
+
+Le calcul reste simple, uniquement les pénalité d'accès mentionné plus haut
+ont besoin d'être calculer puisque n'importe quel autre lecture ou écriture
+n'a plus besoin d'accèder à la DRAM. Voici donc la formule:
+
+\begin{align}
+  \text{T} &= 10\times(2+2+8) \\
+  \text{T} &= 120
+\end{align}
+
 
 \subsection{Pour les instructions}
 \subsubsection{Cas de la DRAM de la problématique}
