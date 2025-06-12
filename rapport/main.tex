@@ -105,6 +105,17 @@ $$
 T = 1073
 $$
 
+\subsection{Organisation en pipeline avec branchement au 2e étage}
+Cette organisation change l'emplacement des branchements et les montent de $2$ étages. Ils sont donc effectué plus tôt dans la chaine d'évènement des pipelines. Ça à pour effet que
+$2$ des $3$ \verb|nop| nécessaire pour les instructions de format J peuvent être enlevé. Par la suite, cette organisation, pour notre cas d'étude, implémente une unité d'avancement.
+Ceci permet aux résultats des instructions d'être disponible plus tôt et de ne pas devoir attendre leurs mise en mémoire, réduisant la taille minimum des bulles de prévention d'aléas
+de données. De plus, une unité de détection des aléas est présente. Cette dernière est plutôt complexe mais enlève complètement le nécessaire de rajouter des \verb|nop| manuellement
+pour créé des bulles. On peut donc enlever tout les \verb|nop|. On revient donc au même nombre d'instruction que l'organisation unicycle.
+
+\todo{les enlève t'ont tous vraiment? Ne doit t'ont pas prendre en compte un temps supplémentaire induit par le module de détection d'aléas?}
+
+La formule algébrique est donc identique à l'organisation unicycle. Le program à donc besoin de $393$ coup d'horloge.
+
 
 \subsection{Temps d'exécution}
 %\todo{calculez le temps d'exécution en vous basant sur une vitesses d'opération de 25 ns pour l'organisation unicycle}
