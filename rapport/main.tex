@@ -200,13 +200,54 @@ demandé.
 
 \section{Performances SIMD}
 
-\todo{identifiez les instructions qui seraient à convertir en SIMD}
+\subsection{Instructions identifiés}
+\subsubsection{Charger un vecteur}
+Vue que le programme doit utilisé des vecteurs, leurs chargement doit être
+possible. Donc une instruction SIMD \verb|lwv| est à implémenter. Elle vient
+avec le bonus d'enlever la traduction de pseudo-instructions.
 
-\todo{calculez le nouveau temps d'exécution en cycles d'horloge, pour enfin le
-comparer avec celui en unicycle}
+\subsubsection{Multiplication}
+Le code de référence fait une multiplication entre deux données de deux
+vecteurs dans la boucle interne. Hors, ceci peut être fait dans dans une
+instruction SIMD, ce qui enlèvera la boucle interne éventuellement. Hors,
+l'instruction \verb|multv| permet de multiplié deux vecteurs et mettre le
+résultat dans un autre.
 
-\todo{dire si le gain de performance permet d'espérer d'atteindre les objectifs
-de la problématique}
+\subsubsection{Somme d'un vecteur}
+L'analyse du code de référence montre qu'une somme des données est effectués.
+Hors, l'utilisation d'un SIMD est possible ici. Une instruction spécial appellé
+\verb|sumv| permet d'additionner les $4$ valeurs d'un vecteur ensemble et
+mettre le résultat dans un registre standard. Ceci permet d'immédiatement
+mettre le résultat à la bonne endroit dans le vecteur de sortie.
+
+\subsection{Nouveau temps d'exécution}
+Dans le nouveau code de référence, le \verb|main| a $5$ instructions. La boucle
+interne a complètement disparût à cause des instructions SIMD. La boucle
+externe a $8$ instructions. La comparaison est a la toute fin ce qui réduit
+d'une instruction car la boucle n'est pas exécuté $5$ fois mais juste $4$. La
+fin de boucle est $2$ instructions. De plus, il n'y a plus de pseudo-instructions.
+
+Ceci dit, la formule de calcul du nombre d'instructions est maintenant la suivante:
+$$
+T = 2 + 4\times(8) + 2
+$$
+$$
+T = 36
+$$
+
+\subsection{Comparaison avec l'unicycle}
+Le total d'instructions passe de $393$ à juste $36$. C'est un gain de $10$! Ce
+gain démontre emplement qu'il est possible de réduire d'au minimum $3$ fois le
+nombre d'instructions total pour la problématique étant donné la nature
+similaire des deux programmes assembleurs.
+
+%\todo{identifiez les instructions qui seraient à convertir en SIMD}
+
+%\todo{calculez le nouveau temps d'exécution en cycles d'horloge, pour enfin le
+%comparer avec celui en unicycle}
+
+%\todo{dire si le gain de performance permet d'espérer d'atteindre les objectifs
+%de la problématique}
 
 
 
@@ -326,13 +367,104 @@ avec un gain de performance de $32$ ça pourrais réduire significativement leur
 problème.
 
 \section{Configuration des caches}
+%\todo{définir nos choix pour la configuration de la cache pour minimiser la
+%taille ET les pénalités d'accès aux données en clock cycles}
+Le programme de référence ainsi que l'algorithme de Vitberbi utilisent des
+tableaux séparable en $4$. En effet, le meilleur implémentation de SIMD pour
+les programmes est d'utiliser des instructions qui gèrent des vecteurs de $4$.
+De plus, les deux algorithmes utilisent la même structures de données. Soit une
+matrice $4\times4$ et deux tableaux de $1\times4$. Optimiser pour un programme
+optimisera donc l'autre à un certain point.
 
-\todo{définir nos choix pour la configuration de la cache pour minimiser la
-taille ET les pénalités d'accès aux données en clock cycles}
+Ceci dit, la cache s'occupe de gérer les requètes et est très versatile. Par
+exemple, pour une cache de $4$ mots par blocs et une DRAM de $2$ mots par
+blocs, la cache vas s'occuper de populer ses $4$ mots en fesant deux appel
+à la DRAM. Si une instruction lui demande $8$ mots, la cache vas les fournir
+dans le même temps qu'une instruction qui en demande qu'un seul.
+
+Ceci simplifie grandement l'optimisation de la cache. Le nombre de mots optimal
+est $2$ par blocs. Ça permet des remplacements de blocs sur des parties
+partielles. Donc si un vecteur de $4$ mots à été mis en cache, $2$ blocs ont
+été utilisés. Si la cache doit faire un remplacement de blocs pour une
+nouvelle donnée, alors uniquement la moitiée du vecteur est remplacé. Donc
+si il est réutilisé plus tard, on aura une pénalité d'accès à la DRAM au lieu
+de $2$ car uniquement une partie est à aller chercher. Si la cache était $4$
+mots, le vecteur au complet aurait été remplacé, nécessitant donc $2$ pénalités
+pour allé le chercher dans la DRAM.
+
+Pour le type de cache (direct, associatif par ensemble, ou associative),
+l'utilisation d'ensemble semble pertinant. En effet les vecteurs réutilisé
+pourrait être mis dans le premier ensemble et le reste dans le deuxième puisque
+les accès aux matrices $4\times4$ est fait qu'une fois et les données ne sont
+pas réutilisé. Ceci réduirait la taille de la cache. Malheureusement, ceci
+ajoute une complexitée. La cache se popule comme elle veut. Donc il faudrait
+être sur que le code assembleur popule la cache dans le bon ordre afin que des
+données de matrices $4\times4$ ne se trouve pas dans le premier ensemble.
+
+Si c'est fait, alors une cache associatif par ensemble de $8$ blocs de $2$ mots
+avec $2$ ensemble semble très optimisé pour le calcul de référence en prennant
+pour aquis que l'ordre d'appel des données est optimisé pour la cache. Ce
+serait beaucoup mieux qu'une cache directe de $32$ blocs de $2$ mots.
+
+Hors une analyze du code de référence confirme l'ordre de chargement des
+données. Les vecteurs d'entrées et sorties sont chargé en premier et donc
+vont être mis dans le premier ensemble. La cache populera le deuxième avec
+les données de matrices. Ceci est donc la meilleur optimisation pour le code de
+référence. Elle optimise à la fois les accès échoué et la grosseur de la cache.
+
+\subsection{Optimisation en fonction de Viterbis}
+Viterbis utilise un index de boucle qui est enregistrer dans la mémoire afin de
+ne pas causer problème avec les fonctions appellé à l'interne. L'optimisation
+discuté plus haut ne prend pas en compte l'ordre d'appel du code Viterbis, ni
+le nombre de données différentes.
 
 \section{Intégration}
 
-\todo{proposer un système optimal et prioriser les modifications par leurs
-gains effectifs sur la performance et leur temps de développement}
+\subsection{Ébauche de priorisation en fonction du temps ressenti}
+Ce qui prend le moins de temps, sont les modifications logicielles. Si un non
+respect total des standard MIPS optimise drastiquement le code Viterbis ou le
+code de référence, alors ce serait une priorité.
+
+Par la suite vient les modifications physique. L'entreprise à déja quelque
+chose qui permet de créé des caches modulable. L'ajout d'une cache
+d'instruction est plus prioritaire que celle de données car elle présente un
+immense gain de performance pour les cas d'étude. Ensuite viendrais la cache
+de données.
+
+Par la suite, le changement d'organisation en pipeline avec branchement au 4e
+étage est moins dur que celle étudié à deux étages avec les modules logiques
+supplémentaire. Chacune permet un gain de performances. Des architectures de
+processeurs sont déjà disponible en ligne, surtout pour de simple processeurs
+sans grande complexité comme ceux des cas d'études. Cependant ceci nécessite
+une restructuration de processeur, ce qui peut être plus couteux que prévu.
+C'est dur à dire.
+
+Pour finir, l'implémentation des instructions SIMD est la plus couteuse.
+Non seulement le physique doit être changé, mais un temps de dévelopment à
+haut risque est ajouté. Certaines instructions peuvent n'être utilisé que pour
+ce cas-ci, rendent la versatilité moins attrayante.
+
+\subsection{Priorisation en fonction de gain}
+Sachant que le total de coups d'horloge sans aucun changement, pour
+l'organisation unicycle est le suivant:
+\begin{align}
+  \text{T} &= 10\times\text{ instructions } + 10\times\text{ accès données } + instructions \\
+  \text{T} &= 3930 + 640 + 393 \\
+  \text{T} &= 4963
+\end{align}
+
+Le plus gros gain est celui de la cache d'instructions. Son implémentation
+réduit d'un facteur de $32.75$ les accès aux instructions, donc d'un facteur
+de $4$ le nombre de coups d'horloge du système unicycle! Cette optimisation
+réponderait directement au gain de $3$ demandé dans la problématique, mais
+n'apporte aucune réduction du nombre d'instructions. C'est donc une priorité.
+
+Changé l'organisation pour être en pipeline 2e étages serais la prochaine chose
+à faire. En effet, la durée d'un coup d'horloge baisse de $25ns$ à $10ns$, mais
+le nombre d'instructions total executé change. On passe d'environ $124$us à
+$55$us. Un gain de $2.2$.
+
+%\todo{proposer un système optimal et prioriser les modifications par leurs
+%gains effectifs sur la performance et leur temps de développement}
 
 \end{document}
