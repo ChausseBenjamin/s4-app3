@@ -208,45 +208,48 @@ d'instructions, tel que demandé.
 
 \section{Performances SIMD}
 
-\subsection{Instructions identifiés}
+\subsection{Instructions identifiées}
+
 \subsubsection{Charger un vecteur}
-Vue que le programme doit utilisé des vecteurs, leurs chargement doit être
-possible. Donc une instruction SIMD \verb|lwv| est à implémenter. Elle vient
-avec le bonus d'enlever la traduction de pseudo-instructions.
+Vu que le programme doit utiliser des vecteurs, leur chargement doit être
+possible. Donc, une instruction SIMD \verb|lwv| est à implémenter. Elle vient
+avec le bonus d'enlever la traduction des pseudo-instructions.
 
 \subsubsection{Multiplication}
-Le code de référence fait une multiplication entre deux données de deux
-vecteurs dans la boucle interne. Hors, ceci peut être fait dans dans une
-instruction SIMD, ce qui enlèvera la boucle interne éventuellement. Hors,
-l'instruction \verb|multv| permet de multiplié deux vecteurs et mettre le
-résultat dans un autre.
+Le code de référence effectue une multiplication entre deux données de deux
+vecteurs dans la boucle interne. Or, ceci peut être fait dans une instruction
+SIMD, ce qui éliminera éventuellement la boucle interne. L'instruction
+\verb|multv| permet de multiplier deux vecteurs et de mettre le résultat dans
+un autre.
 
 \subsubsection{Somme d'un vecteur}
-L'analyse du code de référence montre qu'une somme des données est effectués.
-Hors, l'utilisation d'un SIMD est possible ici. Une instruction spécial appellé
-\verb|sumv| permet d'additionner les $4$ valeurs d'un vecteur ensemble et
-mettre le résultat dans un registre standard. Ceci permet d'immédiatement
-mettre le résultat à la bonne endroit dans le vecteur de sortie.
+L'analyse du code de référence montre qu'une somme des données est effectuée.
+Or, l'utilisation d'une instruction SIMD est possible ici. Une instruction
+spéciale appelée \verb|sumv| permet d'additionner les $4$ valeurs d'un vecteur
+ensemble et de mettre le résultat dans un registre standard. Ceci permet de
+mettre immédiatement le résultat au bon endroit dans le vecteur de sortie.
 
 \subsection{Nouveau temps d'exécution}
 Dans le nouveau code de référence, le \verb|main| a $7$ instructions. La boucle
-interne a complètement disparût à cause des instructions SIMD. La boucle
-externe a $9$ instructions. La comparaison est a la toute fin ce qui réduit
-d'une instruction car la boucle n'est pas exécuté $5$ fois mais juste $4$. La
-fin de boucle est $2$ instructions. De plus, il n'y a plus de pseudo-instructions.
+interne a complètement disparu grâce aux instructions SIMD. La boucle
+externe a $9$ instructions. La comparaison est à la toute fin, ce qui réduit
+d'une instruction car la boucle n'est pas exécutée $5$ fois, mais seulement
+$4$. La fin de boucle est de $2$ instructions. De plus, il n'y a plus de
+pseudo-instructions.
 
-Ceci dit, la formule de calcul du nombre d'instructions est maintenant la suivante:
-$$
-T = 7 + 4\times(9) + 2
-$$
-$$
-T = 45
-$$
+Ceci dit, la formule de calcul du nombre d'instructions est maintenant la
+suivante :
+
+\begin{align}
+  T &= 7 + 4\times(9) + 2 \\
+  T &= 45
+\end{align}
 
 \subsection{Comparaison avec l'unicycle}
-Le total d'instructions passe de $393$ à juste $45$. C'est un gain de $8.7$! Ce
-gain démontre emplement qu'il est possible de réduire d'au minimum $3$ fois le
-nombre d'instructions total pour la problématique étant donné la nature
+
+Le total d'instructions passe de $393$ à juste $45$. C'est un gain de $8{,}7$ !
+Ce gain démontre amplement qu'il est possible de réduire d'au minimum $3$ fois
+le nombre d'instructions total pour la problématique, étant donné la nature
 similaire des deux programmes assembleurs.
 
 %\todo{identifiez les instructions qui seraient à convertir en SIMD}
@@ -260,29 +263,31 @@ similaire des deux programmes assembleurs.
 
 
 \section{Performances des mémoires sur processeur unicycle}
+
 \subsection{Pour la mémoire de données}
+
 \subsubsection{Cas de la DRAM de la problématique}
 
-La DRAM de base à une pénalité de $10$ coups d'horloge par accès. Chaque accès
-fournis 2 mots séquentielles. De base, aucune cache de donnée est inclus.
-Donc chaque accès aux données nécessite $10$ coups d'horloge. Le mode de
-lecture "2-word burst" donne aucun avantage puisque les données ne sont pas
-sauvegarder dans une cache. Ça veut donc dire qu'un des deux mots chargé
-n'est pas utilisé et un autre accès à la DRAM est nécessaire plus tard pour
-allé chercher le deuxième mot! Cependant, si des instructions SIMD sont
-utilisés alors ce mode de lecture vient sauver du temps lors de chargement de
-vecteurs. Charger un vecteur de $4$ prendrait uniquement $20$ coup de clock
-plutôt que $40$ sans ajout d'instructions SIMD.
+La DRAM de base a une pénalité de $10$ coups d'horloge par accès. Chaque accès
+fournit 2 mots séquentiels. De base, aucune cache de données n’est incluse.
+Donc, chaque accès aux données nécessite $10$ coups d'horloge. Le mode de
+lecture "2-word burst" n’apporte aucun avantage puisque les données ne sont pas
+sauvegardées dans une cache. Cela veut donc dire qu’un des deux mots chargés
+n’est pas utilisé et qu’un autre accès à la DRAM est nécessaire plus tard pour
+aller chercher le deuxième mot ! Cependant, si des instructions SIMD sont
+utilisées, alors ce mode de lecture permet de gagner du temps lors du
+chargement de vecteurs. Charger un vecteur de $4$ prendrait uniquement $20$
+coups d’horloge plutôt que $40$ sans ajout d’instructions SIMD.
 
-Le calcul du temps d'accès pour l'implémentation de mémoire sans cache est très
-simple. Chaque appel de \verb|sw| et \verb|lw| causent des délais d'accès.
-Les instructions immédiate en cause aucun puisque les données sont directement
-dans l'instruction directe. Une fois que les données sont dans les registres,
-le coup d'accès est nulle.
+Le calcul du temps d’accès pour l’implémentation de mémoire sans cache est très
+simple. Chaque appel de \verb|sw| et \verb|lw| cause des délais d’accès.
+Les instructions immédiates n’en causent aucun puisque les données sont
+directement dans l’instruction. Une fois que les données sont dans les registres,
+le coût d’accès est nul.
 
-Le programme matricielle de référence fait $4$ appel à ce genre
-d'instructions à l'intérieur de la boucle interne. La formule mathématique
-des coups d'horloge supplémentaire est donc simplement:
+Le programme matriciel de référence fait $4$ appels à ce genre
+d’instructions à l’intérieur de la boucle interne. La formule mathématique
+des coups d’horloge supplémentaires est donc simplement :
 
 \begin{align}
   \text{T} &= 10\times4\times(4\times4) \\
@@ -291,70 +296,69 @@ des coups d'horloge supplémentaire est donc simplement:
 \end{align}
 
 Si on rajoute les instructions de l'organisation unicycle, on obtient un
-total de $1033$ coup d'horloge, sans compté les pénalité de mémoire
-d'instructions!
+total de $1033$ coups d'horloge, sans compter les pénalités de mémoire
+d'instructions !
 
-\subsubsection{Cas avec une cache attaché}
+\subsubsection{Cas avec une cache attachée}
 
-Pour réduire le nombre de pénalité engendré par l'accès à la DRAM, suffit
-d'ajouter une cache. Pour ce cas d'étude, il s'agit d'une cache de $256$ blocs
-avec $2$ mots de $32$ bits par block, avec un mode de DRAM "write-through".
-Dans les caches, les premières accès causent une pénalité de lecture. Les accès
-suivantes, au mêmes données, ne causent pas de pénalité puisque le programme n'a
-plus besoin d'accèder a la DRAM. Hors, les vecteurs d'entrées et de sorties sont
-$4$ mots. Sachant que la cache enregistres des données contingu à l'écriture, la
-lecture initiale des vecteurs causent $2$ pénalité d'accès.
-Pour la matrice, $8$ pénalité ont lieu pour toute la mettre dans la cache par
+Pour réduire le nombre de pénalités engendrées par l'accès à la DRAM, il
+suffit d'ajouter une cache. Pour ce cas d'étude, il s'agit d'une cache de $256$ blocs
+avec $2$ mots de $32$ bits par bloc, avec un mode de DRAM "write-through".
+Dans les caches, les premiers accès causent une pénalité de lecture. Les accès
+suivants, aux mêmes données, ne causent pas de pénalité puisque le programme n'a
+plus besoin d'accéder à la DRAM. Hors, les vecteurs d'entrée et de sortie sont
+de $4$ mots. Sachant que la cache enregistre des données contiguës à l'écriture,
+la lecture initiale des vecteurs cause $2$ pénalités d'accès.
+Pour la matrice, $8$ pénalités ont lieu pour toute la mettre dans la cache par
 groupe de $2$ mots. La cache ayant $256$ blocs, aucun remplacement de blocs
-auront lieu.
+aura lieu.
 
-Le calcul reste simple, uniquement les pénalité d'accès mentionné plus haut
-ont besoin d'être calculer puisque n'importe quel autre lecture ou écriture
-n'a plus besoin d'accèder à la DRAM. Voici donc la formule:
+Le calcul reste simple, uniquement les pénalités d'accès mentionnées plus haut
+doivent être calculées puisque n'importe quelle autre lecture ou écriture
+n'a plus besoin d'accéder à la DRAM. Voici donc la formule :
 
 \begin{align}
   \text{T} &= 10\times(2+2+8) \\
   \text{T} &= 120
 \end{align}
 
-
 \subsection{Pour les instructions}
 \subsubsection{Cas de la DRAM de la problématique}
 
-Le calcul pour les délais d'accès en mémoire pour les instructions est
+Le calcul des délais d'accès en mémoire pour les instructions est
 relativement facile pour le cas de la DRAM de la problématique. En effet,
-sans cache, chaque appelle d'instruction engendre un délai d'acces! Même si
-la DRAM fournis $2$ mots (donc deux instructions) par appel, l'organisation
-unicycle ne peut qu'en exécuter qu'une et sans cache, elle ne peut pas
-enregistrer la prochaine instructions. Donc chaque instructions vient créé $10$
-coups d'horloge supplémentaire.
+sans cache, chaque appel d'instruction engendre un délai d'accès ! Même si
+la DRAM fournit $2$ mots (donc deux instructions) par appel, l'organisation
+unicycle ne peut en exécuter qu'une et sans cache, elle ne peut pas
+enregistrer la prochaine instruction. Donc chaque instruction crée $10$
+coups d'horloge supplémentaires.
 
 Le calcul est relativement simple, il s'agit de multiplier le nombre total
-d'instructions calculé plus haut, à $10$ pour obtenir les coups d'horloge
-supplémentaires engendré par leurs accès. On obtient donc la performance
-suivante:
+d'instructions calculé plus haut par $10$ pour obtenir les coups d'horloge
+supplémentaires engendrés par leur accès. On obtient donc la performance
+suivante :
 
 \begin{equation}
   \text{T}=393\times10=3930
 \end{equation}
 
-\subsubsection{Cas avec une cache attaché}
+\subsubsection{Cas avec une cache attachée}
 
-l'attachement d'une cache à la DRAM permet l'enregistrements d'instructions
-pour ne pas avoir besoin d'aller les chercher avec des pénalités à chaque
-fois. De plus, les instructions dans les boucles et la fin de boucle interne
-vont être chargé dans la cache qu'une seule fois. Heureusement, la cache de
-$256$ blocs de $2$ mots suggéré par le cas d'étude à assez d'espace pour
-qu'aucun cas de remplacement de bloc ait lieu. Le calcul reste facile à
-faire. À chaque deux instructions, une pénalité a lieu. Il suffit donc de
-compté le nombre d'instructions unique dans le programme, divisé par $2$ et
-multiplié par $10$ns et on obtient la pénalité en nanosecondes de l'accès à
-la DRAM.
+L'attachement d'une cache à la DRAM permet l'enregistrement des instructions
+pour éviter d'aller les chercher avec pénalité à chaque accès. De plus, les
+instructions dans les boucles et la fin de boucle interne sont chargées une
+seule fois dans la cache. Heureusement, la cache de $256$ blocs de $2$ mots
+proposée par le cas d'étude a assez d'espace pour qu'aucun remplacement de
+bloc n'ait lieu.
 
-Hors, on a $23$ instructions uniques, incluant la traduction des
-pseudo-instructions dans le programme de référence. Suffisais simplement de
-compté le nombre de lignes. La formule mathématique pour le nombre de coup
-d'horloge supplémentaire est donc la suivante:
+Le calcul reste simple : une pénalité a lieu tous les deux accès (par bloc).
+Il suffit donc de compter le nombre d'instructions uniques dans le programme,
+de le diviser par $2$, puis de multiplier par $10$ ns pour obtenir la pénalité
+totale en nanosecondes liée à l'accès à la DRAM.
+
+Dans notre cas, on compte $23$ instructions uniques, incluant les traductions
+des pseudo-instructions. La formule mathématique pour le nombre de cycles
+supplémentaires est donc la suivante :
 
 \begin{align}
   \text{T} &= 10\times\lceil23/2\rceil \\
@@ -362,138 +366,137 @@ d'horloge supplémentaire est donc la suivante:
   \text{T} &= 120
 \end{align}
 
-\subsection{Analyze des résultats}
+\subsection{Analyse des résultats}
 
-Après l'analyze de configurations de cache, il est évident que l'ajout d'une
-mémoire cache à la DRAM donne des gains significatifs à la performance.
-En effet, un gain d'un facteur de $32$ est observé pour la mémoire
-d'instructions! Un gain de $5.3$ est observé pour les accès aux données.
-Il est donc évidant que l'ajout d'une cache apporte un gain significatif en
-terme de performance. Cependant, ceci coute un changement au niveau physique
-ce qui est couteux et ne réduit pas le nombres d'instructions exécuter. Mais
-avec un gain de performance de $32$ ça pourrais réduire significativement leurs
-problème.
+Après l'analyse des configurations de cache, il est évident que l'ajout d'une
+mémoire cache à la DRAM apporte des gains significatifs en performance.
+En effet, un gain d'un facteur $32$ est observé pour la mémoire
+d'instructions, et un gain de $5{,}3$ pour les accès aux données.
+L'ajout d'une cache améliore donc nettement la performance, même si
+cela implique un changement matériel coûteux et ne réduit pas
+le nombre d'instructions exécutées. Cependant, un gain de performance
+de $32$ pourrait significativement réduire leur problème.
 
 \section{Configuration des caches}
-%\todo{définir nos choix pour la configuration de la cache pour minimiser la
-%taille ET les pénalités d'accès aux données en clock cycles}
-Le programme de référence ainsi que l'algorithme de Vitberbi utilisent des
-tableaux séparable en $4$. En effet, le meilleur implémentation de SIMD pour
-les programmes est d'utiliser des instructions qui gèrent des vecteurs de $4$.
-De plus, les deux algorithmes utilisent la même structures de données. Soit une
-matrice $4\times4$ et deux tableaux de $1\times4$. Optimiser pour un programme
-optimisera donc l'autre à un certain point.
 
-Ceci dit, la cache s'occupe de gérer les requètes et est très versatile. Par
-exemple, pour une cache de $4$ mots par blocs et une DRAM de $2$ mots par
-blocs, la cache vas s'occuper de populer ses $4$ mots en fesant deux appel
-à la DRAM. Si une instruction lui demande $8$ mots, la cache vas les fournir
-dans le même temps qu'une instruction qui en demande qu'un seul.
+Le programme de référence ainsi que l'algorithme de Viterbi utilisent des
+tableaux séparables en vecteurs de taille $4$. En effet, la meilleure
+implémentation SIMD pour ces programmes utilise des instructions gérant
+des vecteurs de $4$ éléments. De plus, les deux algorithmes exploitent la
+même structure de données : une matrice $4\times4$ et deux tableaux de
+taille $1\times4$. Optimiser pour l'un optimise donc partiellement l'autre.
 
-Ceci simplifie grandement l'optimisation de la cache. Le nombre de mots optimal
-est $2$ par blocs. Ça permet des remplacements de blocs sur des parties
-partielles. Donc si un vecteur de $4$ mots à été mis en cache, $2$ blocs ont
-été utilisés. Si la cache doit faire un remplacement de blocs pour une
-nouvelle donnée, alors uniquement la moitiée du vecteur est remplacé. Donc
-si il est réutilisé plus tard, on aura une pénalité d'accès à la DRAM au lieu
-de $2$ car uniquement une partie est à aller chercher. Si la cache était $4$
-mots, le vecteur au complet aurait été remplacé, nécessitant donc $2$ pénalités
-pour allé le chercher dans la DRAM.
+La cache gère les requêtes et est très versatile. Par exemple, pour une
+cache avec blocs de $4$ mots et une DRAM avec blocs de $2$ mots,
+la cache récupérera ses $4$ mots via deux appels DRAM. Si une instruction
+demande $8$ mots, la cache les fournira en un temps similaire à celui
+d'une instruction demandant un seul mot.
 
-Pour le type de cache (direct, associatif par ensemble, ou associative),
-l'utilisation d'ensemble semble pertinant. En effet les vecteurs réutilisé
-pourrait être mis dans le premier ensemble et le reste dans le deuxième puisque
-les accès aux matrices $4\times4$ est fait qu'une fois et les données ne sont
-pas réutilisé. Ceci réduirait la taille de la cache. Malheureusement, ceci
-ajoute une complexitée. La cache se popule comme elle veut. Donc il faudrait
-être sur que le code assembleur popule la cache dans le bon ordre afin que des
-données de matrices $4\times4$ ne se trouve pas dans le premier ensemble.
+Cela simplifie grandement l'optimisation de la cache. Le nombre optimal
+de mots par bloc est $2$, ce qui permet des remplacements partiels.
+Ainsi, si un vecteur de $4$ mots est mis en cache, il occupe deux blocs.
+Un remplacement partiel n'entraîne alors que la récupération partielle
+des données, réduisant la pénalité DRAM. Avec des blocs de $4$ mots,
+le vecteur complet serait remplacé, nécessitant deux pénalités DRAM.
 
-Si c'est fait, alors une cache associatif par ensemble de $8$ blocs de $2$ mots
-avec $2$ ensemble semble très optimisé pour le calcul de référence en prennant
-pour aquis que l'ordre d'appel des données est optimisé pour la cache. Ce
-serait beaucoup mieux qu'une cache directe de $32$ blocs de $2$ mots.
+Concernant le type de cache (directe, associatif par ensemble, ou totalement
+associative), une cache associative par ensemble paraît pertinente.
+Les vecteurs réutilisés peuvent être placés dans un premier ensemble,
+et les données des matrices dans un second, car l'accès aux matrices
+$4\times4$ se fait une seule fois sans réutilisation. Cela réduit la taille
+de la cache mais augmente la complexité. La cache se remplit de façon
+automatique, donc le code assembleur doit garantir un ordre d'accès
+approprié pour que les données des matrices ne se retrouvent pas dans
+le même ensemble que les vecteurs.
 
-Hors une analyze du code de référence confirme l'ordre de chargement des
-données. Les vecteurs d'entrées et sorties sont chargé en premier et donc
-vont être mis dans le premier ensemble. La cache populera le deuxième avec
-les données de matrices. Ceci est donc la meilleur optimisation pour le code de
-référence. Elle optimise à la fois les accès échoué et la grosseur de la cache.
+Dans ces conditions, une cache associative par ensemble avec
+$8$ blocs de $2$ mots par ensemble et $2$ ensembles semble
+très optimisée pour le calcul de référence, en supposant un ordre
+d'accès aux données optimisé. Ce serait préférable à une cache
+directe de $32$ blocs de $2$ mots.
 
-\subsection{Optimisation en fonction de Viterbis}
-Viterbis utilise un index de boucle qui est enregistrer dans la mémoire afin de
-ne pas causer problème avec les fonctions appellé à l'interne. L'optimisation
-discuté plus haut ne prend pas en compte l'ordre d'appel du code Viterbis, ni
-le nombre de données différentes.
+L'analyse du code de référence confirme que les vecteurs d'entrée
+et de sortie sont chargés en premier, donc seront mis dans
+le premier ensemble, tandis que le deuxième sera rempli avec
+les données de la matrice. Cette organisation optimise à la fois
+les accès ratés et la taille de la cache.
+
+\subsection{Optimisation spécifique à Viterbi}
+
+Viterbi utilise un index de boucle stocké en mémoire pour éviter
+les conflits avec les appels de fonctions internes. L'optimisation
+ci-dessus ne prend pas en compte l'ordre d'accès du code Viterbi,
+ni le nombre de données différentes utilisées.
 
 \section{Intégration}
 
 \subsection{Ébauche de priorisation en fonction du temps ressenti}
-Ce qui prend le moins de temps, sont les modifications logicielles. Si un non
-respect total des standard MIPS optimise drastiquement le code Viterbis ou le
-code de référence, alors ce serait une priorité.
 
-Par la suite vient les modifications physique. L'entreprise à déja quelque
-chose qui permet de créé des caches modulable. L'ajout d'une cache
-d'instruction est plus prioritaire que celle de données car elle présente un
-immense gain de performance pour les cas d'étude. Ensuite viendrais la cache
-de données.
+Les modifications logicielles sont les moins chronophages. Si un non-respect total
+des standards MIPS optimise significativement le code Viterbi ou le code de
+référence, cela devrait être prioritaire.
 
-Par la suite, le changement d'organisation en pipeline avec branchement au 4e
-étage est moins dur que celle étudié à deux étages avec les modules logiques
-supplémentaire. Chacune permet un gain de performances. Des architectures de
-processeurs sont déjà disponible en ligne, surtout pour de simple processeurs
-sans grande complexité comme ceux des cas d'études. Cependant ceci nécessite
-une restructuration de processeur, ce qui peut être plus couteux que prévu.
-C'est dur à dire.
+Viennent ensuite les modifications matérielles. L'entreprise dispose déjà d'une
+base permettant de créer des caches modulables. L'ajout d'une cache d'instructions
+est prioritaire, car elle apporte un gain de performance important pour les cas
+d'étude, suivi par la cache de données.
 
-Pour finir, l'implémentation des instructions SIMD est la plus couteuse.
-Non seulement le physique doit être changé, mais un temps de dévelopment à
-haut risque est ajouté. Certaines instructions peuvent n'être utilisé que pour
-ce cas-ci, rendent la versatilité moins attrayante.
+Le changement d’organisation en pipeline avec branchement au 4e étage est moins
+complexe que celui au 2e étage, qui requiert des modules logiques supplémentaires.
+Chacune apporte un gain de performance. Des architectures similaires existent en
+open source, notamment pour des processeurs simples comme ceux étudiés. Toutefois,
+cela nécessite une restructuration matérielle, donc un coût potentiellement élevé.
 
-\subsection{Priorisation en fonction de gain}
-Sachant que le total de coups d'horloge sans aucun changement, pour
-l'organisation unicycle est le suivant:
+Enfin, l’implémentation des instructions SIMD est la plus coûteuse. Elle exige
+non seulement des modifications matérielles majeures, mais aussi un temps de
+développement important et risqué. Certaines instructions peuvent n’être utiles
+que pour ce cas précis, ce qui réduit la versatilité.
+
+\subsection{Priorisation en fonction du gain}
+
+Sans optimisation, le total de coups d'horloge pour l’organisation unicycle est :
+
 \begin{align}
-  \text{T} &= 10\times\text{ instructions } + 10\times\text{ accès données } + instructions \\
-  \text{T} &= 3930 + 640 + 393 \\
-  \text{T} &= 4963
+  \text{T} &= 10 \times \text{instructions} + 10 \times \text{accès données} + \text{instructions} \\
+  &= 10 \times 393 + 10 \times 64 + 393 \\
+  &= 3930 + 640 + 393 \\
+  &= 4963
 \end{align}
 
-Le plus gros gain est d'implémenter les instructions SIMD. En effet le nombres
-d'instructions passe de $393$ à $45$. Ce changement impacte à la fois les
-pénalités des caches d'instructions et les pénalités d'accès à la DRAM de
-données. En effet, dans le nouveau program de référence, au lieu d'avoir $4$
-instructions accèdant à la DRAM dans deux boucles éxecuté $4$ fois chaque,
-uniquement $2$ impactant la mémoire de données sont fait et ce juste $4$ fois.
-La nouvelle formule est donc:
-\begin{align}
-  \text{T} &= 10\times45 + 10\times(2\times4+1) + 45 \\
-  \text{T} &= 450 + 90 + 45 \\
-  \text{T} &= 565
-\end{align}
-On observe donc une amélioration par un facteur de $8.8$!
+Le plus gros gain vient de l’implémentation des instructions SIMD, qui réduit
+le nombre d’instructions de $393$ à $45$. Ce changement diminue aussi bien les
+pénalités d’accès à la cache d’instructions que celles à la DRAM données.
+En effet, dans le nouveau programme, au lieu de $4$ accès DRAM par boucle exécutée
+$4$ fois, seuls $2$ accès impactent la mémoire données, exécutés $4$ fois.
+La nouvelle formule devient :
 
-Ensuite, l'implémentation de cache d'instructions causait le plus grand gain
-de performances sur le code de référence de base, soit un facteur de $32$ en
-différences de pénalités d'accès uniquement. Hors ce gain est en réalitée $4.3$
-lorsqu'appliqué à la première formule de cette section. C'est plus significatif
-que le gain de changement d'organisation et celui de la cache de données! Donc,
-au lieu de $45$ pénalités, uniquement $18$ causent des pénalités.
-Lorsqu'il est appliqué au code SIMD, on obtient un total de coup d'horloge
-suivant:
 \begin{align}
-  \text{T} &= 10\times18 + 10\times(2\times4+1) + 36 \\
-  \text{T} &= 180 + 90 + 36 \\
-  \text{T} &= 306
+  \text{T} &= 10 \times 45 + 10 \times (2 \times 4 + 1) + 45 \\
+  &= 450 + 90 + 45 \\
+  &= 585
 \end{align}
-Ce qui est un gain de $1.8$ après l'implémentation du SIMD.
 
-Changé l'organisation pour être en pipeline 2e étages serais la prochaine chose
-à faire. En effet, la durée d'un coup d'horloge baisse de \SI{25}{\nano\s} à \SI{10}{\nano\s}, mais
-le nombre d'instructions total executé change. On passe d'environ \SI{124}{\micro\s} à
-$55$us. Un gain de $2.2$.
+Soit une amélioration d’un facteur $\approx 8.5$.
+
+L’ajout d’une cache d’instructions apporte initialement un gain de facteur $32$
+sur les pénalités d’accès. Appliqué au calcul initial, ce gain effectif est
+d’environ $4.3$, ce qui dépasse les gains liés à l’organisation pipeline ou
+la cache de données. Ainsi, le nombre de pénalités d’accès passe de $45$ à $18$.
+Appliqué au code SIMD, le total devient :
+
+\begin{align}
+  \text{T} &= 10 \times 18 + 10 \times (2 \times 4 + 1) + 36 \\
+  &= 180 + 90 + 36 \\
+  &= 306
+\end{align}
+
+Soit un gain supplémentaire d’environ $1.9$ après SIMD.
+
+Enfin, passer à une organisation pipeline avec branchement au 2e étage réduit
+le cycle d’horloge de \SI{25}{\nano\s} à \SI{10}{\nano\s} et le nombre
+d’instructions total, passant d’environ \SI{124}{\micro\s} à \SI{55}{\micro\s},
+soit un gain de $2.2$.
+
 
 %\todo{proposer un système optimal et prioriser les modifications par leurs
 %gains effectifs sur la performance et leur temps de développement}
