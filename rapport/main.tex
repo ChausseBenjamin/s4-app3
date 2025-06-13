@@ -379,7 +379,30 @@ le nombre de données différentes.
 
 \section{Intégration}
 
-\todo{proposer un système optimal et prioriser les modifications par leurs
-gains effectifs sur la performance et leur temps de développement}
+\subsection{Priorisation en fonction de la difficulté et les couts}
+Ce qui prend le moins de temps, sont les modifications logicielles. Si un non
+respect total des standard MIPS optimise drastiquement le code Viterbis ou le
+code de référence, alors ce serait une priorité.
+
+Par la suite vient les modifications physique. L'entreprise à déja quelque
+chose qui permet de créé des caches modulable. L'ajout d'une cache
+d'instruction est plus prioritaire que celle de données car elle présente un
+immense gain de performance pour les cas d'étude. Ensuite viendrais la cache
+de données.
+
+Par la suite, le changement d'organisation en pipeline avec branchement au 4e
+étage est moins dur que celle étudié à deux étages avec les modules logiques
+supplémentaire. Chacune permet un gain de performances. Des architectures de
+processeurs sont déjà disponible en ligne, surtout pour de simple processeurs
+sans grande complexité comme ceux des cas d'études. Cependant ceci nécessite
+une restructuration de processeur, ce qui peut être plus couteux que prévu.
+C'est dur à dire.
+
+Pour finir, l'implémentation des instructions SIMD est la plus couteuse.
+Non seulement le physique doit être changé, mais un temps de dévelopment à
+haut risque est ajouté. Certaines instructions peuvent n'être utilisé que pour
+ce cas-ci, rendent la versatilité moins attrayante.
+%\todo{proposer un système optimal et prioriser les modifications par leurs
+%gains effectifs sur la performance et leur temps de développement}
 
 \end{document}
