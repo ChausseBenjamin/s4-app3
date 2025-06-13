@@ -267,19 +267,24 @@ n'a plus besoin d'accèder à la DRAM. Voici donc la formule:
 
 \subsection{Pour les instructions}
 \subsubsection{Cas de la DRAM de la problématique}
-Le calcul pour les délais d'accès en mémoire pour les instructions est relativement facile pour le cas de la DRAM de la problématique. En effet, sans cache, chaque
-appelle d'instruction engendre un délai d'acces! Même si la DRAM fournis $2$ mots (donc deux instructions) par appel, l'organisation unicycle ne peut qu'en exécuter
-qu'une et sans cache, elle ne peut pas enregistrer la prochaine instructions. Donc chaque instructions vient créé 10 coups d'horloge de délai.
 
-Le calcul est relativement simple, il s'agit de multiplier le nombre total d'instructions calculé plus haut à $10$ns introduit par les délais de la DRAM.
-On obtient donc la performance suivante:
-$$
-\text{T}=393\times10=3930ns
-$$
+Le calcul pour les délais d'accès en mémoire pour les instructions est
+relativement facile pour le cas de la DRAM de la problématique. En effet,
+sans cache, chaque appelle d'instruction engendre un délai d'acces! Même si
+la DRAM fournis $2$ mots (donc deux instructions) par appel, l'organisation
+unicycle ne peut qu'en exécuter qu'une et sans cache, elle ne peut pas
+enregistrer la prochaine instructions. Donc chaque instructions vient créé 10
+coups d'horloge de délai.
+
+Le calcul est relativement simple, il s'agit de multiplier le nombre total
+d'instructions calculé plus haut à $10$ns introduit par les délais de la
+DRAM. On obtient donc la performance suivante:
+
+\begin{equation}
+  \text{T}=393\times10=3930ns
+\end{equation}
 
 \subsubsection{Cas avec une cache attaché}
-
-
 
 \section{Configuration des caches}
 
