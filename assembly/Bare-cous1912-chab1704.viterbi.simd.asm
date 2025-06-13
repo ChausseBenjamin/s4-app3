@@ -47,11 +47,6 @@ after_msg:  .asciiz "s0 after: "
 newline:    .asciiz "\n"
 comma:      .asciiz ", "
 
-
-.eqv NOMBRE_ETAT 4           # Sert le meme but que `#define N 4`. (terrible nom de #define en passant.)
-.eqv NOMBRE_ETAT_FOR_LOOP_MAX 16   # Quand on pointe dans un vecteur, on se deplace de 4. Cet constante est essentiellement (NOMBRE_ETAT * 4)
-.eqv LONGUEUR_MESSAGE 12           # Meme but que `#define L 12`. (C'est important de bien nommer nos variables au lieu d'utiliser une lettre de l'alphabet.)
-
 .eqv CalculSurvivants_METRIQUE_PARAM_REGISTER $a0
 .eqv CalculSurvivants_SINPUT_PARAM_REGISTER   $a1
 .eqv CalculSurvivants_SOUTPUT_PARAM_REGISTER  $a2
@@ -92,14 +87,14 @@ CalculSurvivants:
   lw $t1, SINPUT_ADDRESS($sp)
   lw $t2, SOUTPUT_ADDRESS($sp)
 
-  lwv $z1, 0($t1)               # Load sinput[0..3] once
+  lwv $z1, 0($t1) # Load sinput[0] upto sinput[3]
 
-  li $t3, 0                     # i = 0
+  li $t3, 0 # i = 0
 CS_Loop:
-  beq $t3, 16, CS_End           # Loop over i = 0, 4, 8, 12 (4 iterations × 4 bytes)
+  beq $t3, 16, CS_End # Loop over i = 0, 4, 8, 12 (4 iterations × 4 bytes)
 
   # soutput[i] = 250
-  li $t4, 250
+  ; li $t4, 250
   sw $t4, 0($t2)
 
   # Prepare ACS arguments
@@ -121,10 +116,6 @@ CS_End:
 
 
 acs:
-  # acs_METRIQUE_PARAM_REGISTER: address of met[0..3]
-  # acs_SINPUT_PARAM_REGISTER: address of sinput[0..3]
-  # acs_SOUTPUT_PARAM_REGISTER: address of *soutput
-
   lwv $z2, 0(acs_METRIQUE_PARAM_REGISTER)  # Load met[0..3]
   lwv $z3, 0(acs_SINPUT_PARAM_REGISTER)    # Load sinput[0..3]
 
