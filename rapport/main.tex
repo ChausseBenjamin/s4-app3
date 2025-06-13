@@ -452,7 +452,7 @@ Non seulement le physique doit être changé, mais un temps de dévelopment à
 haut risque est ajouté. Certaines instructions peuvent n'être utilisé que pour
 ce cas-ci, rendent la versatilité moins attrayante.
 
-\subsection{Priorisation en fonction de gain}
+\subsection{Ébauches des gains en ordre de priorisation}
 Sachant que le total de coups d'horloge sans aucun changement, pour
 l'organisation unicycle est le suivant:
 \begin{align}
@@ -484,16 +484,31 @@ au lieu de $45$ pénalités, uniquement $18$ causent des pénalités.
 Lorsqu'il est appliqué au code SIMD, on obtient un total de coup d'horloge
 suivant:
 \begin{align}
-  \text{T} &= 10\times18 + 10\times(2\times4+1) + 36 \\
-  \text{T} &= 180 + 90 + 36 \\
-  \text{T} &= 306
+  \text{T} &= 10\times(18/2) + 10\times(2\times4+1) + 36 \\
+  \text{T} &= 90 + 90 + 36 \\
+  \text{T} &= 216
 \end{align}
-Ce qui est un gain de $1.8$ après l'implémentation du SIMD.
+Ce qui est un gain de $2.6$ après l'implémentation du SIMD. Avant
+l'implémentation du SIMD, c'est un gain de $4.30$.
 
 Changé l'organisation pour être en pipeline 2e étages serais la prochaine chose
 à faire. En effet, la durée d'un coup d'horloge baisse de \SI{25}{\nano\s} à \SI{10}{\nano\s}, mais
-le nombre d'instructions total executé change. On passe d'environ \SI{124}{\micro\s} à
-$55$us. Un gain de $2.2$.
+le nombre d'instructions total executé change. le gain observé reste à peu prêt
+$2.2$. Ce calcul est fastidieux à refaire pour le code de référence SIMD et le
+gain total ne changera pas de beaucoup du $2.2$ initialement calculé pour
+l'organisation de base.
+
+Pour l'ajout de la cache de données, le gain final n'est pas de beaucoup. En
+effet, avec le code de référence initiale, un gain de $1.17$ est observé. Si
+cette cache est implémenté après l'implémentation du SIMD, le gain est
+d'uniquement $1.01$ car le nombre de coup d'horloge passe de $565$ à $555$.
+S'il est implémenté après l'implémentation de la cache d'instructions et le
+SIMD, alors le gain est un peu plus. On passe de $216$ à $186$ pour un gain
+de $1.16$.
+
+\subsection{Système proposé}
+Le système proposé est une organisation avec branchement aux 2e étages incluant
+une unité d'avancement et de détection d'hazard, avec des caches
 
 %\todo{proposer un système optimal et prioriser les modifications par leurs
 %gains effectifs sur la performance et leur temps de développement}
