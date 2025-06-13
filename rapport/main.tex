@@ -231,8 +231,8 @@ d'instructions à l'intérieur de la boucle interne. La formule mathématique
 des pénalité est donc simplement:
 
 \begin{align}
-  \text{T} &= 10\times4\times(4\times4) \\
-  \text{T} &= 10\times4\times(4\times4) \\
+  \text{T} &= 10\text{ns }\times4\times(4\times4) \\
+  \text{T} &= 10\text{ns }\times4\times(4\times4) \\
   T        &= 640
 \end{align}
 
@@ -260,8 +260,8 @@ ont besoin d'être calculer puisque n'importe quel autre lecture ou écriture
 n'a plus besoin d'accèder à la DRAM. Voici donc la formule:
 
 \begin{align}
-  \text{T} &= 10\times(2+2+8) \\
-  \text{T} &= 120
+  \text{T} &= 10\text{ns }\times(2+2+8) \\
+  \text{T} &= 120\text{ns}
 \end{align}
 
 
@@ -281,10 +281,33 @@ d'instructions calculé plus haut à $10$ns introduit par les délais de la
 DRAM. On obtient donc la performance suivante:
 
 \begin{equation}
-  \text{T}=393\times10=3930ns
+  \text{T}=393\times10\text{ns}=3930\text{ns}
 \end{equation}
 
 \subsubsection{Cas avec une cache attaché}
+l'attachement d'une cache à la DRAM permet l'enregistrements d'instructions pour ne pas avoir besoin d'aller les chercher avec des pénalités à chaque fois.
+De plus, les instructions dans les boucles et la fin de boucle interne vont être chargé dans la cache qu'une seule fois. Heureusement, la cache de $256$ blocs de
+$2$ mots suggéré par le cas d'étude à assez d'espace pour qu'aucun cas de remplacement de bloc ait lieu.
+Le calcul reste facile à faire. À chaque deux instructions, une pénalité a lieu. Il suffit donc de compté le nombre d'instructions unique dans le programme, divisé
+par $2$ et multiplié par $10$ns et on obtient la pénalité en nanosecondes de l'accès à la DRAM.
+
+Hors, on a 23 instructions uniques, incluant la traduction des pseudo-instructions dans le programme de référence. Suffisais simplement de compté le nombre de
+lignes. La formule mathématique est donc la suivante:
+$$
+\text{T} = 10\text{ns }\times\lceil23/2\rceil
+$$
+$$
+\text{T} = 10\text{ns }\times12
+$$
+$$
+\text{T} = 120\text{ns}
+$$
+
+\subsection{Analyze des résultats}
+Après l'analyze de configurations de cache, il est évident que l'ajout d'une mémoire cache à la DRAM donne des gains significatifs à la performance des programmes.
+En effet, un gain d'un facteur de $32$ est observé pour la mémoire d'instructions! Un gain de $5.3$ est observé pour les accès aux données. Il est donc évidant que
+l'ajout d'une cache apporte un gain significatif en terme de performance. Cependant, ceci coute un changement au niveau physique ce qui est couteux et ne réduit pas
+le nombres d'instructions exécuter. Mais avec un gain de performance de $32$ ça pourrais réduire significativement leurs problème.
 
 \section{Configuration des caches}
 
