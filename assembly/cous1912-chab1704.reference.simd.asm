@@ -16,9 +16,9 @@ mat_A: .word 1,5,9,13,2,6,10,14,3,7,11,15,4,8,12,16 # grouped in columns
 
 
 main:
-  li $s1, 0         # i = 0
+  li $s1, 0         # i = 0 (pas nécessaire. Réduirait d'une instruction total l'éxécution.)
   li $s2, 4         # N columns
-  li $s3, 0         # idx = 0 (will jump by increments of 16 for correct column start)
+  li $s3, 0         # idx = 0 (will jump by increments of 16 for correct column start) (pas nécessaire. Réduirait d'une instruction total l'éxécution.)
 
   la  $t0, vec_entree
   lwv $z1, 0($t0) # vector storage uses $zN instead of $vN to avoid confusion with $v0
