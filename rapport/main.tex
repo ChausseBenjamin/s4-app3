@@ -34,10 +34,13 @@
 \newcommand{\question}[1]{\begin{color}{ForestGreen}\textbf{QUESTION:} #1\end{color}}
 
 \begin{document}
+\pagenumbering{gobble}  % Disable page numbers
 \maketitle
 \newpage
 \tableofcontents
 \newpage
+\pagenumbering{arabic}  % Start page numbering
+\setcounter{page}{1}    % Start from page 1
 
 \section{Performances d'organisations}
 Une analyze des différentes organisations proposées est effectuée dans cette
@@ -345,7 +348,7 @@ la DRAM.
 
 Hors, on a $23$ instructions uniques, incluant la traduction des
 pseudo-instructions dans le programme de référence. Suffisais simplement de
-compté le nombre de lignes. La formule mathématique pour le nombre de coup 
+compté le nombre de lignes. La formule mathématique pour le nombre de coup
 d'horloge supplémentaire est donc la suivante:
 
 \begin{align}
@@ -357,7 +360,7 @@ d'horloge supplémentaire est donc la suivante:
 \subsection{Analyze des résultats}
 
 Après l'analyze de configurations de cache, il est évident que l'ajout d'une
-mémoire cache à la DRAM donne des gains significatifs à la performance. 
+mémoire cache à la DRAM donne des gains significatifs à la performance.
 En effet, un gain d'un facteur de $32$ est observé pour la mémoire
 d'instructions! Un gain de $5.3$ est observé pour les accès aux données.
 Il est donc évidant que l'ajout d'une cache apporte un gain significatif en
@@ -465,7 +468,7 @@ La nouvelle formule est donc:
   \text{T} &= 360 + 90 + 36 \\
   \text{T} &= 486
 \end{align}
-On observe donc une amélioration par un facteur de 
+On observe donc une amélioration par un facteur de
 
 
 Le plus gros gain est celui de la cache d'instructions. Son implémentation
