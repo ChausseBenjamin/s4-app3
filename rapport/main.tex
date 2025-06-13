@@ -453,6 +453,21 @@ l'organisation unicycle est le suivant:
   \text{T} &= 4963
 \end{align}
 
+Le plus gros gain est d'implémenter les instructions SIMD. En effet le nombres
+d'instructions passe de $393$ à $36$. Ce changement impacte à la fois les
+pénalités des caches d'instructions et les pénalités d'accès à la DRAM de
+données. En effet, dans le nouveau program de référence, au lieu d'avoir $4$
+instructions accèdant à la DRAM dans deux boucles éxecuté $4$ fois chaque,
+uniquement $2$ impactant la mémoire de données sont fait et ce juste $4$ fois.
+La nouvelle formule est donc:
+\begin{align}
+  \text{T} &= 10\times36 + 10\times(2\times4+1) + 36 \\
+  \text{T} &= 360 + 90 + 36 \\
+  \text{T} &= 486
+\end{align}
+On observe donc une amélioration par un facteur de 
+
+
 Le plus gros gain est celui de la cache d'instructions. Son implémentation
 réduit d'un facteur de $32.75$ les accès aux instructions, donc d'un facteur
 de $4$ le nombre de coups d'horloge du système unicycle! Cette optimisation
