@@ -335,39 +335,47 @@ De plus, les deux algorithmes utilisent la même structures de données. Soit un
 matrice $4\times4$ et deux tableaux de $1\times4$. Optimiser pour un programme
 optimisera donc l'autre à un certain point.
 
-Il serait donc mieux d'utilisé une cache ayant $4$ mots par blocs.
-Cependant, la DRAM de la problématique cause problème par le fait qu'elle
-fonctionne en "2-word burst". Donc chaque accès fournis uniquement $2$ mots.
-Ça veut dire que même avec une cache de $4$ mots par blocs, $2$ pénalités
-d'accès auront lieu pour remplir un bloc si un \verb|MISS| se produit.
+Ceci dit, la cache s'occupe de gérer les requètes et est très versatile. Par
+exemple, pour une cache de $4$ mots par blocs et une DRAM de $2$ mots par
+blocs, la cache vas s'occuper de populer ses $4$ mots en fesant deux appel
+à la DRAM. Si une instruction lui demande $8$ mots, la cache vas les fournir
+dans le même temps qu'une instruction qui en demande qu'un seul.
 
-L'utilisation de $4$ mots par blocs est tout de même nécessaire. Si ce n'est
-pas le cas, admettons que $2$ mots par blocs, l'implémentation des instructions
-SIMD devient compliqué par le fait que deux accès à la cache sont nécessaire
-pour chaque lecture ou écriture, ralentissant ainsi les instructions SIMD.
-Cependant, dans le cas de $2$ mots par blocs, un remplacement de blocs cause
-moins de pénalités et fait en sorte que dans certains cas, uniquement une
-pénalité a lieu pour aller chercher une portion manquante d'un vecteur.
+Ceci simplifie grandement l'optimisation de la cache. Le nombre de mots optimal
+est $2$ par blocs. Ça permet des remplacements de blocs sur des parties
+partielles. Donc si un vecteur de $4$ mots à été mis en cache, $2$ blocs ont
+été utilisés. Si la cache doit faire un remplacement de blocs pour une
+nouvelle donnée, alors uniquement la moitiée du vecteur est remplacé. Donc
+si il est réutilisé plus tard, on aura une pénalité d'accès à la DRAM au lieu
+de $2$ car uniquement une partie est à aller chercher. Si la cache était $4$
+mots, le vecteur au complet aurait été remplacé, nécessitant donc $2$ pénalités
+pour allé le chercher dans la DRAM.
 
-La décision d'utiliser $4$ mots reste prédominante. Elle simplifie
-l'implémentation d'instructions SIMD à vecteurs de $4$ et ne nécessite pas de
-changer l'accès à la cache pour permettre deux lectures ou écriture par
-instructions.
+Pour le type de cache (direct, associatif par ensemble, ou associative),
+l'utilisation d'ensemble semble pertinant. En effet les vecteurs réutilisé
+pourrait être mis dans le premier ensemble et le reste dans le deuxième puisque
+les accès aux matrices $4\times4$ est fait qu'une fois et les données ne sont
+pas réutilisé. Ceci réduirait la taille de la cache. Malheureusement, ceci
+ajoute une complexitée. La cache se popule comme elle veut. Donc il faudrait
+être sur que le code assembleur popule la cache dans le bon ordre afin que des
+données de matrices $4\times4$ ne se trouve pas dans le premier ensemble.
 
-Sachant ceci, les programmes ont deux tableaux de $4$ données. Il y a donc un
-minimum de $2$ blocs de $4$ mots nécessaire. Les données dans la matrice
-$4\times4$ ne sont utilisé qu'une seule fois. Peut importe ce qui est fait,
-sont accès causera des pénalité d'accès à la DRAM. Si elle est mise en cache de
-façon à ne pas causer de remplacement de blocs, $4$ blocs sont nécessaire. Pour
-un total de $6$ blocs.
+Si c'est fait, alors une cache associatif par ensemble de $8$ blocs de $2$ mots
+avec $2$ ensemble semble très optimisé pour le calcul de référence en prennant
+pour aquis que l'ordre d'appel des données est optimisé pour la cache. Ce
+serait beaucoup mieux qu'une cache directe de $32$ blocs de $2$ mots.
 
-Vu que les mémoires sont en puissance de $2$, la cache aurait donc $8$ blocs.
-Cependant, si la cache fonctionne en mode associatif par ensemble alors juste
-$4$ blocs sont nécessaire. Un ensemble contienderait les tableaux $1\times4$
-réutilisés et l'autre les éléments de la matrices qui se remplacerait tout le
-temps sans ajouter plus de pénalité d'accès que s'il était mis inviduellement
-dans la cache.
+Hors une analyze du code de référence confirme l'ordre de chargement des
+données. Les vecteurs d'entrées et sorties sont chargé en premier et donc
+vont être mis dans le premier ensemble. La cache populera le deuxième avec
+les données de matrices. Ceci est donc la meilleur optimisation pour le code de
+référence. Elle optimise à la fois les accès échoué et la grosseur de la cache.
 
+\subsection{Optimisation en fonction de Viterbis}
+Viterbis utilise un index de boucle qui est enregistrer dans la mémoire afin de
+ne pas causer problème avec les fonctions appellé à l'interne. L'optimisation
+discuté plus haut ne prend pas en compte l'ordre d'appel du code Viterbis, ni
+le nombre de données différentes.
 
 \section{Intégration}
 
