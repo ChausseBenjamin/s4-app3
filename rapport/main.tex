@@ -457,32 +457,33 @@ l'organisation unicycle est le suivant:
 \end{align}
 
 Le plus gros gain est d'implémenter les instructions SIMD. En effet le nombres
-d'instructions passe de $393$ à $36$. Ce changement impacte à la fois les
+d'instructions passe de $393$ à $45$. Ce changement impacte à la fois les
 pénalités des caches d'instructions et les pénalités d'accès à la DRAM de
 données. En effet, dans le nouveau program de référence, au lieu d'avoir $4$
 instructions accèdant à la DRAM dans deux boucles éxecuté $4$ fois chaque,
 uniquement $2$ impactant la mémoire de données sont fait et ce juste $4$ fois.
 La nouvelle formule est donc:
 \begin{align}
-  \text{T} &= 10\times36 + 10\times(2\times4+1) + 36 \\
-  \text{T} &= 360 + 90 + 36 \\
-  \text{T} &= 486
+  \text{T} &= 10\times45 + 10\times(2\times4+1) + 45 \\
+  \text{T} &= 450 + 90 + 45 \\
+  \text{T} &= 565
 \end{align}
-On observe donc une amélioration par un facteur de $10.2$!
+On observe donc une amélioration par un facteur de $8.8$!
 
 Ensuite, l'implémentation de cache d'instructions causait le plus grand gain
 de performances sur le code de référence de base, soit un facteur de $32$ en
 différences de pénalités d'accès uniquement. Hors ce gain est en réalitée $4.3$
 lorsqu'appliqué à la première formule de cette section. C'est plus significatif
-que le gain de changement d'organisation et celui de la cache de donnée!
+que le gain de changement d'organisation et celui de la cache de données! Donc,
+au lieu de $45$ pénalités, uniquement $18$ causent des pénalités.
 Lorsqu'il est appliqué au code SIMD, on obtient un total de coup d'horloge
 suivant:
 \begin{align}
-  \text{T} &= 10\times15 + 10\times(2\times4+1) + 36 \\
-  \text{T} &= 150 + 90 + 36 \\
-  \text{T} &= 276
+  \text{T} &= 10\times18 + 10\times(2\times4+1) + 36 \\
+  \text{T} &= 180 + 90 + 36 \\
+  \text{T} &= 306
 \end{align}
-Ce qui est un gain de $1.76$ après l'implémentation du SIMD.
+Ce qui est un gain de $1.8$ après l'implémentation du SIMD.
 
 Changé l'organisation pour être en pipeline 2e étages serais la prochaine chose
 à faire. En effet, la durée d'un coup d'horloge baisse de \SI{25}{\nano\s} à \SI{10}{\nano\s}, mais
