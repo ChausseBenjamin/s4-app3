@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #define L 12  /* longueur du message en bits */
-#define N 4  /* nombre d'états du code */
+#define N 4   /* nombre d'états du code */
 
 // Message de test pré-encodé
 static const unsigned int bitsrc[L] = { 5, 6, 2, 3, 1, 7, 0, 5, 3, 1, 2, 6 };
