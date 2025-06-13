@@ -74,14 +74,19 @@ seule instruction est exécuté, soit la comparaison \verb|beq|, qui branche
 dans \verb|finBoucleInterne| qui est $2$ instructions. La formule pour la
 boucle interne est donc: $$ T = 4\times(23)+(2+1) $$
 
-la boucle externe est aussi exécuté $4$ fois. Elle contient $2$ instructions puis une exécution complète de la boucle interne. À la 5e exécution, une seule instruction est exécuté
-pour sortie de la boucle et appeller \verb|finBoucleExterne|. Cette dernière est $2$ instructions. La formule pour la boucle externe est donc la suivante:
+la boucle externe est aussi exécuté $4$ fois. Elle contient $2$ instructions
+puis une exécution complète de la boucle interne. À la 5e exécution, une
+seule instruction est exécuté pour sortie de la boucle et appeller
+\verb|finBoucleExterne|. Cette dernière est $2$ instructions. La formule pour
+la boucle externe est donc la suivante:
 
 \begin{equation}
 T = 4\times(2+4\times(23)+(2+1)) + (2+1)
 \end{equation}
 
-Reste juste le \verb|main| à inclure, qui est $2$ instructions. Le temps d'exécution en coup d'horloge est donc:
+Reste juste le \verb|main| à inclure, qui est $2$ instructions. Le temps
+d'exécution en coup d'horloge est donc:
+
 \begin{align}
   T &= 2+ 4\times(2+4\times(23)+(2+1)) + (2+1) \\
   T &= 4\times(4\times(23)+5) + 5 \\
@@ -285,29 +290,39 @@ DRAM. On obtient donc la performance suivante:
 \end{equation}
 
 \subsubsection{Cas avec une cache attaché}
-l'attachement d'une cache à la DRAM permet l'enregistrements d'instructions pour ne pas avoir besoin d'aller les chercher avec des pénalités à chaque fois.
-De plus, les instructions dans les boucles et la fin de boucle interne vont être chargé dans la cache qu'une seule fois. Heureusement, la cache de $256$ blocs de
-$2$ mots suggéré par le cas d'étude à assez d'espace pour qu'aucun cas de remplacement de bloc ait lieu.
-Le calcul reste facile à faire. À chaque deux instructions, une pénalité a lieu. Il suffit donc de compté le nombre d'instructions unique dans le programme, divisé
-par $2$ et multiplié par $10$ns et on obtient la pénalité en nanosecondes de l'accès à la DRAM.
 
-Hors, on a 23 instructions uniques, incluant la traduction des pseudo-instructions dans le programme de référence. Suffisais simplement de compté le nombre de
-lignes. La formule mathématique est donc la suivante:
-$$
-\text{T} = 10\text{ns }\times\lceil23/2\rceil
-$$
-$$
-\text{T} = 10\text{ns }\times12
-$$
-$$
-\text{T} = 120\text{ns}
-$$
+l'attachement d'une cache à la DRAM permet l'enregistrements d'instructions
+pour ne pas avoir besoin d'aller les chercher avec des pénalités à chaque
+fois. De plus, les instructions dans les boucles et la fin de boucle interne
+vont être chargé dans la cache qu'une seule fois. Heureusement, la cache de
+$256$ blocs de $2$ mots suggéré par le cas d'étude à assez d'espace pour
+qu'aucun cas de remplacement de bloc ait lieu. Le calcul reste facile à
+faire. À chaque deux instructions, une pénalité a lieu. Il suffit donc de
+compté le nombre d'instructions unique dans le programme, divisé par $2$ et
+multiplié par $10$ns et on obtient la pénalité en nanosecondes de l'accès à
+la DRAM.
+
+Hors, on a 23 instructions uniques, incluant la traduction des
+pseudo-instructions dans le programme de référence. Suffisais simplement de
+compté le nombre de lignes. La formule mathématique est donc la suivante:
+
+\begin{align}
+  \text{T} &= 10\text{ns }\times\lceil23/2\rceil \\
+  \text{T} &= 10\text{ns }\times12 \\
+  \text{T} &= 120\text{ns}
+\end{align}
 
 \subsection{Analyze des résultats}
-Après l'analyze de configurations de cache, il est évident que l'ajout d'une mémoire cache à la DRAM donne des gains significatifs à la performance des programmes.
-En effet, un gain d'un facteur de $32$ est observé pour la mémoire d'instructions! Un gain de $5.3$ est observé pour les accès aux données. Il est donc évidant que
-l'ajout d'une cache apporte un gain significatif en terme de performance. Cependant, ceci coute un changement au niveau physique ce qui est couteux et ne réduit pas
-le nombres d'instructions exécuter. Mais avec un gain de performance de $32$ ça pourrais réduire significativement leurs problème.
+
+Après l'analyze de configurations de cache, il est évident que l'ajout d'une
+mémoire cache à la DRAM donne des gains significatifs à la performance des
+programmes. En effet, un gain d'un facteur de $32$ est observé pour la
+mémoire d'instructions! Un gain de $5.3$ est observé pour les accès aux
+données. Il est donc évidant que l'ajout d'une cache apporte un gain
+significatif en terme de performance. Cependant, ceci coute un changement au
+niveau physique ce qui est couteux et ne réduit pas le nombres d'instructions
+exécuter. Mais avec un gain de performance de $32$ ça pourrais réduire
+significativement leurs problème.
 
 \section{Configuration des caches}
 
