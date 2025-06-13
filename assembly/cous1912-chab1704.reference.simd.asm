@@ -20,12 +20,15 @@ main:
   li $s2, 4         # N columns
   li $s3, 0         # idx = 0 (will jump by increments of 16 for correct column start)
 
-  lwv $z1, vec_entree # vector storage uses $zN instead of $vN to avoid confusion with $v0
+  la  $t0, vec_entree
+  lwv $z1, 0($t0) # vector storage uses $zN instead of $vN to avoid confusion with $v0
   la  $s4, vec_sortie # index 0 of the output vector (will get incremented)
+  la  $t1, mat_A
 
 loop:
   # Load from mat_A[i] up to mat_A[i+4] into $z2 (aka column) using $s3 as reference
-  lwv $z2, mat_A($s3)
+  add $t3, $t1, $s3 # offset l'addresse.
+  lwv $z2, 0($t3)
 
   # NOTE: The custom SIMD instruction `multv r a b` does r[n] = a[n]*b[n] for each vector component
   multv $z3, $z1, $z2
