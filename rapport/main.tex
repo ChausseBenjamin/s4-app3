@@ -229,22 +229,22 @@ mettre le résultat dans un registre standard. Ceci permet d'immédiatement
 mettre le résultat à la bonne endroit dans le vecteur de sortie.
 
 \subsection{Nouveau temps d'exécution}
-Dans le nouveau code de référence, le \verb|main| a $5$ instructions. La boucle
+Dans le nouveau code de référence, le \verb|main| a $7$ instructions. La boucle
 interne a complètement disparût à cause des instructions SIMD. La boucle
-externe a $8$ instructions. La comparaison est a la toute fin ce qui réduit
+externe a $9$ instructions. La comparaison est a la toute fin ce qui réduit
 d'une instruction car la boucle n'est pas exécuté $5$ fois mais juste $4$. La
 fin de boucle est $2$ instructions. De plus, il n'y a plus de pseudo-instructions.
 
 Ceci dit, la formule de calcul du nombre d'instructions est maintenant la suivante:
 $$
-T = 2 + 4\times(8) + 2
+T = 7 + 4\times(9) + 2
 $$
 $$
-T = 36
+T = 45
 $$
 
 \subsection{Comparaison avec l'unicycle}
-Le total d'instructions passe de $393$ à juste $36$. C'est un gain de $10$! Ce
+Le total d'instructions passe de $393$ à juste $45$. C'est un gain de $8.7$! Ce
 gain démontre emplement qu'il est possible de réduire d'au minimum $3$ fois le
 nombre d'instructions total pour la problématique étant donné la nature
 similaire des deux programmes assembleurs.
@@ -473,14 +473,21 @@ La nouvelle formule est donc:
   \text{T} &= 360 + 90 + 36 \\
   \text{T} &= 486
 \end{align}
-On observe donc une amélioration par un facteur de
+On observe donc une amélioration par un facteur de $10.2$!
 
-
-Le plus gros gain est celui de la cache d'instructions. Son implémentation
-réduit d'un facteur de $32.75$ les accès aux instructions, donc d'un facteur
-de $4$ le nombre de coups d'horloge du système unicycle! Cette optimisation
-réponderait directement au gain de $3$ demandé dans la problématique, mais
-n'apporte aucune réduction du nombre d'instructions. C'est donc une priorité.
+Ensuite, l'implémentation de cache d'instructions causait le plus grand gain
+de performances sur le code de référence de base, soit un facteur de $32$ en
+différences de pénalités d'accès uniquement. Hors ce gain est en réalitée $4.3$
+lorsqu'appliqué à la première formule de cette section. C'est plus significatif
+que le gain de changement d'organisation et celui de la cache de donnée!
+Lorsqu'il est appliqué au code SIMD, on obtient un total de coup d'horloge
+suivant:
+\begin{align}
+  \text{T} &= 10\times15 + 10\times(2\times4+1) + 36 \\
+  \text{T} &= 150 + 90 + 36 \\
+  \text{T} &= 276
+\end{align}
+Ce qui est un gain de $1.76$ après l'implémentation du SIMD.
 
 Changé l'organisation pour être en pipeline 2e étages serais la prochaine chose
 à faire. En effet, la durée d'un coup d'horloge baisse de \SI{25}{\nano\s} à \SI{10}{\nano\s}, mais
