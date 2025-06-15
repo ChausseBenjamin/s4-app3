@@ -49,14 +49,14 @@ problématique?
 
 #### Performances des mémoires sur processeur unicycle
 
-À l'aide du code de référence de calcul matriciel
-sans SIMD, et en vous basant sur une organisation unicycle, calculez le nombre
-de coups d'horloge supplémentaires due aux données pour le cas de la DRAM de la
-problématique, et ensuite pour le cas d'une cache de données attachée à cette
-DRAM utilisant 256 blocs, 2 mots de 32-bits par bloc et l'écriture à la DRAM en
-write-through. Documentez votre calcul sous forme d'équations algébriques avant
-de produire le résultat numérique. Notez que cet exercice est possible avec la
-version en C du code.
+À l'aide du code de référence de calcul matriciel sans SIMD, et en vous basant
+sur une organisation unicycle, calculez le nombre de coups d'horloge
+supplémentaires due aux données pour le cas de la DRAM de la problématique, et
+ensuite pour le cas d'une cache de données attachée à cette DRAM utilisant 256
+blocs, 2 mots de 32-bits par bloc et l'écriture à la DRAM en write-through.
+Documentez votre calcul sous forme d'équations algébriques avant de produire le
+résultat numérique. Notez que cet exercice est possible avec la version en C du
+code.
 
 #### Configuration des caches
 

@@ -445,10 +445,10 @@ référence, cela devrait être prioritaire.
 Viennent ensuite les modifications matérielles. L'entreprise dispose déjà d'une
 base permettant de créer des caches modulables. L'ajout d'une cache d'instructions
 est prioritaire, car elle apporte un gain de performance important pour les cas
-d'étude, suivi par la cache de données.
+d'étude, suivie par la cache de données.
 
-Le changement d’organisation en pipeline avec branchement au 4e étage est moins
-complexe que celui au 2e étage, qui requiert des modules logiques supplémentaires.
+Le changement d’organisation en pipeline avec branchement au 4\textsuperscript{e} étage est moins
+complexe que celui au 2\textsuperscript{e} étage, qui requiert des modules logiques supplémentaires.
 Chacune apporte un gain de performance. Des architectures similaires existent en
 open source, notamment pour des processeurs simples comme ceux étudiés. Toutefois,
 cela nécessite une restructuration matérielle, donc un coût potentiellement élevé.
@@ -460,7 +460,7 @@ que pour ce cas précis, ce qui réduit la versatilité.
 
 \subsection{Ébauches des gains en ordre de priorisation}
 Sachant que le total de coups d'horloge sans aucun changement, pour
-l'organisation unicycle est le suivant:
+l'organisation unicycle, est le suivant:
 \begin{align}
   \text{T} &= 10 \times \text{instructions} + 10 \times \text{accès données} + \text{instructions} \\
   &= 10 \times 393 + 10 \times 64 + 393 \\
@@ -472,7 +472,7 @@ Le plus gros gain vient de l’implémentation des instructions SIMD, qui rédui
 le nombre d’instructions de $393$ à $45$. Ce changement diminue aussi bien les
 pénalités d’accès à la cache d’instructions que celles à la DRAM données.
 En effet, dans le nouveau programme, au lieu de $4$ accès DRAM par boucle exécutée
-$4$ fois, seuls $2$ accès impactent la mémoire données, exécutés $4$ fois.
+$4$ fois, seuls $2$ accès impactent la mémoire de données, exécutés $4$ fois.
 La nouvelle formule devient :
 
 \begin{align}
@@ -481,12 +481,12 @@ La nouvelle formule devient :
   &= 585
 \end{align}
 
-Soit une amélioration d’un facteur $\approx 8.5$.
+Soit une amélioration d’un facteur $\approx 8{,}5$.
 
-L’ajout d’une cache d’instructions apporte initialement un gain de facteur $32$
+L’ajout d’une cache d’instructions apporte initialement un gain d’un facteur $32$
 sur les pénalités d’accès. Appliqué au calcul initial, ce gain effectif est
-d’environ $4.3$, ce qui dépasse les gains liés à l’organisation pipeline ou
-la cache de données. Ainsi, le nombre de pénalités d’accès passe de $45$ à $18$.
+d’environ $4{,}3$, ce qui dépasse les gains liés à l’organisation pipeline ou
+à la cache de données. Ainsi, le nombre de pénalités d’accès passe de $45$ à $18$.
 Appliqué au code SIMD, le total devient :
 
 \begin{align}
@@ -494,45 +494,57 @@ Appliqué au code SIMD, le total devient :
   \text{T} &= 90 + 90 + 45 \\
   \text{T} &= 225
 \end{align}
-Ce qui est un gain de $2.6$ après l'implémentation du SIMD. Avant
-l'implémentation du SIMD, c'est un gain de $4.30$.
+Ce qui est un gain de $2{,}6$ après l'implémentation du SIMD. Avant
+l'implémentation du SIMD, c'est un gain de $4{,}3$.
 
-Changé l'organisation pour être en pipeline 2e étages serais la prochaine chose
+Changer l'organisation pour être en pipeline 2\textsuperscript{e} étage serait la prochaine chose
 à faire. En effet, la durée d'un coup d'horloge baisse de \SI{25}{\nano\s} à \SI{10}{\nano\s}, mais
-le nombre d'instructions total executé change. le gain observé sans SIMD est de
-$2.2$. Pour le SIMD, le calcul mathématique est à refaire. On obtient un total
+le nombre d'instructions total exécuté change. Le gain observé sans SIMD est de
+$2{,}2$. Pour le SIMD, le calcul mathématique est à refaire. On obtient un total
 de $59$ instructions en effectuant la même méthode que le calcul unicycle. Ceci
-donne un gain de $1.9$ au lieu de $2.2$.
+donne un gain de $1{,}9$ au lieu de $2{,}2$.
 
-Pour l'ajout de la cache de données, le gain final n'est pas de beaucoup. En
-effet, avec le code de référence initiale, un gain de $1.17$ est observé. Si
-cette cache est implémenté après l'implémentation du SIMD, le gain est
-d'uniquement $1.05$ car le nombre de coup d'horloge passe de $585$ à $555$.
-S'il est implémenté après l'implémentation de la cache d'instructions et le
-SIMD, alors le gain est un peu plus. On passe de $225$ à $195$ pour un gain
-de $1.15$.
+Pour l'ajout de la cache de données, le gain final n'est pas très grand. En
+effet, avec le code de référence initial, un gain de $1{,}17$ est observé. Si
+cette cache est implémentée après l'implémentation du SIMD, le gain est
+d'uniquement $1{,}05$ car le nombre de coups d'horloge passe de $585$ à $555$.
+S'il est implémenté après l'implémentation de la cache d'instructions et du
+SIMD, alors le gain est un peu plus grand. On passe de $225$ à $195$ pour un gain
+de $1{,}15$.
 
 \subsection{Système proposé}
-Le système proposé est une organisation avec branchement aux 2e étages incluant
-une unité d'avancement et de détection d'hazard, avec des caches d'instructions
-et de données. La cache de donnée est de $8$ blocs de $2$ mots et est
-associative par ensemble. La cache d'instructions est $256$ blocs de $2$ mots
-et est direct.
+Le système proposé est une organisation avec branchement au 2\textsuperscript{e} étage incluant
+une unité d'avancement et de détection d'hazards, avec des caches d'instructions
+et de données. La cache de données est de $8$ blocs de $2$ mots et est
+associative par ensemble. La cache d'instructions est de $256$ blocs de $2$ mots
+et est directe.
 
-Sans changé l'organisation, le nombre total de coups d'horloge passe de $4963$
+Sans changer l'organisation, le nombre total de coups d'horloge passe de $4963$
 à $195$. C'est un gain de performance de $25$. Avec le changement
 d'organisation, $249$ instructions sont faites au lieu de $195$ mais avec des
 coups d'horloge de \SI{10}{\nano\s} au lieu de \SI{25}{\nano\s}. C'est donc un
-gain de performance total, après avoir refaite toutes les calculs,
+gain de performance total, après avoir refait tous les calculs,
 d'environ $50$.
 
 \subsection{Devancement du calendrier}
-La première chose à laisser tombé est l'organisation en pipeline. Une chose est
-sur, le SIMD doit rester. Après ça, la cache de donnée peut prendre le bord.
-L'important est que le SIMD reste implémenté car il répond à la problématique,
-qui est de réduire de $3$ le nombres d'instructions exécuté.
+La première chose à laisser tomber est l'organisation en pipeline. Une chose est
+sûre, le SIMD doit rester. Après ça, la cache de données peut être écartée.
+L'important est que le SIMD reste implémenté, car il répond à la problématique,
+qui est de réduire d’un facteur $3$ le nombre d'instructions exécutées.
 
-%\todo{proposer un système optimal et prioriser les modifications par leurs
-%gains effectifs sur la performance et leur temps de développement}
+\section{Conclusion}
+
+Cette étude a démontré que l'implémentation d'instructions SIMD offre le gain
+de performance le plus significatif, réduisant le nombre d'instructions d'un
+facteur 8,7, dépassant largement l'objectif initial d'une réduction d'un
+facteur 3. L'ajout d'une cache d'instructions et le passage à une
+organisation en pipeline avec branchement au 2\textsuperscript{e} étage
+permettent des gains supplémentaires
+significatifs.
+
+La configuration optimale proposée combine ces trois améliorations pour un
+gain total d'environ 50 fois. Cependant, en cas de contraintes temporelles,
+l'implémentation des instructions SIMD seule suffirait à atteindre les
+objectifs d'optimisation pour l'algorithme de Viterbi.
 
 \end{document}

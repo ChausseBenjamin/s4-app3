@@ -5,37 +5,13 @@ metrique_1: .word 4,3,3,2 # Bon, ca utilise pas ma constante de 4...
             .word 4,3,3,2 # Correspond a metrique du code en C, la premiere fois que CalculSurvivant est appeller.
             .word 2,5,3,2
 
-metrique_2: .word 3,4,2,3
-            .word 5,2,2,3
-            .word 3,4,2,3 # Correspond a metrique du code en C, la deuxieme fois que CalculSurvivant est appeller.
-            .word 3,0,4,5
-
-metrique_3: .word 4,5,3,0
-            .word 2,3,3,4
-            .word 2,3,5,2 # Correspond a metrique du code en C, la troisieme fois que CalculSurvivant est appeller.
-            .word 2,3,3,4
-
-metrique_4: .word 2,5,3,2
-            .word 4,3,3,2
-            .word 0,3,5,4 # Correspond a metrique du code en C, la quatrieme fois que CalculSurvivant est appeller.
-            .word 4,3,3,2
-
-metrique_5: .word 3,2,4,3
-            .word 5,4,0,3
-            .word 3,2,4,3 # Correspond a metrique du code en C, la cinquieme fois que CalculSurvivant est appeller.
-            .word 3,2,2,5
-
-metrique_6: .word 3,4,2,3
-            .word 3,0,4,5
-            .word 3,4,2,3 # Correspond a metrique du code en C, la sixieme fois que CalculSurvivant est appeller.
-            .word 5,2,2,3
 
 si_1: .word 0,0,0,0  # Pareil que le code C. (premiere appel) (terrible nom de variable en passant. SI peut dire tout et rien.)
-si_2: .word 2,0,2,2
-si_3: .word 4,2,4,0
-si_4: .word 0,4,2,4
-si_5: .word 2,4,0,4
-si_6: .word 4,0,4,2
+; si_2: .word 2,0,2,2
+; si_3: .word 4,2,4,0
+; si_4: .word 0,4,2,4
+; si_5: .word 2,4,0,4
+; si_6: .word 4,0,4,2
 
 
 so:   .word 0,0,0,0  # Pareil que le code C. (reutiliser dans tout les calls) (terrible nom de variable en passant. SO peut dire tout et rien.)
