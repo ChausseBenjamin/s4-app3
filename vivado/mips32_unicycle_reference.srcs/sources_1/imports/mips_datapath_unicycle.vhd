@@ -151,6 +151,9 @@ end component;
     signal s_MemoryReadData        : std_logic_vector(31 downto 0);
     signal s_AluB_data             : std_logic_vector(31 downto 0);
     
+    signal s_v_MemoryReadData      : std_logic_vector(127 downto 0); -- Donnees vectorielle lu de la cache de donnees.
+    signal s_v_DataToWriteInCache  : std_logic_vector(127 downto 0);
+    
     -- registres spéciaux pour la multiplication
     signal r_HI             : std_logic_vector(31 downto 0);
     signal r_LO             : std_logic_vector(31 downto 0);
@@ -224,13 +227,13 @@ inst_Registres: BancRegistres
 port map ( 
 	clk          => clk,
 	reset        => reset,
-	i_RS1        => s_rs,
-	i_RS2        => s_rt,
-	i_Wr_DAT     => s_Data2Reg_muxout,
-	i_WDest      => s_WriteRegDest_muxout,
-	i_WE         => i_RegWrite,
-	o_RS1_DAT    => s_reg_data1,
-	o_RS2_DAT    => s_reg_data2
+	i_RS1        => s_rs,                  -- Source universel peut importe le type de donnees. Addresse vers un registre de 1 mot.
+	i_RS2        => s_rt,                  -- Source 2.
+	i_Wr_DAT     => s_Data2Reg_muxout,     -- Donnees a ecrire dans le registre. Peut etre resultat ALU, ou jumps (adr+4), ou multiplications.
+	i_WDest      => s_WriteRegDest_muxout, -- Registre ou le wr_dat est ecrit. (rd ou rt)
+	i_WE         => i_RegWrite,            -- Event qui dit: go, ecrit wr_dat dans wdest.
+	o_RS1_DAT    => s_reg_data1,           -- donnees de rs. Toujours output.
+	o_RS2_DAT    => s_reg_data2            -- donnees de rt. Toujoutrs output.
 	);
 	
 
@@ -269,8 +272,21 @@ port map(
 --    o_ReadData	=> s_MemoryReadData
 --	);
 
-inst_MemDonnees_dual : 
+inst_MemDonnees_Thicc : MemDonneesWideDual
+    Port map ( 
+	   clk 		       => clk,
+	   reset 		   => reset,
+	   i_MemRead	   => i_MemRead,
+	   i_MemWrite 	   => i_MemWrite,
+       i_Addresse      => s_AluResult,      -- To understand
+	   i_WriteData     => s_reg_data2,      -- Sortie 2 des banc de registres standard.
+       o_ReadData      => s_MemoryReadData, -- Donnee a i_addresse, toujours output. Mis dans banc registre si RegWrite est mis a 1. Muxed with other data tho.
 	
+	   i_MemReadWide   => i_v_MemRead,
+	   i_MemWriteWide  => i_v_MemWrite,
+	   i_WriteDataWide => s_v_DataToWriteInCache, -- vecteur a stocker dans la cache.
+       o_ReadDataWide  => s_v_MemoryReadData
+    );
 
 ------------------------------------------------------------------------
 -- Mux d'écriture vers le banc de registres
