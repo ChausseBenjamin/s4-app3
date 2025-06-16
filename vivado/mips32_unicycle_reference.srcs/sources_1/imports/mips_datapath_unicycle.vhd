@@ -60,17 +60,35 @@ component MemInstructions is
            o_instruction : out std_logic_vector (31 downto 0));
 end component;
 
-component MemDonnees is
-Port ( 
-	clk : in std_logic;
-	reset : in std_logic;
-	i_MemRead 	: in std_logic;
-	i_MemWrite : in std_logic;
-    i_Addresse : in std_logic_vector (31 downto 0);
-	i_WriteData : in std_logic_vector (31 downto 0);
-    o_ReadData : out std_logic_vector (31 downto 0)
-);
-end component;
+--component MemDonnees is
+--Port ( 
+--	clk : in std_logic;
+--	reset : in std_logic;
+--	i_MemRead 	: in std_logic;
+--	i_MemWrite : in std_logic;
+--    i_Addresse : in std_logic_vector (31 downto 0);
+--	i_WriteData : in std_logic_vector (31 downto 0);
+--    o_ReadData : out std_logic_vector (31 downto 0)
+--);
+--end component;
+
+    component MemDonneesWideDual is
+    Port ( 
+	   clk 		      : in std_logic;                         -- Pareil que l'ancienne memoire
+	   reset 		  : in std_logic;                         -- Pareil que l'ancienne memoire
+	   i_MemRead	  : in std_logic;                         -- Pareil que l'ancienne memoire. Cependant, ce n'est pas implementer a l'interne!
+	   i_MemWrite 	  : in std_logic;                         -- Dit d'ecrite writedata a i_address. write wide prend le dessus si les deux sont a 1.
+       i_Addresse     : in std_logic_vector (31 downto 0);    -- Address ou aller ecrite les donnees.
+	   i_WriteData    : in std_logic_vector (31 downto 0);    -- Mot a ecrire en mode ecriture pas wide.
+       o_ReadData     : out std_logic_vector (31 downto 0);   -- Donne lu a l'index donnee.
+	
+	   -- ports pour accès à large bus, adresse partagée
+	   i_MemReadWide   : in std_logic;                        -- Quand a 1, le processus est fait sur 4 mots consecutif. A pas besoin de memwrite a 1 pour fonctionner.
+	   i_MemWriteWide  : in std_logic;                        -- Prend le dessus sur memWrite. Change tout le processus pour que ce soit sur 4 mots consecutif.
+	   i_WriteDataWide : in std_logic_vector (127 downto 0);  -- Donne a ecrire dans les 4 addresses consecutif, debutant par i_addresse.
+       o_ReadDataWide  : out std_logic_vector (127 downto 0)  -- 4 mots consecutif a partir de i_addresse. Toujours donnees meme sans i_MemReadWide
+    );
+    end component;
 
 	component BancRegistres is
 	Port ( 
@@ -240,16 +258,18 @@ port map(
 ------------------------------------------------------------------------
 -- Mémoire de données
 ------------------------------------------------------------------------
-inst_MemDonnees : MemDonnees
-Port map( 
-	clk 		=> clk,
-	reset 		=> reset,
-	i_MemRead	=> i_MemRead,
-	i_MemWrite	=> i_MemWrite,
-    i_Addresse	=> s_AluResult,
-	i_WriteData => s_reg_data2,
-    o_ReadData	=> s_MemoryReadData
-	);
+--inst_MemDonnees : MemDonnees
+--Port map( 
+--	clk 		=> clk,
+--	reset 		=> reset,
+--	i_MemRead	=> i_MemRead,
+--	i_MemWrite	=> i_MemWrite,
+--    i_Addresse	=> s_AluResult,
+--	i_WriteData => s_reg_data2,
+--    o_ReadData	=> s_MemoryReadData
+--	);
+
+inst_MemDonnees_dual : 
 	
 
 ------------------------------------------------------------------------
