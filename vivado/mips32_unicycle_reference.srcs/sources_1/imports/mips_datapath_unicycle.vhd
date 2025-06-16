@@ -40,6 +40,12 @@ Port (
 	i_mflo          : in std_logic;
 	i_mfhi          : in std_logic;
 	i_SignExtend 	: in std_logic;
+	
+	i_op_is_simd    : out std_logic; -- Voir controlleur.vhd pour l'explication de ces signaux la.
+	i_v_MemRead     : out std_logic; 
+	i_v_MemWrite    : out std_logic; 
+	i_v_RegDst      : out std_logic; 
+	i_v_RegWrite    : out std_logic;  
 
 	o_Instruction 	: out std_logic_vector (31 downto 0);
 	o_PC		 	: out std_logic_vector (31 downto 0)
