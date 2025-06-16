@@ -12,6 +12,7 @@
 !mips32_unicycle_reference.srcs/sources_1/new
 !mips32_unicycle_reference.srcs/sources_1/new/registres_z.vhd
 !mips32_unicycle_reference.srcs/sources_1/new/alu_z.vhd
+!mips32_unicycle_reference.srcs/sources_1/new/simd_manager.vhd
 !mips32_unicycle_reference.srcs/sources_1/imports
 !mips32_unicycle_reference.srcs/sources_1/imports/alu.vhd
 !mips32_unicycle_reference.srcs/sources_1/imports/controleur.vhd
