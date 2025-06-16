@@ -81,13 +81,22 @@ begin
 			when OP_LW => 
 				o_AluFunct <= ALU_ADD;
             -- when OP_??? =>   -- autres cas?
+            -- SIMD CODES. A noter que Vtype reutilise tout les Rtype!
+            when OP_Vtype =>
+                o_AluFunct <= s_R_funct_decode;
+            when OP_MINV =>
+                o_AluFunct <= ALU_NULL; -- L'ALU fait rien pour le type min.
+            when OP_SWV =>
+                o_AluFunct <= ALU_ADD;  -- Copier du type SW normal. Peut-etre que c'est pertinent, peut-etre pas.
+            when OP_LWV =>
+                o_AluFunct <= ALU_ADD;  -- Copier du type LW normal. Peut-etre que c'est pertinent, peut-etre pas. 
 			-- sinon
             when others =>
 				o_AluFunct <= (others => '0');
         end case;
     end process; 
     
-    -- Commande à l'ALU pour les instructions "R"
+    -- Commande à l'ALU pour les instructions "R". Devrait aussi fonctionner pour les types V.
     process(i_funct_field)
     begin
         case i_funct_field is
