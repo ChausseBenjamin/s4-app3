@@ -151,7 +151,7 @@ begin
     -- Sert a dire au banc de registre de vecteur, qu'il doivent ecraser le registre de destination avec les donnees en entree.
     o_v_RegWrite    <= '1' when i_Op = OP_Vtype or -- v_type pareil que r_type. Ces fonctions doivent ecrite a une destination.
                                 i_Op = OP_LWV      -- load un vecteur ecrase un registre de vecteur.
-                       else '0';                   -- minv ecrit dans un registre standard.
+                       else '0';                   -- minv ecrit dans un registre standard, donc pas inclue ici.
 	
 	-- Selection des registres de destinations --
 	o_RegDst 		<= '1' when i_Op = OP_Rtype else '0'; -- Quand c'est '1', c'est rd qui est utilise. Sinon c'est RT.
