@@ -67,6 +67,13 @@ package MIPS32_package is
     constant OP_LUI   : std_logic_vector( 5 downto 0 ) := "001111";
     constant OP_LW    : std_logic_vector( 5 downto 0 ) := "100011";
     constant OP_SW    : std_logic_vector( 5 downto 0 ) := "101011";
+    
+    -- opcodes pour les types de vecteurs.s
+    constant OP_Vtype : std_logic_vector( 5 downto 0 ) := "011100"; -- Comme le type R, mais les instructions sont route dans 4 ALU parallel
+    constant OP_MINV  : std_logic_vector( 5 downto 0 ) := "011101"; -- Trouve le plus petit mots dans un vecteur de 4 et le mets dans un registre standard.
+    constant OP_LWV   : std_logic_vector( 5 downto 0 ) := "011110"; -- Load de la cache dans un registre de vecteur special
+    constant OP_SWV   : std_logic_vector( 5 downto 0 ) := "011111"; -- Store un vecteur dans la cache.
+    -- constant OP_ADDV                                             -- Fonctionne comme le R type. Use V type for this instruction.    
 	
 	
 	constant c_Mips32_Nop	 	: std_logic_vector(31 downto 0) := X"00000000";
