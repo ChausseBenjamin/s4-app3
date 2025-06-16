@@ -298,8 +298,6 @@ s_Data2Reg_muxout    <= s_adresse_PC_plus_4 when i_jump_link = '1' else
 					    s_AluResult         when i_MemtoReg = '0' else 
 						s_MemoryReadData;
 
-
-		
 ------------------------------------------------------------------------
 -- Registres spéciaux pour la multiplication
 ------------------------------------------------------------------------				
@@ -312,5 +310,9 @@ begin
         end if;
     end if;
 end process;
+
+------------------------------------------------------------------------
+-- SIMD stuff.
+------------------------------------------------------------------------
         
 end Behavioral;
