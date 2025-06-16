@@ -103,6 +103,20 @@ end component;
 		o_RS2_DAT : out std_logic_vector (31 downto 0)
 		);
 	end component;
+	
+	component registres_z is -- the same thing as BancRegistres, mais pour des vecteurs de 4 mots.
+    Port ( clk : in STD_LOGIC;
+           reset : in STD_LOGIC;
+           -- Writing Data (synchronous)
+           i_WE : in STD_LOGIC;
+           i_Wr_DAT : in STD_LOGIC_VECTOR (127 downto 0);
+           i_WDest : in STD_LOGIC_VECTOR (4 downto 0);
+           -- Reading Data (async)
+           i_RS1 : in STD_LOGIC_VECTOR (4 downto 0);
+           i_RS2 : in STD_LOGIC_VECTOR (4 downto 0);  
+           o_RS1_DAT : out STD_LOGIC_VECTOR (127 downto 0); 
+           o_RS2_DAT : out STD_LOGIC_VECTOR (127 downto 0));
+    end component;
 
 	component alu is
 	Port ( 
@@ -119,7 +133,8 @@ end component;
 	constant c_Registre31		 : std_logic_vector(4 downto 0) := "11111";
 	signal s_zero        : std_logic;
 	
-    signal s_WriteRegDest_muxout: std_logic_vector(4 downto 0);
+    signal s_WriteRegDest_muxout   : std_logic_vector(4 downto 0);
+    signal s_v_WriteRegDest_muxout : std_logic_vector(4 downto 0);
 	
     signal r_PC                    : std_logic_vector(31 downto 0);
     signal s_PC_Suivant            : std_logic_vector(31 downto 0);
@@ -153,6 +168,10 @@ end component;
     
     signal s_v_MemoryReadData      : std_logic_vector(127 downto 0); -- Donnees vectorielle lu de la cache de donnees.
     signal s_v_DataToWriteInCache  : std_logic_vector(127 downto 0);
+    signal s_v_DataToWriteInRegs   : std_logic_vector(127 downto 0);
+    
+    signal s_v_reg_data1           : std_logic_vector(127 downto 0); -- Sortie de banc de registres identique a registres normaux, mais vectoriel.
+    signal s_v_reg_data2           : std_logic_vector(127 downto 0);
     
     -- registres spéciaux pour la multiplication
     signal r_HI             : std_logic_vector(31 downto 0);
@@ -314,5 +333,20 @@ end process;
 ------------------------------------------------------------------------
 -- SIMD stuff.
 ------------------------------------------------------------------------
+
+
+banc_registre_de_vecteurs : registres_z -- the same thing as BancRegistres, mais pour des vecteurs de 4 mots.
+    Port map ( 
+        clk         => clk,
+        reset       => reset,
+        i_WE        => i_v_RegWrite,
+        i_Wr_DAT    => s_v_DataToWriteInRegs,
+        i_WDest     => s_v_WriteRegDest_muxout,
+
+        i_RS1       => s_rs,
+        i_RS2       => s_rt,  
+        o_RS1_DAT   => s_v_reg_data1, 
+        o_RS2_DAT   => s_v_reg_data2
+    );
         
 end Behavioral;
