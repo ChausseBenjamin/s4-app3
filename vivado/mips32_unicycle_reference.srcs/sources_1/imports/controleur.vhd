@@ -38,7 +38,14 @@ Port (
 	o_alu_mult      : out std_logic;
 	o_mflo          : out std_logic;
 	o_mfhi          : out std_logic;
-	o_SignExtend 	: out std_logic
+	o_SignExtend 	: out std_logic;
+	
+	-- SIMD stuff.
+	o_op_is_simd    : out std_logic; -- Indique que ce qui doit se passer est en fonction d'operation SIMD. Active le controlleur de SIMD.
+	o_v_MemRead     : out std_logic; -- Dit a la cache qu'elle doit lire en mode large. Permet aussi la logique de decision entre si c'est donnees de cache qui vont dans le registre ou le resultat du core SIMD.
+	o_v_MemWrite    : out std_logic; -- Dit a la cache qu'elle doit ecrite en mode large
+	o_v_RegDst      : out std_logic; -- Drive le MUX pour selectionner entre RD et RT. (registre destination)
+	o_v_RegWrite    : out std_logic  -- Dit au registre de vecteurs qu'il doit ecraser le registre destination avec les donnees en entrees.
     );
 end controleur;
 
