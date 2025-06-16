@@ -111,8 +111,36 @@ package MIPS32_package is
         sim_OP_LUI,
 		sim_OP_LW,
 		sim_OP_SW,
+		sim_OP_LWV,
+		sim_OP_SWV,
+		sim_OP_MINV,
+		sim_OP_Vtype,
 		sim_OP_SYSCALL,
-        sim_OP_Undefined
+        sim_OP_Undefined,
+        
+		sim_VOP_FLUSH,
+		sim_VOP_BULLE,
+		sim_VOP_STALL, -- for cache, similar to bubble
+        sim_VOP_AND,
+        sim_VOP_OR,
+		sim_VOP_NOR,
+        sim_VOP_ADD,
+		sim_VOP_ADDU,
+        sim_VOP_SUB,
+        sim_VOP_SLL,
+        sim_VOP_SRL,
+        sim_VOP_SLT,
+        sim_VOP_SLTU,
+        sim_VOP_MULTU,
+        sim_VOP_MFHI,
+        sim_VOP_MFLO,
+        sim_VOP_ADDI,
+        sim_VOP_ADDIU,
+        sim_VOP_ORI,
+        sim_VOP_LUI,
+        sim_VOP_JR,
+        sim_VOP_SYSCALL,
+        sim_VOP_Undefined
     );
     function f_DisplayOp(InstructionDebug : std_logic_vector( 31 downto 0 )
                         ) return op_type;
@@ -161,6 +189,41 @@ begin
 	end if;
 	
 	case OperatorField is
+	    when OP_Vtype =>
+	        case FunctField is
+	        	when ALUF_AND =>
+					CurrentOp := sim_VOP_AND;
+				when ALUF_OR =>
+					CurrentOp := sim_VOP_OR;
+				when ALUF_NOR =>
+					CurrentOp := sim_VOP_NOR;
+				when ALUF_ADD =>
+					CurrentOp := sim_VOP_ADD;
+				when ALUF_ADDU =>
+					CurrentOp := sim_VOP_ADDU;
+				when ALUF_SUB =>
+					CurrentOp := sim_VOP_SUB;
+				when ALUF_SLL =>
+					CurrentOp := sim_VOP_SLL;
+				when ALUF_SRL =>
+					CurrentOp := sim_VOP_SRL;
+				when ALUF_SLT =>
+					CurrentOp := sim_VOP_SLT;
+				when ALUF_SLTU =>
+					CurrentOp := sim_VOP_SLTU;
+				when ALUF_JR =>
+					CurrentOp := sim_VOP_JR;
+				when ALUF_MULTU =>
+				    CurrentOp := sim_VOP_MULTU;
+				when ALUF_MFHI =>
+				    CurrentOp := sim_VOP_MFHI;
+				when ALUF_MFLO =>
+				    CurrentOp := sim_VOP_MFLO;
+				when ALUF_SYSCALL =>
+					CurrentOp := sim_VOP_SYSCALL;
+				when others =>
+					CurrentOp := sim_VOP_Undefined;
+	        end case;
         when OP_Rtype =>
 			case FunctField is 
 				when ALUF_AND =>
@@ -214,6 +277,12 @@ begin
 			CurrentOp := sim_OP_LW;
 		when OP_SW =>
 			CurrentOp := sim_OP_SW;
+		when OP_MINV =>
+		    CurrentOp := sim_OP_MINV;
+		when OP_LWV =>
+		    CurrentOp := sim_OP_LWV;
+		when OP_SWV =>
+		    CurrentOp := sim_OP_SWV;
 		when others =>
 			CurrentOp := sim_OP_Undefined;
 	end case;
