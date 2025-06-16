@@ -1,15 +1,15 @@
 ---------------------------------------------------------------------------------------------
 --
---	Université de Sherbrooke 
+--	Université de Sherbrooke
 --  Département de génie électrique et génie informatique
 --
---	S4i - APP4 
---	
+--	S4i - APP4
+--
 --
 --	Auteur: 		Marc-André Tétrault
 --					Daniel Dalle
 --					Sébastien Roy
--- 
+--
 ---------------------------------------------------------------------------------------------
 
 
@@ -19,7 +19,7 @@ use ieee.numeric_std.all; -- requis pour la fonction "to_integer"
 use work.MIPS32_package.all;
 
 entity MemDonneesWideDual is
-Port ( 
+Port (
 	clk 		: in std_logic;
 	reset 		: in std_logic;
 	i_MemRead	: in std_logic;
@@ -27,7 +27,7 @@ Port (
     i_Addresse 	: in std_logic_vector (31 downto 0);
 	i_WriteData : in std_logic_vector (31 downto 0);
     o_ReadData 	: out std_logic_vector (31 downto 0);
-	
+
 	-- ports pour accès à large bus, adresse partagée
 	i_MemReadWide       : in std_logic;
 	i_MemWriteWide 		: in std_logic;
@@ -41,6 +41,47 @@ architecture Behavioral of MemDonneesWideDual is
 ------------------------
 -- Insérez vos donnees ici
 ------------------------
+X"0000dead",
+X"0000beef",
+X"00000000",
+X"00000000",
+X"00000042",
+X"00000045",
+X"0000004e",
+X"00000043",
+X"00000020",
+X"00000020",
+X"00000020",
+X"00000020",
+X"00000000",
+X"00000000",
+X"00000000",
+X"00000000",
+X"00000000",
+X"00000000",
+X"00000000",
+X"00000000",
+X"00000000",
+X"00000000",
+X"00000000",
+X"00000000",
+X"00000000",
+X"00000000",
+X"00000000",
+X"00000000",
+X"00000000",
+X"00000000",
+X"00000000",
+X"00000000",
+X"00000000",
+X"00000000",
+X"00000000",
+X"00000000",
+X"00000000",
+X"00000000",
+X"00000000",
+X"00000000",
+X"00000000",
 
 ------------------------
 -- Fin de votre code
@@ -49,25 +90,25 @@ architecture Behavioral of MemDonneesWideDual is
 
     signal s_MemoryIndex 	: integer range 0 to 255; -- 0-127
 	signal s_MemoryRangeValid 	: std_logic;
-	
+
     signal s_WideMemoryRangeValid  : std_logic;
 
 begin
     -- Transformation de l'adresse en entier à interval fixés
     s_MemoryIndex 	<= to_integer(unsigned(i_Addresse(9 downto 2)));
-	s_MemoryRangeValid <= '1' when i_Addresse(31 downto 10) = (X"10010" & "00") else '0'; 
+	s_MemoryRangeValid <= '1' when i_Addresse(31 downto 10) = (X"10010" & "00") else '0';
 
 
-	s_WideMemoryRangeValid <= '1' when (i_Addresse(31 downto 10) = (X"10010" & "00") and i_Addresse(3 downto 2) = "00") else '0'; 
-	
+	s_WideMemoryRangeValid <= '1' when (i_Addresse(31 downto 10) = (X"10010" & "00") and i_Addresse(3 downto 2) = "00") else '0';
+
 	-- message de simulation
-	-- Dans une véritable mémoire SRAM, l'octet "bas" sors toujours sur les même pattes physiques. 
-	-- Par exemple, sur un bus 32-bits et en accès 8-bits, l'octet de l'adresse 0x00 sera aux bits (7 downto 0), 
+	-- Dans une véritable mémoire SRAM, l'octet "bas" sors toujours sur les même pattes physiques.
+	-- Par exemple, sur un bus 32-bits et en accès 8-bits, l'octet de l'adresse 0x00 sera aux bits (7 downto 0),
 	-- et celui de l'adresse 0x01 sur (15 downto 8). Donc typiquement, l'adresse "vue" à la mémoire sera 0x00 dans les deux
 	-- cas, et un multiplexeur viendra replacer la donnée au LSB du banc de registres.
-	-- C'est la même chose pour les mémoires à large bus, comme notre cas ici. En assembleur, 
+	-- C'est la même chose pour les mémoires à large bus, comme notre cas ici. En assembleur,
 	-- il est plus réaliste d'incrémenter par bloc d'accès en blocs de 128 bits.
-	-- L'assertion à la ligne suivante vous averti si cette condition n'est pas respectée pour la mémoire large modélisée pour la problématique. 
+	-- L'assertion à la ligne suivante vous averti si cette condition n'est pas respectée pour la mémoire large modélisée pour la problématique.
 	-- Il est possible de modifier le modèle et retirer ce message, mais alors le modèle ne sera pas réaliste.
 	process(clk, i_MemWriteWide,  i_MemReadWide, i_Addresse) --or i_MemReadWide = '1')
 	begin
@@ -77,7 +118,7 @@ begin
 			end if;
 	   end if;
 	end process;
-	
+
 	-- Partie pour l'écriture
 	process( clk )
     begin
@@ -96,11 +137,11 @@ begin
     -- Valider que nous sommes dans le segment de mémoire, avec 256 addresses valides
     o_ReadData <= ram_DataMemory(s_MemoryIndex) when s_MemoryRangeValid = '1'
                     else (others => '0');
-	
+
 	-- valider le segment et l'alignement de l'adresse
-	o_ReadDataWide <= ram_DataMemory(s_MemoryIndex + 3) & 
-					  ram_DataMemory(s_MemoryIndex + 2) & 
-					  ram_DataMemory(s_MemoryIndex + 1) & 
+	o_ReadDataWide <= ram_DataMemory(s_MemoryIndex + 3) &
+					  ram_DataMemory(s_MemoryIndex + 2) &
+					  ram_DataMemory(s_MemoryIndex + 1) &
 					  ram_DataMemory(s_MemoryIndex + 0)   when s_WideMemoryRangeValid = '1'
 					else (others => '0');
 
