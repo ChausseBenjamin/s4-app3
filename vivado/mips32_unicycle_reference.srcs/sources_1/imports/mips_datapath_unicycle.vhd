@@ -72,6 +72,20 @@ end component;
 --);
 --end component;
 
+    component simd_manager is
+    Port (  i_reg_data_RS1   : in STD_LOGIC_VECTOR (127 downto 0);   -- rs lu du banc de registre
+            i_reg_data_RS2   : in STD_LOGIC_VECTOR (127 downto 0);   -- rt lu du banc de registre
+            i_opcode         : in STD_LOGIC_VECTOR (5 downto 0);     -- Opcode, pour savoir les instructions simd.
+            i_alu_funct      : in STD_LOGIC_VECTOR (3 downto 0);     -- Utiliser lorsque opcode = v_type. Pour que l'ALU parallel sache quoi faire.
+            i_shamt          : in STD_LOGIC_VECTOR (4 downto 0);     -- Passer directement a ALU.
+            i_enable         : in STD_LOGIC;                         -- Enables le process SIMD. si false. Enabled lorsqu'un instruction simd est detecte par le controlleur
+            o_result_is_word : out STD_LOGIC;                        -- Si true, alors le manager a produit un resultat sur un seul mot. Il doit etre mis dans un registre standard non vectoriel.
+            o_result         : out STD_LOGIC_VECTOR (127 downto 0);  -- Resultat (vecteur). Si resultat = mots, il est mis dans le LSB (0) 
+            o_multRes        : out STD_LOGIC_VECTOR (255 downto 0);  -- multRes, viens direct de l'ALU.
+            o_zero           : out STD_LOGIC_VECTOR (3 downto 0));
+    end component;
+
+
     component MemDonneesWideDual is
     Port ( 
 	   clk 		      : in std_logic;                         -- Pareil que l'ancienne memoire
@@ -172,6 +186,9 @@ end component;
     
     signal s_v_reg_data1           : std_logic_vector(127 downto 0); -- Sortie de banc de registres identique a registres normaux, mais vectoriel.
     signal s_v_reg_data2           : std_logic_vector(127 downto 0);
+    
+    signal s_result_is_word        : std_logic;
+    signal s_simd_manager_output   : std_logic_vector(127 downto 0);
     
     -- registres spéciaux pour la multiplication
     signal r_HI             : std_logic_vector(31 downto 0);
@@ -347,6 +364,20 @@ banc_registre_de_vecteurs : registres_z -- the same thing as BancRegistres, mais
         i_RS2       => s_rt,  
         o_RS1_DAT   => s_v_reg_data1, 
         o_RS2_DAT   => s_v_reg_data2
+    );
+    
+gestionnaire_dinstructions_simd : simd_manager
+    Port map ( 
+            i_reg_data_RS1    => s_v_reg_data1,
+            i_reg_data_RS2    => s_v_reg_data2,
+            i_opcode          => s_opcode,
+            i_alu_funct       => s_instr_funct,
+            i_shamt           => s_shamt,
+            i_enable          => i_op_is_simd,
+            o_result_is_word  => s_result_is_word,
+            o_result          => s_simd_manager_output,
+            o_multRes         => open,
+            o_zero            => open
     );
         
 end Behavioral;

@@ -35,7 +35,7 @@ use work.MIPS32_package.all;
 entity simd_manager is
     Port ( i_reg_data_RS1   : in STD_LOGIC_VECTOR (127 downto 0);   -- rs lu du banc de registre
            i_reg_data_RS2   : in STD_LOGIC_VECTOR (127 downto 0);   -- rt lu du banc de registre
-           i_reg_data_Dest  : in STD_LOGIC_VECTOR (127 downto 0);   -- registre de destination, lu du banc de registre. Ye la juste au cas ou.
+           --i_reg_data_Dest  : in STD_LOGIC_VECTOR (127 downto 0);   -- registre de destination, lu du banc de registre. Ye la juste au cas ou.
            i_opcode         : in STD_LOGIC_VECTOR (5 downto 0);     -- Opcode, pour savoir les instructions simd.
            i_alu_funct      : in STD_LOGIC_VECTOR (3 downto 0);     -- Utiliser lorsque opcode = v_type. Pour que l'ALU parallel sache quoi faire.
            i_shamt          : in STD_LOGIC_VECTOR (4 downto 0);     -- Passer directement a ALU.
