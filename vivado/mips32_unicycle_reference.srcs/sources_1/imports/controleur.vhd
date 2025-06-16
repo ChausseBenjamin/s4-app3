@@ -130,10 +130,16 @@ begin
             when others =>
                 s_R_funct_decode <= ALU_NULL;
          end case;
-     end process;
+    end process;
+    
+    -- Identifier si l'operation actuel est un type SIMD ou pas.
+    o_op_is_simd <= '1' when i_Op = OP_Vtype or
+                             i_Op = Op_MINV  or
+                             i_Op = Op_LWV   or
+                             i_Op = Op_SWV
+                    else '0'; 
 	
-	
-	o_RegWrite		<= '1' when i_Op = OP_Rtype or 
+    o_RegWrite		<= '1' when i_Op = OP_Rtype or 
 								i_Op = OP_ADDI or 
 								i_Op = OP_ADDIU or 
 								i_Op = OP_ORI or 
@@ -141,15 +147,28 @@ begin
 								i_Op = OP_LW or 
 								i_Op = OP_JAL
 						else '0';
+    
+    -- Sert a dire au banc de registre de vecteur, qu'il doivent ecraser le registre de destination avec les donnees en entree.
+    o_v_RegWrite    <= '1' when i_Op = OP_Vtype or -- v_type pareil que r_type. Ces fonctions doivent ecrite a une destination.
+                                i_Op = OP_LWV      -- load un vecteur ecrase un registre de vecteur.
+                       else '0';                   -- minv ecrit dans un registre standard.
 	
-	o_RegDst 		<= '1' when i_Op = OP_Rtype else '0';
+	-- Selection des registres de destinations --
+	o_RegDst 		<= '1' when i_Op = OP_Rtype else '0'; -- Quand c'est '1', c'est rd qui est utilise. Sinon c'est RT.
+	o_v_RegDst      <= '1' when i_Op = OP_Vtype else '0'; -- On doit switch entre rt et rd pour le v type, car il est essentiellement pareil que le r type.
+	
 	
 	o_ALUSrc 		<= '0' when i_Op = OP_Rtype or
 								i_Op = OP_BEQ
 						else '1';
 	o_Branch 		<= '1' when i_Op = OP_BEQ   else '0';
+	
 	o_MemRead 		<= '1' when i_Op = OP_LW else '0';
+	o_v_MemRead     <= '1' when i_Op = OP_LWV else '0'; -- Pareil que le signal normal.
+	
 	o_MemWrite 		<= '1' when i_Op = OP_SW else '0';
+	o_v_MemWrite    <= '1' when i_Op = OP_SWV else '0'; -- Pareil que le signal normal.
+	
 	o_MemtoReg 		<= '1' when i_Op = OP_LW else '0';
 	o_SignExtend	<= '1' when i_OP = OP_ADDI or
 	                           i_OP = OP_BEQ 
