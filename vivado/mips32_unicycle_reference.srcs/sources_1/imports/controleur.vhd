@@ -147,6 +147,8 @@ begin
 								i_Op = OP_LW or 
 								i_Op = OP_JAL
 						else '0';
+						-- Il faudra ajouter le opcode de MINV si ce dernier ecrit dans un vecteur standard.
+						-- Si on fait ca, il faut un MUX a la sortie des ALU et une sortie de plus pour dire quel ALU ecrit dans ce registre la.
     
     -- Sert a dire au banc de registre de vecteur, qu'il doivent ecraser le registre de destination avec les donnees en entree.
     o_v_RegWrite    <= '1' when i_Op = OP_Vtype or -- v_type pareil que r_type. Ces fonctions doivent ecrite a une destination.
