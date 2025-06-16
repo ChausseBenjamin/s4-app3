@@ -37,14 +37,14 @@ entity registres_z is
     Port ( clk : in STD_LOGIC;
            reset : in STD_LOGIC;
            -- Writing Data (synchronous)
-           i_WE : in STD_LOGIC;
-           i_Wr_DAT : in STD_LOGIC_VECTOR (127 downto 0);
-           i_WDest : in STD_LOGIC_VECTOR (4 downto 0);
+           i_WE : in STD_LOGIC;                           -- Write Enable
+           i_Wr_DAT : in STD_LOGIC_VECTOR (127 downto 0); -- Write Data
+           i_WDest : in STD_LOGIC_VECTOR (4 downto 0);    -- Write Destination
            -- Reading Data (async)
-           i_RS1 : in STD_LOGIC_VECTOR (4 downto 0);
-           i_RS2 : in STD_LOGIC_VECTOR (4 downto 0);
-           o_RS1_DAT : out STD_LOGIC_VECTOR (127 downto 0);
-           o_RS2_DAT : out STD_LOGIC_VECTOR (127 downto 0));
+           i_RS1 : in STD_LOGIC_VECTOR (4 downto 0);         -- From Operand A
+           i_RS2 : in STD_LOGIC_VECTOR (4 downto 0);         -- From Operand B
+           o_RS1_DAT : out STD_LOGIC_VECTOR (127 downto 0);  -- To Operand A
+           o_RS2_DAT : out STD_LOGIC_VECTOR (127 downto 0)); -- To Operand B
 end registres_z;
 
 architecture comport of registres_z is
@@ -64,7 +64,7 @@ begin
     end if; -- clk
   end process;
 
-  process(i_RS1,i_RS2)
+  process(i_RS1,i_RS2,regs)
   begin
 
     if (unsigned(i_RS1) <= 28) then
