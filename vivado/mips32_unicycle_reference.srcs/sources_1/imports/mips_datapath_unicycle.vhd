@@ -366,18 +366,18 @@ banc_registre_de_vecteurs : registres_z -- the same thing as BancRegistres, mais
         o_RS2_DAT   => s_v_reg_data2
     );
     
-gestionnaire_dinstructions_simd : simd_manager
-    Port map ( 
-            i_reg_data_RS1    => s_v_reg_data1,
-            i_reg_data_RS2    => s_v_reg_data2,
-            i_opcode          => s_opcode,
-            i_alu_funct       => s_instr_funct,
-            i_shamt           => s_shamt,
-            i_enable          => i_op_is_simd,
-            o_result_is_word  => s_result_is_word,
-            o_result          => s_simd_manager_output,
-            o_multRes         => open,
-            o_zero            => open
-    );
+--gestionnaire_dinstructions_simd : simd_manager
+--    Port map ( 
+--            i_reg_data_RS1    => s_v_reg_data1,
+--            i_reg_data_RS2    => s_v_reg_data2,
+--            i_opcode          => s_opcode,
+--            i_alu_funct       => s_instr_funct,
+--            i_shamt           => s_shamt,
+--            i_enable          => i_op_is_simd,
+--            o_result_is_word  => s_result_is_word,
+--            o_result          => s_simd_manager_output,
+--            o_multRes         => open,
+--            o_zero            => open
+--    );
         
 end Behavioral;
