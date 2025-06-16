@@ -40,6 +40,12 @@ Port (
 	i_mflo          : in std_logic;
 	i_mfhi          : in std_logic;
 	i_SignExtend 	: in std_logic;
+	
+	i_op_is_simd    : out std_logic; -- Voir controlleur.vhd pour l'explication de ces signaux la.
+	i_v_MemRead     : out std_logic; 
+	i_v_MemWrite    : out std_logic; 
+	i_v_RegDst      : out std_logic; 
+	i_v_RegWrite    : out std_logic;  
 
 	o_Instruction 	: out std_logic_vector (31 downto 0);
 	o_PC		 	: out std_logic_vector (31 downto 0)
@@ -54,17 +60,35 @@ component MemInstructions is
            o_instruction : out std_logic_vector (31 downto 0));
 end component;
 
-component MemDonnees is
-Port ( 
-	clk : in std_logic;
-	reset : in std_logic;
-	i_MemRead 	: in std_logic;
-	i_MemWrite : in std_logic;
-    i_Addresse : in std_logic_vector (31 downto 0);
-	i_WriteData : in std_logic_vector (31 downto 0);
-    o_ReadData : out std_logic_vector (31 downto 0)
-);
-end component;
+--component MemDonnees is
+--Port ( 
+--	clk : in std_logic;
+--	reset : in std_logic;
+--	i_MemRead 	: in std_logic;
+--	i_MemWrite : in std_logic;
+--    i_Addresse : in std_logic_vector (31 downto 0);
+--	i_WriteData : in std_logic_vector (31 downto 0);
+--    o_ReadData : out std_logic_vector (31 downto 0)
+--);
+--end component;
+
+    component MemDonneesWideDual is
+    Port ( 
+	   clk 		      : in std_logic;                         -- Pareil que l'ancienne memoire
+	   reset 		  : in std_logic;                         -- Pareil que l'ancienne memoire
+	   i_MemRead	  : in std_logic;                         -- Pareil que l'ancienne memoire. Cependant, ce n'est pas implementer a l'interne!
+	   i_MemWrite 	  : in std_logic;                         -- Dit d'ecrite writedata a i_address. write wide prend le dessus si les deux sont a 1.
+       i_Addresse     : in std_logic_vector (31 downto 0);    -- Address ou aller ecrite les donnees.
+	   i_WriteData    : in std_logic_vector (31 downto 0);    -- Mot a ecrire en mode ecriture pas wide.
+       o_ReadData     : out std_logic_vector (31 downto 0);   -- Donne lu a l'index donnee.
+	
+	   -- ports pour accès à large bus, adresse partagée
+	   i_MemReadWide   : in std_logic;                        -- Quand a 1, le processus est fait sur 4 mots consecutif. A pas besoin de memwrite a 1 pour fonctionner.
+	   i_MemWriteWide  : in std_logic;                        -- Prend le dessus sur memWrite. Change tout le processus pour que ce soit sur 4 mots consecutif.
+	   i_WriteDataWide : in std_logic_vector (127 downto 0);  -- Donne a ecrire dans les 4 addresses consecutif, debutant par i_addresse.
+       o_ReadDataWide  : out std_logic_vector (127 downto 0)  -- 4 mots consecutif a partir de i_addresse. Toujours donnees meme sans i_MemReadWide
+    );
+    end component;
 
 	component BancRegistres is
 	Port ( 
@@ -79,6 +103,20 @@ end component;
 		o_RS2_DAT : out std_logic_vector (31 downto 0)
 		);
 	end component;
+	
+	component registres_z is -- the same thing as BancRegistres, mais pour des vecteurs de 4 mots.
+    Port ( clk : in STD_LOGIC;
+           reset : in STD_LOGIC;
+           -- Writing Data (synchronous)
+           i_WE : in STD_LOGIC;
+           i_Wr_DAT : in STD_LOGIC_VECTOR (127 downto 0);
+           i_WDest : in STD_LOGIC_VECTOR (4 downto 0);
+           -- Reading Data (async)
+           i_RS1 : in STD_LOGIC_VECTOR (4 downto 0);
+           i_RS2 : in STD_LOGIC_VECTOR (4 downto 0);  
+           o_RS1_DAT : out STD_LOGIC_VECTOR (127 downto 0); 
+           o_RS2_DAT : out STD_LOGIC_VECTOR (127 downto 0));
+    end component;
 
 	component alu is
 	Port ( 
@@ -95,7 +133,8 @@ end component;
 	constant c_Registre31		 : std_logic_vector(4 downto 0) := "11111";
 	signal s_zero        : std_logic;
 	
-    signal s_WriteRegDest_muxout: std_logic_vector(4 downto 0);
+    signal s_WriteRegDest_muxout   : std_logic_vector(4 downto 0);
+    signal s_v_WriteRegDest_muxout : std_logic_vector(4 downto 0);
 	
     signal r_PC                    : std_logic_vector(31 downto 0);
     signal s_PC_Suivant            : std_logic_vector(31 downto 0);
@@ -126,6 +165,13 @@ end component;
     signal s_Reg_Wr_Data           : std_logic_vector(31 downto 0);
     signal s_MemoryReadData        : std_logic_vector(31 downto 0);
     signal s_AluB_data             : std_logic_vector(31 downto 0);
+    
+    signal s_v_MemoryReadData      : std_logic_vector(127 downto 0); -- Donnees vectorielle lu de la cache de donnees.
+    signal s_v_DataToWriteInCache  : std_logic_vector(127 downto 0);
+    signal s_v_DataToWriteInRegs   : std_logic_vector(127 downto 0);
+    
+    signal s_v_reg_data1           : std_logic_vector(127 downto 0); -- Sortie de banc de registres identique a registres normaux, mais vectoriel.
+    signal s_v_reg_data2           : std_logic_vector(127 downto 0);
     
     -- registres spéciaux pour la multiplication
     signal r_HI             : std_logic_vector(31 downto 0);
@@ -200,13 +246,13 @@ inst_Registres: BancRegistres
 port map ( 
 	clk          => clk,
 	reset        => reset,
-	i_RS1        => s_rs,
-	i_RS2        => s_rt,
-	i_Wr_DAT     => s_Data2Reg_muxout,
-	i_WDest      => s_WriteRegDest_muxout,
-	i_WE         => i_RegWrite,
-	o_RS1_DAT    => s_reg_data1,
-	o_RS2_DAT    => s_reg_data2
+	i_RS1        => s_rs,                  -- Source universel peut importe le type de donnees. Addresse vers un registre de 1 mot.
+	i_RS2        => s_rt,                  -- Source 2.
+	i_Wr_DAT     => s_Data2Reg_muxout,     -- Donnees a ecrire dans le registre. Peut etre resultat ALU, ou jumps (adr+4), ou multiplications.
+	i_WDest      => s_WriteRegDest_muxout, -- Registre ou le wr_dat est ecrit. (rd ou rt)
+	i_WE         => i_RegWrite,            -- Event qui dit: go, ecrit wr_dat dans wdest.
+	o_RS1_DAT    => s_reg_data1,           -- donnees de rs. Toujours output.
+	o_RS2_DAT    => s_reg_data2            -- donnees de rt. Toujoutrs output.
 	);
 	
 
@@ -234,17 +280,32 @@ port map(
 ------------------------------------------------------------------------
 -- Mémoire de données
 ------------------------------------------------------------------------
-inst_MemDonnees : MemDonnees
-Port map( 
-	clk 		=> clk,
-	reset 		=> reset,
-	i_MemRead	=> i_MemRead,
-	i_MemWrite	=> i_MemWrite,
-    i_Addresse	=> s_AluResult,
-	i_WriteData => s_reg_data2,
-    o_ReadData	=> s_MemoryReadData
-	);
+--inst_MemDonnees : MemDonnees
+--Port map( 
+--	clk 		=> clk,
+--	reset 		=> reset,
+--	i_MemRead	=> i_MemRead,
+--	i_MemWrite	=> i_MemWrite,
+--    i_Addresse	=> s_AluResult,
+--	i_WriteData => s_reg_data2,
+--    o_ReadData	=> s_MemoryReadData
+--	);
+
+inst_MemDonnees_Thicc : MemDonneesWideDual
+    Port map ( 
+	   clk 		       => clk,
+	   reset 		   => reset,
+	   i_MemRead	   => i_MemRead,
+	   i_MemWrite 	   => i_MemWrite,
+       i_Addresse      => s_AluResult,      -- To understand
+	   i_WriteData     => s_reg_data2,      -- Sortie 2 des banc de registres standard.
+       o_ReadData      => s_MemoryReadData, -- Donnee a i_addresse, toujours output. Mis dans banc registre si RegWrite est mis a 1. Muxed with other data tho.
 	
+	   i_MemReadWide   => i_v_MemRead,
+	   i_MemWriteWide  => i_v_MemWrite,
+	   i_WriteDataWide => s_v_DataToWriteInCache, -- vecteur a stocker dans la cache.
+       o_ReadDataWide  => s_v_MemoryReadData
+    );
 
 ------------------------------------------------------------------------
 -- Mux d'écriture vers le banc de registres
@@ -256,8 +317,6 @@ s_Data2Reg_muxout    <= s_adresse_PC_plus_4 when i_jump_link = '1' else
 					    s_AluResult         when i_MemtoReg = '0' else 
 						s_MemoryReadData;
 
-
-		
 ------------------------------------------------------------------------
 -- Registres spéciaux pour la multiplication
 ------------------------------------------------------------------------				
@@ -270,5 +329,24 @@ begin
         end if;
     end if;
 end process;
+
+------------------------------------------------------------------------
+-- SIMD stuff.
+------------------------------------------------------------------------
+
+
+banc_registre_de_vecteurs : registres_z -- the same thing as BancRegistres, mais pour des vecteurs de 4 mots.
+    Port map ( 
+        clk         => clk,
+        reset       => reset,
+        i_WE        => i_v_RegWrite,
+        i_Wr_DAT    => s_v_DataToWriteInRegs,
+        i_WDest     => s_v_WriteRegDest_muxout,
+
+        i_RS1       => s_rs,
+        i_RS2       => s_rt,  
+        o_RS1_DAT   => s_v_reg_data1, 
+        o_RS2_DAT   => s_v_reg_data2
+    );
         
 end Behavioral;

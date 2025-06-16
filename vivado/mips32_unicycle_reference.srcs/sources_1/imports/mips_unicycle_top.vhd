@@ -32,7 +32,7 @@ architecture Behavioral of mips_unicycle_top is
 
 component controleur is
 Port (
-    i_Op        : in std_logic_vector(5 downto 0);
+    i_Op          : in std_logic_vector(5 downto 0);
     i_funct_field : in std_logic_vector (5 downto 0);
     
     o_RegDst    : out std_logic;
@@ -46,12 +46,18 @@ Port (
 	
 	-- Sorties supp. vs 4.17
     o_Jump : out std_logic;
-	o_jump_register : out std_logic;
-	o_jump_link : out std_logic;
-	o_alu_mult      : out std_logic;
-	o_mflo          : out std_logic;
-	o_mfhi          : out std_logic;
-	o_SignExtend : out std_logic
+	o_jump_register    : out std_logic;
+	o_jump_link        : out std_logic;
+	o_alu_mult         : out std_logic;
+	o_mflo             : out std_logic;
+	o_mfhi             : out std_logic;
+	o_SignExtend       : out std_logic;
+	
+    o_op_is_simd    : out std_logic;
+	o_v_MemRead     : out std_logic;
+	o_v_MemWrite    : out std_logic;
+	o_v_RegDst      : out std_logic;
+	o_v_RegWrite    : out std_logic
     );
 end component;
 
@@ -77,6 +83,12 @@ Port (
 	i_mfhi          : in std_logic;
 	i_SignExtend 	: in std_logic;
 	
+	i_op_is_simd    : out std_logic;
+	i_v_MemRead     : out std_logic; 
+	i_v_MemWrite    : out std_logic; 
+	i_v_RegDst      : out std_logic; 
+	i_v_RegWrite    : out std_logic;
+	
 	o_Instruction 	: out std_logic_vector (31 downto 0);
 	o_PC		 	: out std_logic_vector (31 downto 0)
 );
@@ -97,6 +109,13 @@ end component;
 	signal s_alu_mult       : std_logic;
 	signal s_mflo           : std_logic;
 	signal s_mfhi           : std_logic;
+	
+	-- Entre controleur et data path.
+    signal s_op_is_simd    : std_logic;
+	signal s_v_MemRead     : std_logic;
+	signal s_v_MemWrite    : std_logic;
+	signal s_v_RegDst      : std_logic;
+	signal s_v_RegWrite    : std_logic;
 
 	
     signal s_Instruction    : std_logic_vector(31 downto 0);
@@ -127,7 +146,13 @@ Port map(
 	o_alu_mult      => s_alu_mult,
 	o_mflo          => s_mflo,
 	o_mfhi          => s_mfhi,
-	o_SignExtend 	=> s_SignExtend
+	o_SignExtend 	=> s_SignExtend,
+	
+	o_op_is_simd    => s_op_is_simd,
+	o_v_MemRead     => s_v_MemRead, 
+	o_v_MemWrite    => s_v_MemWrite, 
+	o_v_RegDst      => s_v_RegDst, 
+	o_v_RegWrite    => s_v_RegWrite
     );
 	
 	
@@ -153,7 +178,13 @@ Port map(
     i_mfhi          => s_mfhi,    
 	i_SignExtend 	=> s_SignExtend,
 	o_Instruction 	=> s_Instruction,
-	o_PC			=> o_PC
+	o_PC			=> o_PC,
+	
+	i_op_is_simd    => s_op_is_simd,
+	i_v_MemRead     => s_v_MemRead, 
+	i_v_MemWrite    => s_v_MemWrite, 
+	i_v_RegDst      => s_v_RegDst, 
+	i_v_RegWrite    => s_v_RegWrite
 );	
 
 o_Instruction <= s_Instruction;

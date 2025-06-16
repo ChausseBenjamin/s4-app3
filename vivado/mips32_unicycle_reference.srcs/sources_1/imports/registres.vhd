@@ -30,6 +30,8 @@ entity BancRegistres is
 end BancRegistres;
 
 architecture comport of BancRegistres is
+    -- Le registre de stack pointer commence a cet addresse la, car uniquement 256 cases de stacks sont disponible.
+    -- La stack n'est pas sauvegarder ici ofc.
     signal regs: RAM(0 to 31) := (29 => X"100103FC", -- registre $SP
                                 others => (others => '0'));
 begin
