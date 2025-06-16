@@ -38,18 +38,17 @@ entity registres_z is
            reset : in STD_LOGIC;
            -- Writing Data (synchronous)
            i_WE : in STD_LOGIC;                           -- Write Enable
-           i_Wr_DAT : in STD_LOGIC_VECTOR (127 downto 0); -- Write Data
-           i_WDest : in STD_LOGIC_VECTOR (4 downto 0);    -- Write Destination
+           i_Wr_DAT : in STD_LOGIC_VECTOR (127 downto 0); -- Data to write, written when WE is true.
+           i_WDest : in STD_LOGIC_VECTOR (4 downto 0);    -- Destination register where Wr_DAT is written.
            -- Reading Data (async)
-           i_RS1 : in STD_LOGIC_VECTOR (4 downto 0);         -- From Operand A
-           i_RS2 : in STD_LOGIC_VECTOR (4 downto 0);         -- From Operand B
-           o_RS1_DAT : out STD_LOGIC_VECTOR (127 downto 0);  -- To Operand A
-           o_RS2_DAT : out STD_LOGIC_VECTOR (127 downto 0)); -- To Operand B
+           i_RS1 : in STD_LOGIC_VECTOR (4 downto 0);         -- From Operand A (rs in all cases)
+           i_RS2 : in STD_LOGIC_VECTOR (4 downto 0);         -- From Operand B (rt in all cases)
+           o_RS1_DAT : out STD_LOGIC_VECTOR (127 downto 0);  -- To Operand A (data stored in rs)
+           o_RS2_DAT : out STD_LOGIC_VECTOR (127 downto 0)); -- To Operand B (data stored in rt)
 end registres_z;
 
 architecture comport of registres_z is
-    signal regs: RAM(0 to 31) := (29 => X"100103FC", -- registre $SP
-                                others => (others => '0'));
+    signal regs: RAM(0 to 31) := (others => (others => '0')); -- pas de sp comme dans registre standard. Ce banc de registre la est juste pour des vecteurs.
 
 begin
   process( clk )
