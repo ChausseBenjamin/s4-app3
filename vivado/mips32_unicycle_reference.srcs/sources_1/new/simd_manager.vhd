@@ -107,13 +107,13 @@ begin
     case(i_opcode) is
         when OP_MINV => -- Trouver le plus petit mots dans le vecteur RS.
                 if (s_a_word_0 <= s_a_word_1 and s_a_word_0 <= s_a_word_2 and s_a_word_0 <= s_a_word_3) then
-                    s_special_ops_result <= s_a_word_0;
+                    s_special_ops_result(31 downto 0) <= s_a_word_0;
                 elsif (s_a_word_1 <= s_a_word_0 and s_a_word_1 <= s_a_word_2 and s_a_word_1 <= s_a_word_3) then
-                    s_special_ops_result <= s_a_word_1;
+                    s_special_ops_result(31 downto 0) <= s_a_word_1;
                 elsif (s_a_word_2 <= s_a_word_0 and s_a_word_2 <= s_a_word_1 and s_a_word_2 <= s_a_word_3) then
-                    s_special_ops_result <= s_a_word_2;
+                    s_special_ops_result(31 downto 0) <= s_a_word_2;
                 else
-                    s_special_ops_result <= s_a_word_3;
+                    s_special_ops_result(31 downto 0) <= s_a_word_3;
                 end if;
                 o_result_is_word <= '1';
 
