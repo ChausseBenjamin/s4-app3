@@ -351,6 +351,10 @@ end process;
 -- SIMD stuff.
 ------------------------------------------------------------------------
 
+-- Selectionner ce qui est a ecrire en cache, pour le vecteur. Peut-etre pas necessaire
+-- La seule affaire qui ecrit en cache c'est les store words.
+s_v_DataToWriteInCache <= s_v_reg_data2; -- Copier coller de ce qui est fait pour cache normal? (rt)
+
 -- Selectionner si ce qui est ecrit dans le registre est le resultat du manager ou un registre lu.
 s_v_DataToWriteInRegs <= s_simd_manager_output when (i_v_MemRead = '0') else s_v_MemoryReadData;
 
