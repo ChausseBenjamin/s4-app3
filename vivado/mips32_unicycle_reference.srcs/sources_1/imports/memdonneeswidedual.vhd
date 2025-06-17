@@ -41,47 +41,72 @@ architecture Behavioral of MemDonneesWideDual is
 ------------------------
 -- Insérez vos donnees ici
 ------------------------
-X"0000dead",
-X"0000beef",
+--X"0000dead",
+--X"0000beef",
+--X"00000000",
+--X"00000000",
+--X"00000042",
+--X"00000045",
+--X"0000004e",
+--X"00000043",
+--X"00000020",
+--X"00000020",
+--X"00000020",
+--X"00000020",
+--X"00000000",
+--X"00000000",
+--X"00000000",
+--X"00000000",
+--X"00000000",
+--X"00000000",
+--X"00000000",
+--X"00000000",
+--X"00000000",
+--X"00000000",
+--X"00000000",
+--X"00000000",
+--X"00000000",
+--X"00000000",
+--X"00000000",
+--X"00000000",
+--X"00000000",
+--X"00000000",
+--X"00000000",
+--X"00000000",
+--X"00000000",
+--X"00000000",
+--X"00000000",
+--X"00000000",
+--X"00000000",
+--X"00000000",
+--X"00000000",
+--X"00000000",
+--X"00000000",
+
+X"000000fa",
+X"000000fa",
+X"000000fa",
+X"000000fa",
 X"00000000",
 X"00000000",
-X"00000042",
-X"00000045",
-X"0000004e",
-X"00000043",
-X"00000020",
-X"00000020",
-X"00000020",
-X"00000020",
 X"00000000",
 X"00000000",
+X"00000004",
+X"00000003",
+X"00000003",
+X"00000002",
 X"00000000",
-X"00000000",
-X"00000000",
-X"00000000",
-X"00000000",
-X"00000000",
-X"00000000",
-X"00000000",
-X"00000000",
-X"00000000",
-X"00000000",
-X"00000000",
-X"00000000",
-X"00000000",
-X"00000000",
-X"00000000",
-X"00000000",
-X"00000000",
-X"00000000",
-X"00000000",
-X"00000000",
-X"00000000",
-X"00000000",
-X"00000000",
-X"00000000",
-X"00000000",
-X"00000000",
+X"00000003",
+X"00000005",
+X"00000004",
+X"00000004",
+X"00000003",
+X"00000003",
+X"00000002",
+X"00000002",
+X"00000005",
+X"00000003",
+X"00000002",
 
 ------------------------
 -- Fin de votre code
@@ -114,7 +139,7 @@ begin
 	begin
         if clk='0' and clk'event then -- sur front descendant
 			if(i_MemWriteWide = '1' or i_MemReadWide = '1') then
-				--assert (i_Addresse(3 downto 0) = "0000") report "mauvais alignement de l'adresse pour une ecriture large" severity failure;
+				assert (i_Addresse(3 downto 0) = "0000") report "mauvais alignement de l'adresse pour une ecriture large" severity failure;
 			end if;
 	   end if;
 	end process;
@@ -142,7 +167,7 @@ begin
 	o_ReadDataWide <= ram_DataMemory(s_MemoryIndex + 3) &
 					  ram_DataMemory(s_MemoryIndex + 2) &
 					  ram_DataMemory(s_MemoryIndex + 1) &
-					  ram_DataMemory(s_MemoryIndex + 0)   when s_WideMemoryRangeValid = '1'
-					else (others => '0');
+					  ram_DataMemory(s_MemoryIndex + 0) when s_WideMemoryRangeValid = '1'
+					  else (others => '0');
 
 end Behavioral;

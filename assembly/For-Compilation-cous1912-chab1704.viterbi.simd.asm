@@ -56,7 +56,7 @@ CalculSurvivants:
   .eqv Survivor_MET_ADDR        8
   .eqv Survivor_OUTPUT_ADDR     12
   .eqv Survivor_MAT_OFFSET_ADDR 16 # Iterator over the matrix rows
-  addi $sp, $sp, -20
+  addi $sp, $sp, -32
 
   sw $ra,                 Survivor_RETURN_ADDR($sp)
   sw Survivor_SINPUT_REG, Survivor_SINPUT_ADDR($sp)
@@ -66,8 +66,11 @@ CalculSurvivants:
   # Quickly overwrite the output with a vector populated with 250s into the
   # output address. SIMD allows doing this in parallel hence the lwv.
   # Acs will overwrite these values if necessary afterwards
-  lwv $z0, base_vec
-  swv Survivor_OUTPUT_ADDR($sp) # goal is to put the 250 250 into s0.
+  lw $t0, Survivor_OUTPUT_ADDR($sp)
+  nop
+  lw $1, base_vec
+  sw $1, 0($t0)
+  nop
 
   # Prepare loop that jumps throught the 4 vector rows
   li $t0, 0
@@ -77,21 +80,25 @@ CalculSurvivants:
     # Load the Latest Matrix offset to check if it's time to leave the loop
     # or increment it
     lw  $t0, Survivor_MAT_OFFSET_ADDR($sp)
-    bge $t0, MAT_SIZE, survivorEnd # The total 4x4 matrix byte-size busts (64)
+    beq $t0, MAT_SIZE, survivorEnd # The total 4x4 matrix byte-size busts (64)
 
     # Setup parameters for acs call
-    sw acs_SINPUT_REG Survivor_SINPUT_REG
-    sw acs_MET_REG    Survivor_MET_REG($t0) # Correct row withing the matrix
+    lw acs_SINPUT_REG, Survivor_SINPUT_ADDR($sp)
+    lw $t5, Survivor_MET_ADDR($sp)
+    add $t4, $t5, $t0
+    move acs_MET_REG, $t4 # Correct row withing the matrix
 
     # If the iterator operates on the byte address of a matrix row (0,16,32,48)
     # The output[i] byte address (0,4,8,12) can be retrieved via a rightshift
     add $t2, $t0, 0
-    sra $t1, $t2, 2
+    srl  $t1, $t2, 2
 
-    sw acs_OUTPUT_REG Survivor_OUTPUT_REG($t1)
+    lw $t5, Survivor_OUTPUT_ADDR($sp)
+    add $t4, $t5, $t1
+    lw acs_OUTPUT_REG, 0($t4)
 
     # Just before jumping store the next matrix row/vector offset
-    addi $t0, VEC_SIZE # size of a vector/row = 16
+    addi $t0, $t0, VEC_SIZE # size of a vector/row = 16
     sw   $t0, Survivor_MAT_OFFSET_ADDR($sp)
     jal acs
 
@@ -100,7 +107,7 @@ CalculSurvivants:
 
   survivorEnd:
     lw $ra, Survivor_RETURN_ADDR($sp)
-    addi $sp, 20 # Free stack memory
+    addi $sp, $sp, 32 # Free stack memory
     jr $ra
 
   acs:
@@ -109,27 +116,30 @@ CalculSurvivants:
     .eqv acs_SINPUT_ADDR     4
     .eqv acs_MET_ADDR        8
     .eqv acs_OUTPUT_ADDR     12
-    addi $sp, $sp, -16
+    #addi $sp, $sp, -16
 
-    sw acs_SINPUT_REG, acs_SINPUT_ADDR($sp)
-    sw acs_MET_REG,       acs_MET_ADDR($sp)
-    sw acs_OUTPUT_REG, acs_OUTPUT_ADDR($sp)
+    #sw acs_SINPUT_REG, acs_SINPUT_ADDR($sp)
+    #sw acs_MET_REG,       acs_MET_ADDR($sp)
+    #sw acs_OUTPUT_REG, acs_OUTPUT_ADDR($sp)
 
-    lw $t0, acs_OUTPUT_REG # should be the 250 previously loaded
+    move acs_OUTPUT_REG, $t0 # should be the 250 previously loaded
 
-    swv $z0 acs_SINPUT_REG
-    swv $z1 acs_MET_REG
-    addv $z3, $z0, $z1 # z2 is the sum of both vectors
-    minv $t1, $z3 # t1 is the minimum fron the vector
+    #lwv $z0 acs_SINPUT_REG
+    nop
+    lw $1, 0(acs_SINPUT_REG)
+    lw $2, 0(acs_MET_REG)
+    addu $3, $1, $2 	# z2 is the sum of both vectors
+    andi $t1, $3, 0 	# t1 is the minimum fron the vector
+    nop
 
     # If the output (pre-set at 250) is already smaller the the vector minimum,
     # skip the reassignment and jump to the return
     blt $t0, $t1, acsEnd
 
-    sw $t1, acs_OUTPUT_REG
+    sw $t1, 0($t0)
 
     acsEnd:
-      lw $ra, acs_RETURN_ADDR($sp)
-      addi $sp, 16 # Free stack memory
+      #lw $ra, acs_RETURN_ADDR($sp)
+      #addi $sp, $sp, 16 # Free stack memory
       jr $ra
 
