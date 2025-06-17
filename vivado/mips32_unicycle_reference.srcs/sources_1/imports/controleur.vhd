@@ -133,10 +133,10 @@ begin
     end process;
     
     -- Identifier si l'operation actuel est un type SIMD ou pas.
-    o_op_is_simd <= '1' when i_Op = OP_Vtype or
-                             i_Op = Op_MINV  or
-                             i_Op = Op_LWV   or
-                             i_Op = Op_SWV
+    o_op_is_simd <= '1' when ((i_Op = OP_Vtype) or
+                             (i_Op = Op_MINV)  or
+                             (i_Op = Op_LWV)   or
+                             (i_Op = Op_SWV))
                     else '0'; 
 	
     o_RegWrite		<= '1' when i_Op = OP_Rtype or 
