@@ -351,6 +351,15 @@ end process;
 -- SIMD stuff.
 ------------------------------------------------------------------------
 
+-- Selectionner ce qui est a ecrire en cache, pour le vecteur. Peut-etre pas necessaire
+-- La seule affaire qui ecrit en cache c'est les store words.
+s_v_DataToWriteInCache <= s_v_reg_data2; -- Copier coller de ce qui est fait pour cache normal? (rt)
+
+-- Selectionner si ce qui est ecrit dans le registre est le resultat du manager ou un registre lu.
+s_v_DataToWriteInRegs <= s_simd_manager_output when (i_v_MemRead = '0') else s_v_MemoryReadData;
+
+-- Selectionner si on veut rt ou rd comme destination pour les instructions simd.
+s_v_WriteRegDest_muxout <= s_rt when (i_v_RegDst = '0') else s_rd;
 
 banc_registre_de_vecteurs : registres_z -- the same thing as BancRegistres, mais pour des vecteurs de 4 mots.
     Port map ( 
@@ -366,18 +375,18 @@ banc_registre_de_vecteurs : registres_z -- the same thing as BancRegistres, mais
         o_RS2_DAT   => s_v_reg_data2
     );
     
---gestionnaire_dinstructions_simd : simd_manager
---    Port map ( 
---            i_reg_data_RS1    => s_v_reg_data1,
---            i_reg_data_RS2    => s_v_reg_data2,
---            i_opcode          => s_opcode,
---            i_alu_funct       => s_instr_funct,
---            i_shamt           => s_shamt,
---            i_enable          => i_op_is_simd,
---            o_result_is_word  => s_result_is_word,
---            o_result          => s_simd_manager_output,
---            o_multRes         => open,
---            o_zero            => open
---    );
+gestionnaire_dinstructions_simd : simd_manager
+    Port map ( 
+            i_reg_data_RS1    => s_v_reg_data1,
+            i_reg_data_RS2    => s_v_reg_data2,
+            i_opcode          => s_opcode,
+            i_alu_funct       => i_alu_funct,
+            i_shamt           => s_shamt,
+            i_enable          => i_op_is_simd,
+            o_result_is_word  => s_result_is_word,
+            o_result          => s_simd_manager_output,
+            o_multRes         => open,
+            o_zero            => open
+    );
         
 end Behavioral;
