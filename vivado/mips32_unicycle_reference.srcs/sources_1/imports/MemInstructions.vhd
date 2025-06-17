@@ -31,7 +31,7 @@ architecture Behavioral of MemInstructions is
 -- Insérez votre code ici
 ------------------------
 
--- test_vanilla_load:
+-- test_vanilla_load: WORKED
 -- "001111"
 "00111100000000010001000000000001", -- lui $1  0x00001001
 -- "100011": load 0xdead into $t4
@@ -47,7 +47,7 @@ architecture Behavioral of MemInstructions is
 -- "000000"
 "00000000000000000000000000000000", -- nop x5
 
--- test_vanilla_store:
+-- test_vanilla_store: WORKED. Seen in the RAM.
 -- "001111"
 "00111100000000010001000000000001", -- lui $1  0x00001001
 -- "101011" store 0xdead from $t4 into out_norm .data
