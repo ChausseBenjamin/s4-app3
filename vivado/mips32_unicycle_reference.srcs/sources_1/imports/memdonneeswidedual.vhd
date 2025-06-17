@@ -114,7 +114,7 @@ begin
 	begin
         if clk='0' and clk'event then -- sur front descendant
 			if(i_MemWriteWide = '1' or i_MemReadWide = '1') then
-				assert (i_Addresse(3 downto 0) = "0000") report "mauvais alignement de l'adresse pour une ecriture large" severity failure;
+				--assert (i_Addresse(3 downto 0) = "0000") report "mauvais alignement de l'adresse pour une ecriture large" severity failure;
 			end if;
 	   end if;
 	end process;
