@@ -63,7 +63,7 @@ architecture Behavioral of MemInstructions is
 -- "000000"
 "00000000000000000000000000000000", -- nop x5
 
--- test_vanilla_add:
+-- test_vanilla_add: WORKED.
 -- "001111"
 "00111100000000010001000000000001", -- lui $1  0x00001001
 -- "100011" load 0xbeef into $t5
@@ -85,11 +85,11 @@ architecture Behavioral of MemInstructions is
 -- "000000"
 "00000000000000000000000000000000", -- nop x5
 
--- test_vec_load:
+-- test_vec_load: WORKED. Data put in registers properly
 -- "001111"
 "00111100000000010001000000000001", -- lui $1 0x00001001
 -- "011110" load [b,e,n,c] into $z0 from ben_vec .data
-"01111000001010000000000000010000", -- lwv  $8 0x00000010($1)
+"01111000001000000000000000010000", -- lwv  $8 0x00000010($1) (loaded into 00000)
 -- "000000"
 "00000000000000000000000000000000", -- nop x1
 -- "000000"
@@ -101,11 +101,11 @@ architecture Behavioral of MemInstructions is
 -- "000000"
 "00000000000000000000000000000000", -- nop x5
 
--- test_vec_store:
+-- test_vec_store: Put in RAM successfully.
 -- "001111"
 "00111100000000010001000000000001", -- lui $1 0x00001001
 -- "011111" store [B,E,N,C] from $z0 into out_vec .data
-"01111100001010000000000000110000", -- swv  $8 0x00000030($1)
+"01111100001000000000000000110000", -- swv  $8 0x00000030($1) (stores data from 00000)
 -- "000000"
 "00000000000000000000000000000000", -- nop x1
 -- "000000"
@@ -121,9 +121,9 @@ architecture Behavioral of MemInstructions is
 -- "001111"
 "00111100000000010001000000000001", -- lui $1  0x00001001
 -- "011110" load [32,32,32,32] into $z1 from lower_vec .data
-"01111000001010010000000000100000", -- lwv  $9  0x00000020($1)
--- "011100" add $z0 (BENC) and $z1 (lower) into $z2 (equals benc)
-"01110001000010010101000000100001", -- addv $10 $8 $9
+"01111000001000010000000000100000", -- lwv  $9  0x00000020($1)      WORKED (put data at 00001)
+-- "011100" add $z0 (BENC) and $z1 (lower) into $z2 (equals benc)   WORKED
+"01110000000000010001000000100001", -- addv $10 $8 $9           Puts data at 00010 from add 00001 + 00000
 -- "001111" store $z2 (benc) into out_vec .data
 "00111100000000010001000000000001", -- lui $1  0x00001001
 -- "011111"
@@ -141,11 +141,11 @@ architecture Behavioral of MemInstructions is
 
 -- test_vec_min:
 -- "011101"
-"01110101000010110000000000101010", -- minv $11 $8 0x0000002a
+"01110100000011110000000000101010", -- minv $11 $8 0x0000002a (minimum of 00000 into 01111 ($t7) - WORKED!
 -- "001111"
 "00111100000000010001000000000001", -- lui $1  0x00001001
 -- "011111"
-"01111100001010110000000001000000", -- swv  $11 0x00000040($1)
+"10101100001011110000000001000000", -- swv  $11 0x00000040($1)
 -- "000000"
 "00000000000000000000000000000000", -- nop x1
 -- "000000"
