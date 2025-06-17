@@ -145,7 +145,8 @@ begin
 								i_Op = OP_ORI or 
 								i_Op = OP_LUI or 
 								i_Op = OP_LW or 
-								i_Op = OP_JAL
+								i_Op = OP_JAL or
+								i_Op = OP_MINV      -- Minv ecrit dans un registre standard.
 						else '0';
 						-- Il faudra ajouter le opcode de MINV si ce dernier ecrit dans un vecteur standard.
 						-- Si on fait ca, il faut un MUX a la sortie des ALU et une sortie de plus pour dire quel ALU ecrit dans ce registre la.

@@ -328,7 +328,8 @@ inst_MemDonnees_Thicc : MemDonneesWideDual
 -- Mux d'écriture vers le banc de registres
 ------------------------------------------------------------------------
 
-s_Data2Reg_muxout    <= s_adresse_PC_plus_4 when i_jump_link = '1' else
+s_Data2Reg_muxout    <= s_simd_manager_output(31 downto 0) when (s_result_is_word = '1' and i_op_is_simd = '1') else -- Permet a une valeur lsb d'un instruction z d'etre mis dans un registre standard.
+                        s_adresse_PC_plus_4 when i_jump_link = '1' else
 					    r_HI                when i_mfhi = '1' else 
 					    r_LO                when i_mflo = '1' else
 					    s_AluResult         when i_MemtoReg = '0' else 
