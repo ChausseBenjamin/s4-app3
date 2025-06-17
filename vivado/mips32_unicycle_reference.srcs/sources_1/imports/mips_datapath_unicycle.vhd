@@ -351,6 +351,9 @@ end process;
 -- SIMD stuff.
 ------------------------------------------------------------------------
 
+-- Selectionner si ce qui est ecrit dans le registre est le resultat du manager ou un registre lu.
+s_v_DataToWriteInRegs <= s_simd_manager_output when (i_v_MemRead = '0') else s_v_MemoryReadData;
+
 -- Selectionner si on veut rt ou rd comme destination pour les instructions simd.
 s_v_WriteRegDest_muxout <= s_rt when (i_v_RegDst = '0') else s_rd;
 
