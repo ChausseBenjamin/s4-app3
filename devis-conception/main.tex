@@ -68,8 +68,10 @@ d'instruction n'a pas besoin d'être créé (autre que \verb|R|,\verb|I|,\verb|J
 puisque les nouvelles instructions SIMD peuvent suivre la même structure.
 
 Puisque la nouvelle architecture est spécifiquement nécessaire pour optimiser
-le temps d'éxécution de l'algorithme viterbi, les instructions suivantes ont
-été ajoutées.
+le temps d'éxécution de l'algorithme viterbi, des instructions ont été faites
+spécifiquement pour cette situation. Par exemple, viterbi n'opère pas sur des
+chiffres négatifs. Ainsi, les opérations \verb|addv| et \verb|minv| plus bas
+opèrent sur des entiers non-signés.
 
 \subsection{lwv: Load word vector}
 
@@ -156,10 +158,10 @@ tests servent d'assurance à cet effet.
 		\\
 
 		\midrule
-		\#                                 &
-		Test                               &
-		Action                             &
-		Résultat Attendu\footnotemark[1]   &
+		\#               &
+		Test             &
+		Action           &
+		Résultat Attendu &
 		\cboxtick
 		\\
 
@@ -175,23 +177,21 @@ tests servent d'assurance à cet effet.
 		\endlastfoot
 		% }}}
 		% Sanity Tests {{{
-		\tid                               & \verb|lw|:
+		\tid & \verb|lw|:
 		"Load Word" fonctionne toujours                  &
 		\verb|lw base_val, $t4| &
 		Le registre unitaire \verb|$t4| devrait contenir \verb|0xdead| &
 		\cbox
 		\\
-    \hline
 
-		\tid                               & \verb|sw|:
+		\tid & \verb|sw|:
 		"Store Word" fonctionne toujours                  &
 		\verb|sw $t4, $t4| &
 		L'addresse \verb|out_norm| devrait contenir \verb|0xdead| &
 		\cbox
 		\\
-    \hline
 
-		\tid                               & \verb|add|:
+		\tid & \verb|add|:
 		L'arithmétique sur des registres standards fonctionne toujours &
     \verb|lw $t5 base_add|
 		\verb|add $t6, $t4, $t5|
@@ -199,27 +199,24 @@ tests servent d'assurance à cet effet.
 		L'addresse \verb|sum_norm| devrait contenir \verb|0x19d9c| &
 		\cbox
 		\\
-    \hline % }}}
 
-		\tid                               & \verb|lwv|:
+		\tid & \verb|lwv|:
 		Il est possible de stocker de la mémoire vers des registres vectoriels &
 		\verb|lwv $z0, ben_vec|                &
     Le registre vectoriel \verb|$z0| devrait contenir la même chose que
     \verb|ben_vec| &
 		\cbox
 		\\
-    \hline
 
-		\tid                               & \verb|swv|:
+		\tid & \verb|swv|:
 		Il est possible de stocker d'un registre vectoriel vers la mémoire &
 		\verb|swv $z0, out_vec|                &
     L'addresse \verb|out_vec| devrait contenir la même chose qu'à
     l'addresse \verb|ben_vec| &
 		\cbox
 		\\
-    \hline
 
-		\tid                               & \verb|addv|:
+		\tid & \verb|addv|:
 		Il est possible de stocker la somme de deux registres vectoriels dans un troisième
     registre &
 		\verb|lwv $z1, lower_vec|
@@ -230,10 +227,9 @@ tests servent d'assurance à cet effet.
     &
 		\cbox
 		\\
-    \hline
 
-		\tid                               & \verb|minv|:
-		Il est possible de stocker la valeur minimale d'un registre vectoriel dans
+		\tid & \verb|minv|:
+		Il est possible de stocker la valeur minimale d'un registre vectoriel à l'index 0 dans
     un registre unitaire &
 		\verb|minv $t0, $z0|
 		\verb|lw  $t0, min_val|
@@ -242,7 +238,42 @@ tests servent d'assurance à cet effet.
     &
 		\cbox
 		\\
-    \hline
+
+		\tid & \verb|minv|:
+		Il est possible de stocker la valeur minimale d'un registre vectoriel à l'index 1 dans
+    un registre unitaire &
+		\verb|lwv $z3, min_one|
+		\verb|minv $t0,  $z3|
+		\verb|sw  $t0, min_val|
+    &
+    L'addresse \verb|min_val| devrait contenir  contenir 1
+    &
+		\cbox
+		\\
+
+		\tid & \verb|minv|:
+		Il est possible de stocker la valeur minimale d'un registre vectoriel à l'index 2 dans
+    un registre unitaire &
+		\verb|lwv $z3, min_two|
+		\verb|minv $t0,  $z3|
+		\verb|sw  $t0, min_val|
+    &
+    L'addresse \verb|min_val| devrait contenir  contenir 2
+    &
+		\cbox
+		\\
+
+		\tid & \verb|minv|:
+		Il est possible de stocker la valeur minimale d'un registre vectoriel à l'index 3 dans
+    un registre unitaire &
+		\verb|lwv $z3, min_three|
+		\verb|minv $t0,  $z3|
+		\verb|sw  $t0, min_val|
+    &
+    L'addresse \verb|min_val| devrait contenir  contenir 3
+    &
+		\cbox
+		\\
 
 	\end{longtable}
 \end{center}
@@ -271,6 +302,9 @@ tests servent d'assurance à cet effet.
 		\verb|ben_vec|   & \verb|{'B', 'E', 'N', 'C'}| & Vecteur pour tester le stockage dans un registre             \\
 		\verb|lower_vec| & \verb|{32,32,32,32}|        & Vecteur de offset entre un Majuscule et Minuscule ASCII      \\
 		\verb|out_vec|   & \verb|{0,0,0,0}|            & Endroit pour tester le stockage de vecteurs                  \\
+    \verb|min_one|   & \verb|{4,1,2,3}|            & Vecteur ayant sa valeur minimale à l'index 1 \\
+    \verb|min_two|   & \verb|{4,5,2,3}|            & Vecteur ayant sa valeur minimale à l'index 2 \\
+    \verb|min_three| & \verb|{4,5,6,3}|            & Vecteur ayant sa valeur minimale à l'index 3 \\
 		\verb|min_val|   & \verb|0|                    & Endroit pour stocker le résultat d'une opération \verb|minv| \\
 
 		\bottomrule
