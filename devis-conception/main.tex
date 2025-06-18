@@ -132,7 +132,7 @@ affecté le bon fonctionnement de l'infrastructure déjà en place, les premiers
 tests servent d'assurance à cet effet.
 
 \begin{center}
-  \begin{longtable}{lp{5cm}p{4cm}p{4cm}l}
+  \begin{longtable}{lp{5cm}p{3.5cm}p{4.5cm}l}
 		% Headers & Footers {{{
 		\caption{Plan de vérification} \label{tab:verif}
 		\\
@@ -204,7 +204,8 @@ tests servent d'assurance à cet effet.
 		Il est possible de stocker de la mémoire vers des registres vectoriels &
 		\verb|lwv $z0, ben_vec|                &
     Le registre vectoriel \verb|$z0| devrait contenir la même chose que
-    \verb|ben_vec| &
+    \verb|ben_vec| (avec les valeurs dans le même ordre)
+    et l'opération \verb|lwv| ne devrait prendre qu'un seul coup d'horloge &
 		\cbox
 		\\
 
@@ -212,7 +213,8 @@ tests servent d'assurance à cet effet.
 		Il est possible de stocker d'un registre vectoriel vers la mémoire &
 		\verb|swv $z0, out_vec|                &
     L'addresse \verb|out_vec| devrait contenir la même chose qu'à
-    l'addresse \verb|ben_vec| &
+    l'addresse \verb|ben_vec| et l'action de stockage ne devrait prendre qu'un
+    coup d'horloge &
 		\cbox
 		\\
 
@@ -224,7 +226,7 @@ tests servent d'assurance à cet effet.
 		\verb|swv $z2, out_vec|
     &
     L'addresse \verb|out_vec| devrait contenir la même chose que \verb|Vsum|
-    &
+    et l'opération \verb|addv| ne devrait prendre qu'un seul coup d'horloge &
 		\cbox
 		\\
 
@@ -235,7 +237,7 @@ tests servent d'assurance à cet effet.
 		\verb|lw  $t0, min_val|
     &
     L'addresse \verb|min_val| devrait contenir \verb|'B'|
-    &
+    et \verb|minv| ne devrait prendre qu'un seul coup d'horloge &
 		\cbox
 		\\
 
@@ -279,6 +281,8 @@ tests servent d'assurance à cet effet.
 \end{center}
 
 \section{Figure d'organisation}
+
+\todo{figure}
 
 \begin{appendices}
 \section{Valeurs utiles}
