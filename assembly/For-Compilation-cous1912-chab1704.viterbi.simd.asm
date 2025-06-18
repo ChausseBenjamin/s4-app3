@@ -95,7 +95,7 @@ CalculSurvivants:
 
     lw $t5, Survivor_OUTPUT_ADDR($sp)
     add $t4, $t5, $t1
-    lw acs_OUTPUT_REG, 0($t4)
+    move acs_OUTPUT_REG, $t4
 
     # Just before jumping store the next matrix row/vector offset
     addi $t0, $t0, VEC_SIZE # size of a vector/row = 16
@@ -122,7 +122,7 @@ CalculSurvivants:
     #sw acs_MET_REG,       acs_MET_ADDR($sp)
     #sw acs_OUTPUT_REG, acs_OUTPUT_ADDR($sp)
 
-    move acs_OUTPUT_REG, $t0 # should be the 250 previously loaded
+    #move acs_OUTPUT_REG, $t0 # should be the 250 previously loaded
 
     #lwv $z0 acs_SINPUT_REG
     nop
@@ -134,9 +134,10 @@ CalculSurvivants:
 
     # If the output (pre-set at 250) is already smaller the the vector minimum,
     # skip the reassignment and jump to the return
+    lw $t0, 0(acs_OUTPUT_REG)
     blt $t0, $t1, acsEnd
 
-    sw $t1, 0($t0)
+    sw $t1, 0(acs_OUTPUT_REG)
 
     acsEnd:
       #lw $ra, acs_RETURN_ADDR($sp)
