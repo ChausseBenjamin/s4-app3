@@ -63,9 +63,16 @@ De la même façon que l'architecture MIPS contient 32 registres de 32 Bits, les
 nouvelles instructions SIMD introduisent 32 nouveaux registres de 128 Bits
 ($4\times32$ Bits). De cette façon, chaque opération SIMD peut accéder à des
 registres de la même façon que le font les autres opération sans pour autant
-entrer en conflit avec celles-ci et les corrompres. Aussi, un nouveaux type
+entrer en conflit avec celles-ci et les corrompres. Aussi, aucun nouveaux type
 d'instruction n'a pas besoin d'être créé (autre que \verb|R|,\verb|I|,\verb|J|)
-puisque les nouvelles instructions SIMD peuvent suivre la même structure.
+puisque les nouvelles instructions SIMD ont des structures identiques.
+
+Afin de réutiliser le plus possible les addresses déjà existentes, un format
+\verb|V| a été introduit. Ce dernier est identique au format \verb|R| mais a un
+opcode different. Cependant, les multiplications ne fonctionne pas puisqu'ils
+n'était pas nécessaires pour Viterbi. Donc, de nouveaux "types" d'instructions
+sont ajouter, mais leurs fonctionnement est soit identique au format \verb|R|
+au utilise les mêmes registres que le format \verb|I|.
 
 Puisque la nouvelle architecture est spécifiquement nécessaire pour optimiser
 le temps d'éxécution de l'algorithme viterbi, des instructions ont été faites
