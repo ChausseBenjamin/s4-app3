@@ -24,4 +24,5 @@
 !mips32_unicycle_reference.srcs/sources_1/imports/registres.vhd
 !mips32_unicycle_reference.srcs/sources_1/imports/memdonneeswidedual.vhd
 !mips32_unicycle_reference.xpr
+!amogus.wcfg
 !.gitignore

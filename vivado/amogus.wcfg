@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="mips_unicycle_tb_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="mips32_package" />
+            <top_module name="mips_unicycle_tb" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="0fs"></ZoomStartTime>
+      <ZoomEndTime time="1380001fs"></ZoomEndTime>
+      <Cursor1Time time="400000fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="181"></NameColumnWidth>
+      <ValueColumnWidth column_width="58"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="51" />
+   <wvobject fp_name="/mips_unicycle_tb/clk_cycle" type="other">
+      <obj_property name="ElementShortName">clk_cycle</obj_property>
+      <obj_property name="ObjectShortName">clk_cycle</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mips_unicycle_tb/dut/inst_Datapath/inst_MemInstr/o_instruction" type="array">
+      <obj_property name="ElementShortName">o_instruction[31:0]</obj_property>
+      <obj_property name="ObjectShortName">o_instruction[31:0]</obj_property>
+      <obj_property name="CustomSignalColor">#FF0000</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="Radix">BINARYRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mips_unicycle_tb/dut/inst_Controleur/i_Op" type="array">
+      <obj_property name="ElementShortName">i_Op[5:0]</obj_property>
+      <obj_property name="ObjectShortName">i_Op[5:0]</obj_property>
+      <obj_property name="Radix">BINARYRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mips_unicycle_tb/clk" type="logic">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+      <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mips_unicycle_tb/reset" type="logic">
+      <obj_property name="ElementShortName">reset</obj_property>
+      <obj_property name="ObjectShortName">reset</obj_property>
+      <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mips_unicycle_tb/inst_monitor/show_Instruction" type="other">
+      <obj_property name="ElementShortName">show_Instruction</obj_property>
+      <obj_property name="ObjectShortName">show_Instruction</obj_property>
+      <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mips_unicycle_tb/inst_monitor/show_alu_action" type="other">
+      <obj_property name="ElementShortName">show_alu_action</obj_property>
+      <obj_property name="ObjectShortName">show_alu_action</obj_property>
+      <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mips_unicycle_tb/dut/inst_Datapath/inst_Registres/regs[4]" type="array">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">[4][31:0]</obj_property>
+      <obj_property name="ObjectShortName">[4][31:0]</obj_property>
+      <obj_property name="label">$a0</obj_property>
+      <obj_property name="CustomSignalColor">#0000FF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mips_unicycle_tb/dut/inst_Datapath/inst_Registres/regs[5]" type="array">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">[5][31:0]</obj_property>
+      <obj_property name="ObjectShortName">[5][31:0]</obj_property>
+      <obj_property name="label">$a1</obj_property>
+      <obj_property name="CustomSignalColor">#0000FF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mips_unicycle_tb/dut/inst_Datapath/inst_Registres/regs[6]" type="array">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">[6][31:0]</obj_property>
+      <obj_property name="ObjectShortName">[6][31:0]</obj_property>
+      <obj_property name="label">$a2</obj_property>
+      <obj_property name="CustomSignalColor">#0000FF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mips_unicycle_tb/dut/inst_Datapath/inst_Registres/regs[8]" type="array">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">[8][31:0]</obj_property>
+      <obj_property name="ObjectShortName">[8][31:0]</obj_property>
+      <obj_property name="label">$t0</obj_property>
+      <obj_property name="CustomSignalColor">#800080</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mips_unicycle_tb/dut/inst_Datapath/inst_Registres/regs[9]" type="array">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">[9][31:0]</obj_property>
+      <obj_property name="ObjectShortName">[9][31:0]</obj_property>
+      <obj_property name="label">$t1</obj_property>
+      <obj_property name="CustomSignalColor">#800080</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mips_unicycle_tb/dut/inst_Datapath/inst_Registres/regs[10]" type="array">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">[10][31:0]</obj_property>
+      <obj_property name="ObjectShortName">[10][31:0]</obj_property>
+      <obj_property name="label">$t2</obj_property>
+      <obj_property name="CustomSignalColor">#800080</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mips_unicycle_tb/dut/inst_Datapath/inst_Registres/regs[12]" type="array">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">[12][31:0]</obj_property>
+      <obj_property name="ObjectShortName">[12][31:0]</obj_property>
+      <obj_property name="label">$t4</obj_property>
+      <obj_property name="CustomSignalColor">#800080</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mips_unicycle_tb/dut/inst_Datapath/inst_Registres/regs[13]" type="array">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">[13][31:0]</obj_property>
+      <obj_property name="ObjectShortName">[13][31:0]</obj_property>
+      <obj_property name="label">$t5</obj_property>
+      <obj_property name="CustomSignalColor">#800080</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mips_unicycle_tb/dut/inst_Datapath/banc_registre_de_vecteurs/regs" type="array">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">regs[0:31][31:0]</obj_property>
+      <obj_property name="ObjectShortName">regs[0:31][31:0]</obj_property>
+      <obj_property name="label">Z Registers</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mips_unicycle_tb/dut/inst_Datapath/inst_Registres/i_WE" type="logic">
+      <obj_property name="ElementShortName">i_WE</obj_property>
+      <obj_property name="ObjectShortName">i_WE</obj_property>
+      <obj_property name="CustomSignalColor">#FFFF00</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mips_unicycle_tb/dut/inst_Datapath/banc_registre_de_vecteurs/i_WE" type="logic">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">i_WE</obj_property>
+      <obj_property name="ObjectShortName">i_WE</obj_property>
+      <obj_property name="label">i_WE (z)</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mips_unicycle_tb/dut/inst_Datapath/inst_Registres/i_Wr_DAT" type="array">
+      <obj_property name="ElementShortName">i_Wr_DAT[31:0]</obj_property>
+      <obj_property name="ObjectShortName">i_Wr_DAT[31:0]</obj_property>
+      <obj_property name="CustomSignalColor">#FFFF00</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mips_unicycle_tb/dut/inst_Datapath/banc_registre_de_vecteurs/i_Wr_DAT" type="array">
+      <obj_property name="ElementShortName">i_Wr_DAT[127:0]</obj_property>
+      <obj_property name="ObjectShortName">i_Wr_DAT[127:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mips_unicycle_tb/dut/inst_Datapath/banc_registre_de_vecteurs/i_WDest" type="array">
+      <obj_property name="ElementShortName">i_WDest[4:0]</obj_property>
+      <obj_property name="ObjectShortName">i_WDest[4:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mips_unicycle_tb/dut/inst_Datapath/inst_MemDonnees_Thicc/i_WriteData" type="array">
+      <obj_property name="ElementShortName">i_WriteData[31:0]</obj_property>
+      <obj_property name="ObjectShortName">i_WriteData[31:0]</obj_property>
+      <obj_property name="CustomSignalColor">#FFFF00</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mips_unicycle_tb/dut/inst_Datapath/inst_MemDonnees_Thicc/i_WriteDataWide" type="array">
+      <obj_property name="ElementShortName">i_WriteDataWide[127:0]</obj_property>
+      <obj_property name="ObjectShortName">i_WriteDataWide[127:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mips_unicycle_tb/dut/inst_Datapath/inst_MemDonnees_Thicc/o_ReadData" type="array">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">o_ReadData[31:0]</obj_property>
+      <obj_property name="ObjectShortName">o_ReadData[31:0]</obj_property>
+      <obj_property name="CustomSignalColor">#FFFF00</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="label">o cache word</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mips_unicycle_tb/dut/inst_Datapath/inst_MemDonnees_Thicc/o_ReadDataWide" type="array">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">o_ReadDataWide[127:0]</obj_property>
+      <obj_property name="ObjectShortName">o_ReadDataWide[127:0]</obj_property>
+      <obj_property name="label">o cache wide</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mips_unicycle_tb/dut/inst_Datapath/inst_MemDonnees_Thicc/i_MemReadWide" type="logic">
+      <obj_property name="ElementShortName">i_MemReadWide</obj_property>
+      <obj_property name="ObjectShortName">i_MemReadWide</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mips_unicycle_tb/dut/inst_Datapath/inst_MemDonnees_Thicc/i_MemWriteWide" type="logic">
+      <obj_property name="ElementShortName">i_MemWriteWide</obj_property>
+      <obj_property name="ObjectShortName">i_MemWriteWide</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mips_unicycle_tb/dut/inst_Datapath/inst_MemDonnees_Thicc/i_Addresse" type="array">
+      <obj_property name="ElementShortName">i_Addresse[31:0]</obj_property>
+      <obj_property name="ObjectShortName">i_Addresse[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mips_unicycle_tb/dut/inst_Datapath/inst_MemDonnees_Thicc/s_MemoryRangeValid" type="logic">
+      <obj_property name="ElementShortName">s_MemoryRangeValid</obj_property>
+      <obj_property name="ObjectShortName">s_MemoryRangeValid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mips_unicycle_tb/dut/inst_Datapath/inst_MemDonnees_Thicc/s_WideMemoryRangeValid" type="logic">
+      <obj_property name="ElementShortName">s_WideMemoryRangeValid</obj_property>
+      <obj_property name="ObjectShortName">s_WideMemoryRangeValid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mips_unicycle_tb/dut/inst_Datapath/inst_MemDonnees_Thicc/s_MemoryIndex" type="other">
+      <obj_property name="ElementShortName">s_MemoryIndex</obj_property>
+      <obj_property name="ObjectShortName">s_MemoryIndex</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mips_unicycle_tb/dut/inst_Datapath/inst_MemDonnees_Thicc/ram_DataMemory" type="array">
+      <obj_property name="ElementShortName">ram_DataMemory[0:255][31:0]</obj_property>
+      <obj_property name="ObjectShortName">ram_DataMemory[0:255][31:0]</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+   </wvobject>
+   <wvobject fp_name="/mips_unicycle_tb/dut/inst_Datapath/banc_registre_de_vecteurs/i_RS1" type="array">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">i_RS1[4:0]</obj_property>
+      <obj_property name="ObjectShortName">i_RS1[4:0]</obj_property>
+      <obj_property name="label">i reg z, rs adr</obj_property>
+      <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="Radix">BINARYRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mips_unicycle_tb/dut/inst_Datapath/banc_registre_de_vecteurs/o_RS1_DAT" type="array">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">o_RS1_DAT[127:0]</obj_property>
+      <obj_property name="ObjectShortName">o_RS1_DAT[127:0]</obj_property>
+      <obj_property name="label">o reg z, rs data</obj_property>
+      <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mips_unicycle_tb/dut/inst_Datapath/gestionnaire_dinstructions_simd/i_reg_data_RS1" type="array">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">i_reg_data_RS1[127:0]</obj_property>
+      <obj_property name="ObjectShortName">i_reg_data_RS1[127:0]</obj_property>
+      <obj_property name="label">v_ALU_RS1 (rs in)</obj_property>
+      <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mips_unicycle_tb/dut/inst_Datapath/banc_registre_de_vecteurs/i_RS2" type="array">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">i_RS2[4:0]</obj_property>
+      <obj_property name="ObjectShortName">i_RS2[4:0]</obj_property>
+      <obj_property name="label">i reg z, rt adr</obj_property>
+      <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="Radix">BINARYRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mips_unicycle_tb/dut/inst_Datapath/banc_registre_de_vecteurs/o_RS2_DAT" type="array">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">o_RS2_DAT[127:0]</obj_property>
+      <obj_property name="ObjectShortName">o_RS2_DAT[127:0]</obj_property>
+      <obj_property name="label">o reg z, rt data</obj_property>
+      <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mips_unicycle_tb/dut/inst_Datapath/gestionnaire_dinstructions_simd/i_reg_data_RS2" type="array">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">i_reg_data_RS2[127:0]</obj_property>
+      <obj_property name="ObjectShortName">i_reg_data_RS2[127:0]</obj_property>
+      <obj_property name="label">v_ALU_RS2</obj_property>
+      <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mips_unicycle_tb/dut/inst_Datapath/gestionnaire_dinstructions_simd/o_result" type="array">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">o_result[127:0]</obj_property>
+      <obj_property name="ObjectShortName">o_result[127:0]</obj_property>
+      <obj_property name="label">v manager output</obj_property>
+      <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mips_unicycle_tb/dut/inst_Datapath/gestionnaire_dinstructions_simd/s_z_alu_output" type="array">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">s_z_alu_output[127:0]</obj_property>
+      <obj_property name="ObjectShortName">s_z_alu_output[127:0]</obj_property>
+      <obj_property name="label">v alu output</obj_property>
+      <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mips_unicycle_tb/dut/inst_Datapath/gestionnaire_dinstructions_simd/o_result_is_word" type="logic">
+      <obj_property name="ElementShortName">o_result_is_word</obj_property>
+      <obj_property name="ObjectShortName">o_result_is_word</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mips_unicycle_tb/dut/inst_Controleur/o_op_is_simd" type="logic">
+      <obj_property name="ElementShortName">o_op_is_simd</obj_property>
+      <obj_property name="ObjectShortName">o_op_is_simd</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mips_unicycle_tb/dut/inst_Controleur/o_v_MemRead" type="logic">
+      <obj_property name="ElementShortName">o_v_MemRead</obj_property>
+      <obj_property name="ObjectShortName">o_v_MemRead</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mips_unicycle_tb/dut/inst_Controleur/o_v_MemWrite" type="logic">
+      <obj_property name="ElementShortName">o_v_MemWrite</obj_property>
+      <obj_property name="ObjectShortName">o_v_MemWrite</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mips_unicycle_tb/dut/inst_Controleur/o_v_RegWrite" type="logic">
+      <obj_property name="ElementShortName">o_v_RegWrite</obj_property>
+      <obj_property name="ObjectShortName">o_v_RegWrite</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mips_unicycle_tb/dut/inst_Controleur/o_v_RegDst" type="logic">
+      <obj_property name="ElementShortName">o_v_RegDst</obj_property>
+      <obj_property name="ObjectShortName">o_v_RegDst</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mips_unicycle_tb/dut/inst_Controleur/o_MemRead" type="logic">
+      <obj_property name="ElementShortName">o_MemRead</obj_property>
+      <obj_property name="ObjectShortName">o_MemRead</obj_property>
+      <obj_property name="CustomSignalColor">#FFFF00</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mips_unicycle_tb/dut/inst_Controleur/o_MemWrite" type="logic">
+      <obj_property name="ElementShortName">o_MemWrite</obj_property>
+      <obj_property name="ObjectShortName">o_MemWrite</obj_property>
+      <obj_property name="CustomSignalColor">#FFFF00</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mips_unicycle_tb/dut/inst_Controleur/o_RegWrite" type="logic">
+      <obj_property name="ElementShortName">o_RegWrite</obj_property>
+      <obj_property name="ObjectShortName">o_RegWrite</obj_property>
+      <obj_property name="CustomSignalColor">#FFFF00</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mips_unicycle_tb/dut/inst_Controleur/o_MemtoReg" type="logic">
+      <obj_property name="ElementShortName">o_MemtoReg</obj_property>
+      <obj_property name="ObjectShortName">o_MemtoReg</obj_property>
+      <obj_property name="CustomSignalColor">#FFFF00</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/mips_unicycle_tb/dut/inst_Controleur/o_RegDst" type="logic">
+      <obj_property name="ElementShortName">o_RegDst</obj_property>
+      <obj_property name="ObjectShortName">o_RegDst</obj_property>
+      <obj_property name="CustomSignalColor">#FFFF00</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+</wave_config>
