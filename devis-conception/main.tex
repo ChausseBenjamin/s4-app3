@@ -60,7 +60,7 @@
 \section{Spécifications SIMD sommaires}
 
 De la même façon que l'architecture MIPS contient 32 registres de 32 Bits, les
-nouvelles instructions SIMD introduisent 32 nouveaux registres de 128 Bits
+nouvelles instructions SIMD introduisent 8 nouveaux registres de 128 Bits
 ($4\times32$ Bits). De cette façon, chaque opération SIMD peut accéder à des
 registres de la même façon que le font les autres opération sans pour autant
 entrer en conflit avec celles-ci et les corrompres. Aussi, aucun nouveaux type
@@ -139,7 +139,7 @@ affecté le bon fonctionnement de l'infrastructure déjà en place, les premiers
 tests servent d'assurance à cet effet.
 
 \begin{center}
-  \begin{longtable}{lp{5cm}p{3.5cm}p{4.5cm}l}
+  \begin{longtable}{lp{5cm}p{3cm}p{5cm}l}
 		% Headers & Footers {{{
 		\caption{Plan de vérification} \label{tab:verif}
 		\\
@@ -211,6 +211,18 @@ tests servent d'assurance à cet effet.
 		\verb|lwv $z0, ben_vec|                &
     Le registre vectoriel \verb|$z0| devrait contenir la même chose que
     \verb|ben_vec| (avec les valeurs dans le même ordre)
+    et l'opération \verb|lwv| ne devrait prendre qu'un seul coup d'horloge &
+		\cbox
+		\\
+
+		\tid & \verb|lwv|:
+		Il est possible de stocker de la mémoire vers des registres vectoriels &
+		\verb|lwv $t8, ben_vec|                &
+    On s'attends à ce que malgré que 5 Bits soient réservés à l'indexation des
+    registres, seul les 3 LSB sont retenus (shift de 2) lors d'accès à des
+    registres vectoriel. Ainsi, atteindre \verb|$t8| ("11000") est équivalent
+    à \verb|$z0| ("00000") une fois assemblé. On devrait donc obenir le même
+    résultat qu'au test prédécent.
     et l'opération \verb|lwv| ne devrait prendre qu'un seul coup d'horloge &
 		\cbox
 		\\

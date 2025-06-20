@@ -1,4 +1,4 @@
-.data 0x00001001
+.data
 
 base_val: .word 0xDEAD
 base_add: .word 0xBEEF
@@ -45,7 +45,7 @@ main:
     nop
 
   test_vec_load:
-    lw   $t0, ben_vec
+    lw   $0, ben_vec
     nop
     nop
     nop
@@ -53,7 +53,7 @@ main:
     nop
 
   test_vec_store:
-    sw  $t0,  out_vec # Output should be the same as ben_vec
+    sw  $0,  out_vec # Output should be the same as ben_vec
     nop
     nop
     nop
@@ -61,9 +61,9 @@ main:
     nop
 
   test_vec_add:
-    lw   $t1,  lower_vec # Load lowercaseTransform into $z1
-    add  $t2,  $t0, $t1  # Make $z2 a lowercase $z0 using $z1
-    sw   $t2,  out_vec   # Overwrite the output with lowercase
+    lw   $1,  lower_vec # Load lowercaseTransform into $z1
+    add  $2,  $0, $1  # Make $z2 a lowercase $z0 using $z1
+    sw   $2,  out_vec   # Overwrite the output with lowercase
     nop
     nop
     nop
@@ -71,8 +71,7 @@ main:
     nop
 
   test_vec_min:
-    #TODO: Replace ori with our custom `minw $t3, $z0` ($t0 should be 66)
-    ori  $t3,  $t0,     42
+    ori  $t3,  $0,  0
     sw   $t3,  min_val
     nop
     nop
